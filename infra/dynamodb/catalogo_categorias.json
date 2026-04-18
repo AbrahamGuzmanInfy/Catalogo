@@ -1,0 +1,58 @@
+{
+    "TableName":  "catalogo_categorias",
+    "AttributeDefinitions":  [
+                                 {
+                                     "AttributeName":  "categoria_id",
+                                     "AttributeType":  "S"
+                                 },
+                                 {
+                                     "AttributeName":  "slug",
+                                     "AttributeType":  "S"
+                                 },
+                                 {
+                                     "AttributeName":  "activa",
+                                     "AttributeType":  "S"
+                                 },
+                                 {
+                                     "AttributeName":  "orden",
+                                     "AttributeType":  "N"
+                                 }
+                             ],
+    "KeySchema":  [
+                      {
+                          "AttributeName":  "categoria_id",
+                          "KeyType":  "HASH"
+                      }
+                  ],
+    "GlobalSecondaryIndexes":  [
+                                   {
+                                       "IndexName":  "slug-index",
+                                       "KeySchema":  [
+                                                         {
+                                                             "AttributeName":  "slug",
+                                                             "KeyType":  "HASH"
+                                                         }
+                                                     ],
+                                       "Projection":  {
+                                                          "ProjectionType":  "ALL"
+                                                      }
+                                   },
+                                   {
+                                       "IndexName":  "activa-orden-index",
+                                       "KeySchema":  [
+                                                         {
+                                                             "AttributeName":  "activa",
+                                                             "KeyType":  "HASH"
+                                                         },
+                                                         {
+                                                             "AttributeName":  "orden",
+                                                             "KeyType":  "RANGE"
+                                                         }
+                                                     ],
+                                       "Projection":  {
+                                                          "ProjectionType":  "ALL"
+                                                      }
+                                   }
+                               ],
+    "BillingMode":  "PAY_PER_REQUEST"
+}

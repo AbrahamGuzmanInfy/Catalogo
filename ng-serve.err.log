@@ -1,0 +1,13 @@
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'showHome' does not exist on type 'App'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.html:76:60:
+[37m      76 │ ...ria-label="Inicio" (click)="[32mshowHome[37m($event)"><img src="/icons/...
+         ╵                                [32m~~~~~~~~[0m
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:16:15:
+[37m      16 │   templateUrl: [32m'./app.html'[37m,
+         ╵                [32m~~~~~~~~~~~~[0m
+
+[39m[22m

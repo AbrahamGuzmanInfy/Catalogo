@@ -1,0 +1,42 @@
+{
+    "TableName":  "catalogo_productos_categorias",
+    "AttributeDefinitions":  [
+                                 {
+                                     "AttributeName":  "categoria_id",
+                                     "AttributeType":  "S"
+                                 },
+                                 {
+                                     "AttributeName":  "producto_id",
+                                     "AttributeType":  "S"
+                                 }
+                             ],
+    "KeySchema":  [
+                      {
+                          "AttributeName":  "categoria_id",
+                          "KeyType":  "HASH"
+                      },
+                      {
+                          "AttributeName":  "producto_id",
+                          "KeyType":  "RANGE"
+                      }
+                  ],
+    "GlobalSecondaryIndexes":  [
+                                   {
+                                       "IndexName":  "producto_id-index",
+                                       "KeySchema":  [
+                                                         {
+                                                             "AttributeName":  "producto_id",
+                                                             "KeyType":  "HASH"
+                                                         },
+                                                         {
+                                                             "AttributeName":  "categoria_id",
+                                                             "KeyType":  "RANGE"
+                                                         }
+                                                     ],
+                                       "Projection":  {
+                                                          "ProjectionType":  "ALL"
+                                                      }
+                                   }
+                               ],
+    "BillingMode":  "PAY_PER_REQUEST"
+}

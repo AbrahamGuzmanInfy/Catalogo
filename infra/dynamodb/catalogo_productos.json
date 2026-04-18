@@ -1,0 +1,58 @@
+{
+    "TableName":  "catalogo_productos",
+    "AttributeDefinitions":  [
+                                 {
+                                     "AttributeName":  "producto_id",
+                                     "AttributeType":  "S"
+                                 },
+                                 {
+                                     "AttributeName":  "slug",
+                                     "AttributeType":  "S"
+                                 },
+                                 {
+                                     "AttributeName":  "activo",
+                                     "AttributeType":  "S"
+                                 },
+                                 {
+                                     "AttributeName":  "created_at",
+                                     "AttributeType":  "S"
+                                 }
+                             ],
+    "KeySchema":  [
+                      {
+                          "AttributeName":  "producto_id",
+                          "KeyType":  "HASH"
+                      }
+                  ],
+    "GlobalSecondaryIndexes":  [
+                                   {
+                                       "IndexName":  "slug-index",
+                                       "KeySchema":  [
+                                                         {
+                                                             "AttributeName":  "slug",
+                                                             "KeyType":  "HASH"
+                                                         }
+                                                     ],
+                                       "Projection":  {
+                                                          "ProjectionType":  "ALL"
+                                                      }
+                                   },
+                                   {
+                                       "IndexName":  "activo-created_at-index",
+                                       "KeySchema":  [
+                                                         {
+                                                             "AttributeName":  "activo",
+                                                             "KeyType":  "HASH"
+                                                         },
+                                                         {
+                                                             "AttributeName":  "created_at",
+                                                             "KeyType":  "RANGE"
+                                                         }
+                                                     ],
+                                       "Projection":  {
+                                                          "ProjectionType":  "ALL"
+                                                      }
+                                   }
+                               ],
+    "BillingMode":  "PAY_PER_REQUEST"
+}
