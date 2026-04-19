@@ -120,9 +120,14 @@ export class App implements OnInit, OnDestroy {
     this.addZoomBlocker(document, 'gesturechange', (event) => event.preventDefault());
     this.addZoomBlocker(document, 'gestureend', (event) => event.preventDefault());
 
-    this.addZoomBlocker(document, 'touchmove', (event) => {
+    this.addZoomBlocker(document, 'touchstart', (event) => {
       const touchEvent = event as TouchEvent;
       if (touchEvent.touches.length > 1) touchEvent.preventDefault();
+    });
+
+    this.addZoomBlocker(document, 'touchmove', (event) => {
+      const touchEvent = event as TouchEvent;
+      if (touchEvent.touches.length > 1) event.preventDefault();
     });
 
     this.addZoomBlocker(document, 'touchend', (event) => {
@@ -145,8 +150,9 @@ export class App implements OnInit, OnDestroy {
   }
 
   private addZoomBlocker(target: EventTarget, eventName: string, handler: EventListener): void {
-    target.addEventListener(eventName, handler, { passive: false });
-    this.zoomCleanupCallbacks.push(() => target.removeEventListener(eventName, handler));
+    const options: AddEventListenerOptions = { passive: false, capture: true };
+    target.addEventListener(eventName, handler, options);
+    this.zoomCleanupCallbacks.push(() => target.removeEventListener(eventName, handler, options));
   }
   private setupInstallPrompt(): void {
     if (this.isStandaloneMode()) return;

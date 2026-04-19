@@ -7,7 +7,8 @@ body {
 
 body {
   overflow-x: hidden;
-  touch-action: manipulation;
+  touch-action: pan-y;
+  overscroll-behavior: none;
 }
 
 app-root {
