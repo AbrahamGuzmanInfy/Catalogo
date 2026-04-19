@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ProductViewer3d } from './product-viewer-3d/product-viewer-3d';
 
 type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile';
 
@@ -41,6 +42,7 @@ type Product = {
   alt: string;
   description: string;
   slug: string;
+  model3dUrl?: string;
 };
 
 type ProductsResponse = {
@@ -54,6 +56,7 @@ type CartItem = {
 
 @Component({
   selector: 'app-root',
+  imports: [ProductViewer3d],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

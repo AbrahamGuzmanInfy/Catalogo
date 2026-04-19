@@ -42,3 +42,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+*.log
+/public/models/*.glb
+!/public/models/ramo-primavera-mobile-draco.glb
