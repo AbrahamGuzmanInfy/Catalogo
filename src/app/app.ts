@@ -6,6 +6,7 @@ type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile';
 
 const API_BASE_URL = 'https://hs5rkunm27jueyzgyhqliykv7u0sizsx.lambda-url.us-east-2.on.aws';
 const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
+const INSTALL_DISMISSED_KEY = 'petal-install-dismissed-v2';
 
 function viewFromHash(): View {
   if (window.location.hash.startsWith('#producto-')) return 'detail';
@@ -98,7 +99,7 @@ export class App implements OnInit {
 
 
   private setupInstallPrompt(): void {
-    if (this.isStandaloneMode() || localStorage.getItem('petal-install-dismissed') === 'true') return;
+    if (this.isStandaloneMode() || this.wasInstallPromptDismissed()) return;
 
     this.isIosInstallHelp = this.isIosDevice();
     this.showInstallPrompt = this.isIosInstallHelp;
@@ -130,7 +131,7 @@ export class App implements OnInit {
     this.showInstallPrompt = false;
     this.canInstallApp = false;
     this.deferredInstallPrompt = null;
-    localStorage.setItem('petal-install-dismissed', 'true');
+    this.markInstallPromptDismissed();
     this.changeDetector.detectChanges();
   }
 
@@ -138,8 +139,28 @@ export class App implements OnInit {
     return window.matchMedia('(display-mode: standalone)').matches || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
   }
 
+  private wasInstallPromptDismissed(): boolean {
+    try {
+      return localStorage.getItem(INSTALL_DISMISSED_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  private markInstallPromptDismissed(): void {
+    try {
+      localStorage.setItem(INSTALL_DISMISSED_KEY, 'true');
+    } catch {
+      // Safari private mode can block localStorage; the banner can simply reappear later.
+    }
+  }
+
   private isIosDevice(): boolean {
-    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const userAgent = navigator.userAgent.toLowerCase();
+    const platform = navigator.platform.toLowerCase();
+    const touchPoints = navigator.maxTouchPoints || 0;
+
+    return /iphone|ipad|ipod/.test(userAgent) || (platform === 'macintel' && touchPoints > 1);
   }
 
   private loadCategories(): void {
