@@ -43,6 +43,64 @@ a {
   overflow-x: hidden;
 }
 
+
+.install-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 30px;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, var(--screen-max-width));
+  min-height: 58px;
+  margin: 0 auto 16px;
+  padding: 10px 10px 10px 13px;
+  border: 1px solid #ececf0;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 5px 14px rgba(7, 7, 10, 0.08);
+}
+
+.install-banner strong {
+  display: block;
+  color: #07070a;
+  font-size: 14px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.install-banner p {
+  margin: 3px 0 0;
+  color: #55555c;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.install-action,
+.install-close {
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.install-action {
+  height: 34px;
+  padding: 0 13px;
+  background: var(--accent-action);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.install-close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: #f2f2f4;
+  color: #07070a;
+  font-size: 20px;
+  line-height: 1;
+}
+
 .home-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;

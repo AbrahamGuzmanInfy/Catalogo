@@ -1,4 +1,20 @@
 <main class="home-shell" [class.detail-mode]="activeView === 'detail'" [class.cart-mode]="activeView === 'cart'" aria-label="Cat&aacute;logo">
+  @if (showInstallPrompt) {
+    <section class="install-banner" aria-label="Instalar aplicaci&oacute;n">
+      <div>
+        <strong>Petal &amp; Co en tu inicio</strong>
+        @if (isIosInstallHelp) {
+          <p>Toca Compartir y elige Agregar a pantalla de inicio.</p>
+        } @else {
+          <p>Abre Petal &amp; Co como app desde tu pantalla principal.</p>
+        }
+      </div>
+      @if (canInstallApp) {
+        <button class="install-action" type="button" (click)="installApp()">Instalar</button>
+      }
+      <button class="install-close" type="button" aria-label="Cerrar aviso" (click)="dismissInstallPrompt()">&times;</button>
+    </section>
+  }
   @if (activeView === 'home') {
     <section class="home-screen">
       <header class="topbar" aria-label="Encabezado">

@@ -55,6 +55,11 @@ type CartItem = {
   product: Product;
   quantity: number;
 };
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+};
+
 
 @Component({
   selector: 'app-root',
@@ -74,6 +79,10 @@ export class App implements OnInit {
   protected categorySearchTerm = '';
   protected selectedCategoryId = '';
   protected cartItems: CartItem[] = [];
+  protected showInstallPrompt = false;
+  protected canInstallApp = false;
+  protected isIosInstallHelp = false;
+  private deferredInstallPrompt: BeforeInstallPromptEvent | null = null;
 
   protected readonly shippingAmount = 5;
 
@@ -84,6 +93,52 @@ export class App implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     this.loadProducts();
+  }
+
+
+  private setupInstallPrompt(): void {
+    if (this.isStandaloneMode() || localStorage.getItem('petal-install-dismissed') === 'true') return;
+
+    this.isIosInstallHelp = this.isIosDevice();
+    this.showInstallPrompt = this.isIosInstallHelp;
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      this.deferredInstallPrompt = event as BeforeInstallPromptEvent;
+      this.canInstallApp = true;
+      this.showInstallPrompt = true;
+      this.changeDetector.detectChanges();
+    });
+
+    window.addEventListener('appinstalled', () => {
+      this.dismissInstallPrompt();
+    });
+  }
+
+  protected async installApp(): Promise<void> {
+    if (!this.deferredInstallPrompt) return;
+
+    const promptEvent = this.deferredInstallPrompt;
+    this.deferredInstallPrompt = null;
+    await promptEvent.prompt();
+    await promptEvent.userChoice;
+    this.dismissInstallPrompt();
+  }
+
+  protected dismissInstallPrompt(): void {
+    this.showInstallPrompt = false;
+    this.canInstallApp = false;
+    this.deferredInstallPrompt = null;
+    localStorage.setItem('petal-install-dismissed', 'true');
+    this.changeDetector.detectChanges();
+  }
+
+  private isStandaloneMode(): boolean {
+    return window.matchMedia('(display-mode: standalone)').matches || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+  }
+
+  private isIosDevice(): boolean {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
   }
 
   private loadCategories(): void {
