@@ -13,6 +13,11 @@ concurrency:
   group: catalogo-s3-deploy
   cancel-in-progress: true
 
+env:
+  AWS_REGION: us-east-2
+  S3_BUCKET: catalogo-app-1
+  CLOUDFRONT_DISTRIBUTION_ID: E15ZOTIVJSBSOS
+
 jobs:
   deploy:
     name: Build and deploy
@@ -39,7 +44,10 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to S3
-        run: aws s3 sync dist/catalogo/browser s3://catalogo-app-1 --delete --region us-east-2
+        run: aws s3 sync dist/catalogo/browser s3://${{ env.S3_BUCKET }} --delete --region ${{ env.AWS_REGION }}
+
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
