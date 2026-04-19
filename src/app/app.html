@@ -31,7 +31,7 @@
               <h2>{{ product.name }}</h2>
               <p class="rating" aria-label="5 estrellas">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
               <p class="price">{{ product.price }}</p>
-              <button type="button" (click)="showProduct(product)">Ver m&aacute;s</button>
+              <button type="button" (click)="showProduct(product, 'home')">Ver m&aacute;s</button>
             </div>
           </article>
         }
@@ -54,7 +54,7 @@
     </section>
   } @else if (activeView === 'detail' && selectedProduct) {
     <section class="detail-screen" aria-label="Detalle de producto">
-      <button class="detail-back-button" type="button" aria-label="Regresar al inicio" (click)="showView('home')"><span aria-hidden="true">&#8249;</span></button>
+      <button class="detail-back-button" type="button" aria-label="Regresar al inicio" (click)="showDetailBack()"><span aria-hidden="true">&#8249;</span></button>
       @if (selectedProduct.model3dUrl) {
         @defer (when selectedProduct.model3dUrl) {
           <app-product-viewer-3d class="detail-viewer-3d" [modelUrl]="selectedProduct.model3dUrl" [alt]="selectedProduct.alt" />
@@ -110,16 +110,16 @@
 
       <section class="cart-list" aria-label="Productos en carrito">
         @for (item of cartItems; track item.product.producto_id) {
-          <article class="cart-item">
+          <article class="cart-item" role="button" tabindex="0" [attr.aria-label]="'Ver detalle de ' + item.product.name" (click)="showProduct(item.product, 'cart')" (keydown.enter)="showProduct(item.product, 'cart')" (keydown.space)="showProduct(item.product, 'cart'); $event.preventDefault()">
             <img [src]="item.product.image" [alt]="item.product.alt" />
             <div class="cart-item-info">
               <h2>{{ item.product.name }}</h2>
               <p>{{ item.product.price }}</p>
             </div>
-            <div class="quantity-control" aria-label="Cantidad">
-              <button type="button" aria-label="Quitar" (click)="decreaseQuantity(item)">−</button>
+            <div class="quantity-control" aria-label="Cantidad" (keydown)="$event.stopPropagation()">
+              <button type="button" aria-label="Quitar" (click)="$event.stopPropagation(); decreaseQuantity(item)">−</button>
               <span>{{ item.quantity }}</span>
-              <button class="plus" type="button" aria-label="Agregar" (click)="increaseQuantity(item)">+</button>
+              <button class="plus" type="button" aria-label="Agregar" (click)="$event.stopPropagation(); increaseQuantity(item)">+</button>
             </div>
           </article>
         }
@@ -153,7 +153,7 @@
   }
 
   <nav class="bottom-nav" aria-label="Navegaci&oacute;n principal">
-    <button [class.active]="isActive('home')" type="button" aria-label="Inicio" (click)="showView('home')"><img src="/icons/tdesign/home-filled.svg" alt="" aria-hidden="true" /></button>
+    <button [class.active]="isActive('home')" type="button" aria-label="Inicio" (click)="showDetailBack()"><img src="/icons/tdesign/home-filled.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('categories')" type="button" aria-label="Categor&iacute;as" (click)="showView('categories')"><img src="/icons/tdesign/app.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('cart')" type="button" aria-label="Carrito" (click)="showView('cart')"><img src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="showView('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>

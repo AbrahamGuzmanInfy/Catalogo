@@ -79,6 +79,7 @@ export class App implements OnInit {
 
   protected activeView: View = viewFromHash();
   protected selectedProduct: Product | null = null;
+  private detailReturnView: Exclude<View, 'detail'> = 'home';
 
   ngOnInit(): void {
     this.loadCategories();
@@ -241,11 +242,16 @@ export class App implements OnInit {
 
     item.quantity -= 1;
   }
-  protected showProduct(product: Product): void {
+  protected showProduct(product: Product, returnView: Exclude<View, 'detail'> = 'home'): void {
+    this.detailReturnView = returnView;
     this.selectedProduct = product;
     this.activeView = 'detail';
     window.history.replaceState(null, '', `#producto-${product.slug || product.producto_id}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  protected showDetailBack(): void {
+    this.showView(this.detailReturnView);
   }
 
   protected showView(view: Exclude<View, 'detail'>, event?: Event): void {
