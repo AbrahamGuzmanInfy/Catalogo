@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ProductDetailComponent } from './product-detail/product-detail';
 
 type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile';
 
 const API_BASE_URL = 'https://hs5rkunm27jueyzgyhqliykv7u0sizsx.lambda-url.us-east-2.on.aws';
 const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
-const INSTALL_DISMISSED_KEY = 'petal-install-dismissed-v2';
+const INSTALL_DISMISSED_KEY = 'petal-install-dismissed-session';
+const IOS_INSTALL_DISMISSED_KEY = 'petal-ios-install-dismissed-session';
 const DEDICATION_MAX_LENGTH = 160;
 
 function viewFromHash(): View {
@@ -70,7 +71,7 @@ type BeforeInstallPromptEvent = Event & {
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly changeDetector = inject(ChangeDetectorRef);
 
@@ -91,6 +92,7 @@ export class App implements OnInit {
   protected canInstallApp = false;
   protected isIosInstallHelp = false;
   private deferredInstallPrompt: BeforeInstallPromptEvent | null = null;
+  private readonly zoomCleanupCallbacks: Array<() => void> = [];
 
   protected readonly shippingAmount = 5;
 
@@ -99,17 +101,62 @@ export class App implements OnInit {
   private detailReturnView: Exclude<View, 'detail'> = 'home';
 
   ngOnInit(): void {
+    this.disableBrowserZoom();
     this.loadCategories();
     this.loadProducts();
     this.setupInstallPrompt();
   }
 
 
+  ngOnDestroy(): void {
+    this.zoomCleanupCallbacks.forEach((cleanup) => cleanup());
+    this.zoomCleanupCallbacks.length = 0;
+  }
+
+  private disableBrowserZoom(): void {
+    let lastTouchEnd = 0;
+
+    this.addZoomBlocker(document, 'gesturestart', (event) => event.preventDefault());
+    this.addZoomBlocker(document, 'gesturechange', (event) => event.preventDefault());
+    this.addZoomBlocker(document, 'gestureend', (event) => event.preventDefault());
+
+    this.addZoomBlocker(document, 'touchmove', (event) => {
+      const touchEvent = event as TouchEvent;
+      if (touchEvent.touches.length > 1) touchEvent.preventDefault();
+    });
+
+    this.addZoomBlocker(document, 'touchend', (event) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) event.preventDefault();
+      lastTouchEnd = now;
+    });
+
+    this.addZoomBlocker(window, 'wheel', (event) => {
+      const wheelEvent = event as WheelEvent;
+      if (wheelEvent.ctrlKey || wheelEvent.metaKey) wheelEvent.preventDefault();
+    });
+
+    this.addZoomBlocker(window, 'keydown', (event) => {
+      const keyboardEvent = event as KeyboardEvent;
+      const key = keyboardEvent.key.toLowerCase();
+      const isZoomKey = key === '+' || key === '-' || key === '=' || key === '0';
+      if ((keyboardEvent.ctrlKey || keyboardEvent.metaKey) && isZoomKey) keyboardEvent.preventDefault();
+    });
+  }
+
+  private addZoomBlocker(target: EventTarget, eventName: string, handler: EventListener): void {
+    target.addEventListener(eventName, handler, { passive: false });
+    this.zoomCleanupCallbacks.push(() => target.removeEventListener(eventName, handler));
+  }
   private setupInstallPrompt(): void {
-    if (this.isStandaloneMode() || this.wasInstallPromptDismissed()) return;
+    if (this.isStandaloneMode()) return;
 
     this.isIosInstallHelp = this.isIosDevice();
-    this.showInstallPrompt = this.isIosInstallHelp;
+    if (this.isIosInstallHelp) {
+      this.showInstallPrompt = !this.wasIosInstallPromptDismissed();
+    } else if (this.wasInstallPromptDismissed()) {
+      return;
+    }
 
     window.addEventListener('beforeinstallprompt', (event) => {
       event.preventDefault();
@@ -138,7 +185,11 @@ export class App implements OnInit {
     this.showInstallPrompt = false;
     this.canInstallApp = false;
     this.deferredInstallPrompt = null;
-    this.markInstallPromptDismissed();
+    if (this.isIosInstallHelp) {
+      this.markIosInstallPromptDismissed();
+    } else {
+      this.markInstallPromptDismissed();
+    }
     this.changeDetector.detectChanges();
   }
 
@@ -148,7 +199,7 @@ export class App implements OnInit {
 
   private wasInstallPromptDismissed(): boolean {
     try {
-      return localStorage.getItem(INSTALL_DISMISSED_KEY) === 'true';
+      return sessionStorage.getItem(INSTALL_DISMISSED_KEY) === 'true';
     } catch {
       return false;
     }
@@ -156,12 +207,27 @@ export class App implements OnInit {
 
   private markInstallPromptDismissed(): void {
     try {
-      localStorage.setItem(INSTALL_DISMISSED_KEY, 'true');
+      sessionStorage.setItem(INSTALL_DISMISSED_KEY, 'true');
     } catch {
-      // Safari private mode can block localStorage; the banner can simply reappear later.
+      // Private mode can block storage; the banner can simply reappear later.
     }
   }
 
+  private wasIosInstallPromptDismissed(): boolean {
+    try {
+      return sessionStorage.getItem(IOS_INSTALL_DISMISSED_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  private markIosInstallPromptDismissed(): void {
+    try {
+      sessionStorage.setItem(IOS_INSTALL_DISMISSED_KEY, 'true');
+    } catch {
+      // Safari private mode can block storage; the banner can simply reappear later.
+    }
+  }
   private isIosDevice(): boolean {
     const userAgent = navigator.userAgent.toLowerCase();
     const platform = navigator.platform.toLowerCase();
