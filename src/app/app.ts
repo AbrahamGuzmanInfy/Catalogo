@@ -7,6 +7,7 @@ type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile';
 const API_BASE_URL = 'https://hs5rkunm27jueyzgyhqliykv7u0sizsx.lambda-url.us-east-2.on.aws';
 const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
 const INSTALL_DISMISSED_KEY = 'petal-install-dismissed-v2';
+const DEDICATION_MAX_LENGTH = 160;
 
 function viewFromHash(): View {
   if (window.location.hash.startsWith('#producto-')) return 'detail';
@@ -55,6 +56,7 @@ type ProductsResponse = {
 type CartItem = {
   product: Product;
   quantity: number;
+  dedication?: string;
 };
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -80,6 +82,11 @@ export class App implements OnInit {
   protected categorySearchTerm = '';
   protected selectedCategoryId = '';
   protected cartItems: CartItem[] = [];
+  protected dedicationPanelOpen = false;
+  protected dedicationDraft = '';
+  protected dedicationProduct: Product | null = null;
+  protected readonly dedicationMaxLength = DEDICATION_MAX_LENGTH;
+  private readonly productDedications = new Map<string, string>();
   protected showInstallPrompt = false;
   protected canInstallApp = false;
   protected isIosInstallHelp = false;
@@ -250,6 +257,22 @@ export class App implements OnInit {
     this.selectedCategoryId = this.selectedCategoryId === category.categoria_id ? '' : category.categoria_id;
   }
 
+  protected openCategory(category: Category): void {
+    this.selectedCategoryId = category.categoria_id;
+    this.productSearchTerm = '';
+    this.categorySearchTerm = '';
+    this.showView('home');
+  }
+
+  protected getCategoryProductCount(category: Category): number {
+    return this.products.filter((product) => product.categoriaIds?.includes(category.categoria_id)).length;
+  }
+
+  protected getCategoryProductLabel(category: Category): string {
+    const count = this.getCategoryProductCount(category);
+    return count === 1 ? '1 producto' : `${count} productos`;
+  }
+
   protected isHomeCategorySelected(category: Category): boolean {
     return this.selectedCategoryId === category.categoria_id;
   }
@@ -294,14 +317,66 @@ export class App implements OnInit {
     return `$${value.toFixed(2)}`;
   }
 
+  protected get dedicationCounter(): string {
+    return `${this.dedicationDraft.length}/${this.dedicationMaxLength}`;
+  }
+
+  protected getProductDedication(product: Product | null): string {
+    if (!product) return '';
+
+    const cartItem = this.cartItems.find((item) => item.product.producto_id === product.producto_id);
+    return cartItem?.dedication ?? this.productDedications.get(product.producto_id) ?? '';
+  }
+
+  protected openDedication(product: Product, event?: Event): void {
+    event?.stopPropagation();
+    event?.preventDefault();
+    this.dedicationProduct = product;
+    this.dedicationDraft = this.getProductDedication(product);
+    this.dedicationPanelOpen = true;
+    this.changeDetector.detectChanges();
+  }
+
+  protected updateDedicationDraft(event: Event): void {
+    const value = (event.target as HTMLTextAreaElement).value.slice(0, this.dedicationMaxLength);
+    this.dedicationDraft = value;
+  }
+
+  protected closeDedicationPanel(): void {
+    this.dedicationPanelOpen = false;
+    this.dedicationDraft = '';
+    this.dedicationProduct = null;
+  }
+
+  protected saveDedication(): void {
+    if (!this.dedicationProduct) return;
+
+    const productId = this.dedicationProduct.producto_id;
+    const dedication = this.dedicationDraft.trim();
+
+    if (dedication) {
+      this.productDedications.set(productId, dedication);
+    } else {
+      this.productDedications.delete(productId);
+    }
+
+    this.cartItems = this.cartItems.map((item) => {
+      if (item.product.producto_id !== productId) return item;
+      return dedication ? { ...item, dedication } : { product: item.product, quantity: item.quantity };
+    });
+
+    this.closeDedicationPanel();
+  }
   protected addToCart(product: Product | null): void {
     if (!product) return;
 
+    const dedication = this.getProductDedication(product).trim();
     const existingItem = this.cartItems.find((item) => item.product.producto_id === product.producto_id);
     if (existingItem) {
       existingItem.quantity += 1;
+      if (dedication) existingItem.dedication = dedication;
     } else {
-      this.cartItems = [...this.cartItems, { product, quantity: 1 }];
+      this.cartItems = [...this.cartItems, { product, quantity: 1, ...(dedication ? { dedication } : {}) }];
     }
 
     this.showView('cart');

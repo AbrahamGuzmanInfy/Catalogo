@@ -15,19 +15,20 @@
       <button class="install-close" type="button" aria-label="Cerrar aviso" (click)="dismissInstallPrompt()">&times;</button>
     </section>
   }
+
+  <header class="topbar" aria-label="Encabezado">
+    <div aria-hidden="true"></div>
+    <h1>Petal &amp; Co</h1>
+    <button class="cart-button" type="button" aria-label="Carrito" (click)="showView('cart')">
+      <img class="cart-icon" src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" />
+      @if (hasCartItems) {
+        <span class="cart-dot" aria-hidden="true"></span>
+      }
+    </button>
+  </header>
+
   @if (activeView === 'home') {
     <section class="home-screen">
-      <header class="topbar" aria-label="Encabezado">
-        <div aria-hidden="true"></div>
-        <h1>Petal & Co</h1>
-        <button class="cart-button" type="button" aria-label="Carrito" (click)="showView('cart')">
-          <img class="cart-icon" src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" />
-          @if (hasCartItems) {
-            <span class="cart-dot" aria-hidden="true"></span>
-          }
-        </button>
-      </header>
-
       <label class="search-box" aria-label="Buscar flores">
         <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
         <input type="search" placeholder="Buscar flores..." [value]="productSearchTerm" (input)="updateProductSearch($event)" />
@@ -70,15 +71,10 @@
     </section>
   } @else if (activeView === 'detail' && selectedProduct) {
     @defer (when activeView === 'detail') {
-      <app-product-detail [product]="selectedProduct" (back)="showDetailBack()" (addToCart)="addToCart($event)" />
+      <app-product-detail [product]="selectedProduct" [dedication]="getProductDedication(selectedProduct)" (back)="showDetailBack()" (addToCart)="addToCart($event)" (editDedication)="openDedication($event)" />
     }
   } @else if (activeView === 'categories') {
     <section class="simple-screen categories-screen" aria-label="Categor&iacute;as">
-      <header class="screen-title">
-        <h1>Categor&iacute;as</h1>
-        <p>Petal & Co</p>
-      </header>
-
       <label class="search-box" aria-label="Buscar categor&iacute;as">
         <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
         <input type="search" placeholder="Buscar categor&iacute;as..." [value]="categorySearchTerm" (input)="updateCategorySearch($event)" />
@@ -86,29 +82,29 @@
 
       <section class="category-grid" aria-label="Lista de categor&iacute;as">
         @for (category of filteredCategories; track category.categoria_id) {
-          <button type="button" class="category-tile">
+          <button type="button" class="category-tile" (click)="openCategory(category)">
             <span>{{ category.nombre }}</span>
+            <small>{{ getCategoryProductLabel(category) }}</small>
           </button>
         }
       </section>
     </section>
   } @else if (activeView === 'cart') {
     <section class="cart-screen" aria-label="Carrito">
-      <header class="cart-title">
-        <h1>Carrito</h1>
-        <p>Petal & Co</p>
-      </header>
-
       <section class="cart-list" aria-label="Productos en carrito">
         @for (item of cartItems; track item.product.producto_id) {
           <article class="cart-item" role="button" tabindex="0" [attr.aria-label]="'Ver detalle de ' + item.product.name" (click)="showProduct(item.product, 'cart')" (keydown.enter)="showProduct(item.product, 'cart')" (keydown.space)="showProduct(item.product, 'cart'); $event.preventDefault()">
             <img [src]="item.product.image" [alt]="item.product.alt" />
             <div class="cart-item-info">
               <h2>{{ item.product.name }}</h2>
-              <p>{{ item.product.price }}</p>
+              <p class="cart-price">{{ item.product.price }}</p>
+              @if (item.dedication) {
+                <p class="cart-dedication">{{ item.dedication }}</p>
+              }
+              <button class="cart-dedication-button" type="button" (click)="openDedication(item.product, $event)">{{ item.dedication ? 'Editar dedicatoria' : 'Agregar dedicatoria' }}</button>
             </div>
             <div class="quantity-control" aria-label="Cantidad" (keydown)="$event.stopPropagation()">
-              <button type="button" aria-label="Quitar" (click)="$event.stopPropagation(); decreaseQuantity(item)">−</button>
+              <button type="button" aria-label="Quitar" (click)="$event.stopPropagation(); decreaseQuantity(item)">&#8722;</button>
               <span>{{ item.quantity }}</span>
               <button class="plus" type="button" aria-label="Agregar" (click)="$event.stopPropagation(); increaseQuantity(item)">+</button>
             </div>
@@ -126,11 +122,6 @@
     </section>
   } @else {
     <section class="simple-screen profile-screen" aria-label="Perfil">
-      <header class="screen-title">
-        <h1>Perfil</h1>
-        <p>Petal & Co</p>
-      </header>
-
       <div class="profile-card">
         <img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" />
         <h2>Invitado</h2>
@@ -143,6 +134,30 @@
     </section>
   }
 
+
+  @if (dedicationPanelOpen) {
+    <section class="dedication-overlay" aria-label="Dedicatoria">
+      <div class="dedication-sheet">
+        <header>
+          <div>
+            <h2>Dedicatoria</h2>
+            <p>La agregaremos a tu tarjeta floral.</p>
+          </div>
+          <button type="button" aria-label="Cerrar dedicatoria" (click)="closeDedicationPanel()">&times;</button>
+        </header>
+
+        <label class="dedication-field">
+          <span>Mensaje</span>
+          <textarea [attr.maxlength]="dedicationMaxLength" [value]="dedicationDraft" placeholder="Escribe tu dedicatoria..." (input)="updateDedicationDraft($event)"></textarea>
+        </label>
+
+        <p class="dedication-count">{{ dedicationCounter }}</p>
+
+        <button class="dedication-save" type="button" (click)="saveDedication()">Guardar Dedicatoria</button>
+        <button class="dedication-cancel" type="button" (click)="closeDedicationPanel()">Cancelar</button>
+      </div>
+    </section>
+  }
   <nav class="bottom-nav" aria-label="Navegaci&oacute;n principal">
     <button [class.active]="isActive('home')" type="button" aria-label="Inicio" (click)="showView('home')"><img src="/icons/tdesign/home-filled.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('categories')" type="button" aria-label="Categor&iacute;as" (click)="showView('categories')"><img src="/icons/tdesign/app.svg" alt="" aria-hidden="true" /></button>

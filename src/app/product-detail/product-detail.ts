@@ -40,10 +40,18 @@ export type ProductDetailProduct = {
 
       <p class="detail-description">{{ product.description }}</p>
 
-      <button class="dedication-button" type="button">
+      <button class="dedication-button" type="button" (click)="editDedication.emit(product)">
         <img src="/icons/tdesign/edit-1.svg" alt="" aria-hidden="true" />
-        <span>A&ntilde;adir Dedicatoria</span>
+        @if (dedication) {
+          <span>Editar Dedicatoria</span>
+        } @else {
+          <span>A&ntilde;adir Dedicatoria</span>
+        }
       </button>
+
+      @if (dedication) {
+        <p class="dedication-preview">{{ dedication }}</p>
+      }
 
       <button class="add-cart-button" type="button" (click)="addToCart.emit(product)">A&ntilde;adir al Carrito</button>
     </section>
@@ -51,6 +59,9 @@ export type ProductDetailProduct = {
 })
 export class ProductDetailComponent {
   @Input({ required: true }) product!: ProductDetailProduct;
+  @Input() dedication = '';
   @Output() back = new EventEmitter<void>();
   @Output() addToCart = new EventEmitter<ProductDetailProduct>();
+  @Output() editDedication = new EventEmitter<ProductDetailProduct>();
 }
+
