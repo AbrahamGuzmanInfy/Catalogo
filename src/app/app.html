@@ -6,7 +6,9 @@
         <h1>Petal & Co</h1>
         <button class="cart-button" type="button" aria-label="Carrito" (click)="showView('cart')">
           <img class="cart-icon" src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" />
-          <span class="cart-dot" aria-hidden="true"></span>
+          @if (hasCartItems) {
+            <span class="cart-dot" aria-hidden="true"></span>
+          }
         </button>
       </header>
 
@@ -73,7 +75,7 @@
         <span>A&ntilde;adir Dedicatoria</span>
       </button>
 
-      <button class="add-cart-button" type="button" (click)="showView('cart')">A&ntilde;adir al Carrito</button>
+      <button class="add-cart-button" type="button" (click)="addToCart(selectedProduct)">A&ntilde;adir al Carrito</button>
     </section>
   } @else if (activeView === 'categories') {
     <section class="simple-screen categories-screen" aria-label="Categor&iacute;as">
@@ -111,9 +113,9 @@
               <p>{{ item.product.price }}</p>
             </div>
             <div class="quantity-control" aria-label="Cantidad">
-              <button type="button" aria-label="Quitar">−</button>
+              <button type="button" aria-label="Quitar" (click)="decreaseQuantity(item)">−</button>
               <span>{{ item.quantity }}</span>
-              <button class="plus" type="button" aria-label="Agregar">+</button>
+              <button class="plus" type="button" aria-label="Agregar" (click)="increaseQuantity(item)">+</button>
             </div>
           </article>
         }

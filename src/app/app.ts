@@ -71,9 +71,7 @@ export class App implements OnInit {
   protected productsError = '';
   protected cartItems: CartItem[] = [];
 
-  protected readonly subtotal = '$80.00';
-  protected readonly shipping = '$5.00';
-  protected readonly total = '$85.00';
+  protected readonly shippingAmount = 5;
 
   protected activeView: View = viewFromHash();
   protected selectedProduct: Product | null = null;
@@ -102,14 +100,12 @@ export class App implements OnInit {
     this.http.get<ProductsResponse>(`${API_BASE_URL}/productos`).subscribe({
       next: (response) => {
         this.products = this.withModelFallbacks(response.items ?? []);
-        this.cartItems = this.products.map((product) => ({ product, quantity: 1 }));
         this.productsError = '';
         this.selectProductFromHash();
         this.changeDetector.detectChanges();
       },
       error: () => {
         this.products = [];
-        this.cartItems = [];
         this.productsError = 'No se pudieron cargar los productos';
         this.changeDetector.detectChanges();
       },
@@ -130,6 +126,64 @@ export class App implements OnInit {
     this.selectedProduct = this.products.find((product) => product.slug === slug) ?? this.products[0] ?? null;
   }
 
+  protected get cartQuantity(): number {
+    return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  protected get hasCartItems(): boolean {
+    return this.cartQuantity > 0;
+  }
+
+  protected get subtotal(): string {
+    return this.formatCurrency(this.subtotalAmount);
+  }
+
+  protected get shipping(): string {
+    return this.hasCartItems ? this.formatCurrency(this.shippingAmount) : this.formatCurrency(0);
+  }
+
+  protected get total(): string {
+    return this.formatCurrency(this.subtotalAmount + (this.hasCartItems ? this.shippingAmount : 0));
+  }
+
+  private get subtotalAmount(): number {
+    return this.cartItems.reduce((sum, item) => sum + this.priceToNumber(item.product.price) * item.quantity, 0);
+  }
+
+  private priceToNumber(price: string): number {
+    const value = Number(String(price).replace(/[^0-9.]/g, ''));
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  private formatCurrency(value: number): string {
+    return `$${value.toFixed(2)}`;
+  }
+
+  protected addToCart(product: Product | null): void {
+    if (!product) return;
+
+    const existingItem = this.cartItems.find((item) => item.product.producto_id === product.producto_id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      this.cartItems = [...this.cartItems, { product, quantity: 1 }];
+    }
+
+    this.showView('cart');
+  }
+
+  protected increaseQuantity(item: CartItem): void {
+    item.quantity += 1;
+  }
+
+  protected decreaseQuantity(item: CartItem): void {
+    if (item.quantity <= 1) {
+      this.cartItems = this.cartItems.filter((cartItem) => cartItem.product.producto_id !== item.product.producto_id);
+      return;
+    }
+
+    item.quantity -= 1;
+  }
   protected showProduct(product: Product): void {
     this.selectedProduct = product;
     this.activeView = 'detail';
