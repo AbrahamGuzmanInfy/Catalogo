@@ -56,7 +56,11 @@
     <section class="detail-screen" aria-label="Detalle de producto">
       <button class="detail-back-button" type="button" aria-label="Regresar al inicio" (click)="showView('home')"><span aria-hidden="true">&#8249;</span></button>
       @if (selectedProduct.model3dUrl) {
-        <app-product-viewer-3d class="detail-viewer-3d" [modelUrl]="selectedProduct.model3dUrl" [alt]="selectedProduct.alt" />
+        @defer (when selectedProduct.model3dUrl) {
+          <app-product-viewer-3d class="detail-viewer-3d" [modelUrl]="selectedProduct.model3dUrl" [alt]="selectedProduct.alt" />
+        } @placeholder {
+          <img class="detail-image" [src]="selectedProduct.detailImage" [alt]="selectedProduct.alt" />
+        }
       } @else {
         <img class="detail-image" [src]="selectedProduct.detailImage" [alt]="selectedProduct.alt" />
       }
