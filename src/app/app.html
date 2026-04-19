@@ -14,7 +14,7 @@
 
       <label class="search-box" aria-label="Buscar flores">
         <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
-        <input type="search" placeholder="Buscar flores..." />
+        <input type="search" placeholder="Buscar flores..." [value]="productSearchTerm" (input)="updateProductSearch($event)" />
       </label>
 
       <nav class="category-row" aria-label="Categor&iacute;as">
@@ -24,7 +24,7 @@
       </nav>
 
       <section class="product-grid" aria-label="Productos destacados">
-        @for (product of products; track product.producto_id) {
+        @for (product of filteredProducts; track product.producto_id) {
           <article class="product-card">
             <img [src]="product.image" [alt]="product.alt" />
             <div class="product-body">
@@ -86,11 +86,11 @@
 
       <label class="search-box" aria-label="Buscar categor&iacute;as">
         <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
-        <input type="search" placeholder="Buscar categor&iacute;as..." />
+        <input type="search" placeholder="Buscar categor&iacute;as..." [value]="categorySearchTerm" (input)="updateCategorySearch($event)" />
       </label>
 
       <section class="category-grid" aria-label="Lista de categor&iacute;as">
-        @for (category of categories; track category.categoria_id) {
+        @for (category of filteredCategories; track category.categoria_id) {
           <button type="button" class="category-tile">
             <span>{{ category.nombre }}</span>
           </button>

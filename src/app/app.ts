@@ -69,6 +69,8 @@ export class App implements OnInit {
   protected categoriesError = '';
   protected products: Product[] = [];
   protected productsError = '';
+  protected productSearchTerm = '';
+  protected categorySearchTerm = '';
   protected cartItems: CartItem[] = [];
 
   protected readonly shippingAmount = 5;
@@ -126,6 +128,42 @@ export class App implements OnInit {
     this.selectedProduct = this.products.find((product) => product.slug === slug) ?? this.products[0] ?? null;
   }
 
+
+  protected get filteredProducts(): Product[] {
+    const term = this.normalizeSearch(this.productSearchTerm);
+    if (!term) return this.products;
+
+    return this.products.filter((product) =>
+      [product.name, product.description, product.slug]
+        .some((value) => this.normalizeSearch(value).includes(term)),
+    );
+  }
+
+  protected get filteredCategories(): Category[] {
+    const term = this.normalizeSearch(this.categorySearchTerm);
+    if (!term) return this.categories;
+
+    return this.categories.filter((category) =>
+      [category.nombre, category.slug]
+        .some((value) => this.normalizeSearch(value).includes(term)),
+    );
+  }
+
+  protected updateProductSearch(event: Event): void {
+    this.productSearchTerm = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateCategorySearch(event: Event): void {
+    this.categorySearchTerm = (event.target as HTMLInputElement).value;
+  }
+
+  private normalizeSearch(value: string): string {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+  }
   protected get cartQuantity(): number {
     return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }
