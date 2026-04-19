@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { ProductViewer3d } from './product-viewer-3d/product-viewer-3d';
+import { ProductDetailComponent } from './product-detail/product-detail';
 
 type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile';
 
@@ -58,7 +58,7 @@ type CartItem = {
 
 @Component({
   selector: 'app-root',
-  imports: [ProductViewer3d],
+  imports: [ProductDetailComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -270,6 +270,10 @@ export class App implements OnInit {
   }
 
   protected isActive(view: Exclude<View, 'detail'>): boolean {
-    return this.activeView === view || (view === 'home' && this.activeView === 'detail');
+    if (this.activeView === 'detail') {
+      return this.detailReturnView === view;
+    }
+
+    return this.activeView === view;
   }
 }

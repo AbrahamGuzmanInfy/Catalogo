@@ -53,34 +53,9 @@
       </section>
     </section>
   } @else if (activeView === 'detail' && selectedProduct) {
-    <section class="detail-screen" aria-label="Detalle de producto">
-      <button class="detail-back-button" type="button" aria-label="Regresar al inicio" (click)="showDetailBack()"><span aria-hidden="true">&#8249;</span></button>
-      @if (selectedProduct.model3dUrl) {
-        @defer (when selectedProduct.model3dUrl) {
-          <app-product-viewer-3d class="detail-viewer-3d" [modelUrl]="selectedProduct.model3dUrl" [alt]="selectedProduct.alt" />
-        } @placeholder {
-          <img class="detail-image" [src]="selectedProduct.detailImage" [alt]="selectedProduct.alt" />
-        }
-      } @else {
-        <img class="detail-image" [src]="selectedProduct.detailImage" [alt]="selectedProduct.alt" />
-      }
-
-      <h1>{{ selectedProduct.name }}</h1>
-
-      <div class="detail-meta">
-        <p class="detail-rating" aria-label="5 estrellas">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
-        <p class="detail-price">{{ selectedProduct.price }}</p>
-      </div>
-
-      <p class="detail-description">{{ selectedProduct.description }}</p>
-
-      <button class="dedication-button" type="button">
-        <img src="/icons/tdesign/edit-1.svg" alt="" aria-hidden="true" />
-        <span>A&ntilde;adir Dedicatoria</span>
-      </button>
-
-      <button class="add-cart-button" type="button" (click)="addToCart(selectedProduct)">A&ntilde;adir al Carrito</button>
-    </section>
+    @defer (when activeView === 'detail') {
+      <app-product-detail [product]="selectedProduct" (back)="showDetailBack()" (addToCart)="addToCart($event)" />
+    }
   } @else if (activeView === 'categories') {
     <section class="simple-screen categories-screen" aria-label="Categor&iacute;as">
       <header class="screen-title">
@@ -153,7 +128,7 @@
   }
 
   <nav class="bottom-nav" aria-label="Navegaci&oacute;n principal">
-    <button [class.active]="isActive('home')" type="button" aria-label="Inicio" (click)="showDetailBack()"><img src="/icons/tdesign/home-filled.svg" alt="" aria-hidden="true" /></button>
+    <button [class.active]="isActive('home')" type="button" aria-label="Inicio" (click)="showView('home')"><img src="/icons/tdesign/home-filled.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('categories')" type="button" aria-label="Categor&iacute;as" (click)="showView('categories')"><img src="/icons/tdesign/app.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('cart')" type="button" aria-label="Carrito" (click)="showView('cart')"><img src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="showView('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>
