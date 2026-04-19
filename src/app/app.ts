@@ -5,6 +5,7 @@ import { ProductViewer3d } from './product-viewer-3d/product-viewer-3d';
 type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile';
 
 const API_BASE_URL = 'https://hs5rkunm27jueyzgyhqliykv7u0sizsx.lambda-url.us-east-2.on.aws';
+const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
 
 function viewFromHash(): View {
   if (window.location.hash.startsWith('#producto-')) return 'detail';
@@ -100,7 +101,7 @@ export class App implements OnInit {
   private loadProducts(): void {
     this.http.get<ProductsResponse>(`${API_BASE_URL}/productos`).subscribe({
       next: (response) => {
-        this.products = response.items ?? [];
+        this.products = this.withModelFallbacks(response.items ?? []);
         this.cartItems = this.products.map((product) => ({ product, quantity: 1 }));
         this.productsError = '';
         this.selectProductFromHash();
@@ -112,6 +113,13 @@ export class App implements OnInit {
         this.productsError = 'No se pudieron cargar los productos';
         this.changeDetector.detectChanges();
       },
+    });
+  }
+
+  private withModelFallbacks(products: Product[]): Product[] {
+    return products.map((product) => {
+      if (product.model3dUrl || product.slug !== 'ramo-primavera') return product;
+      return { ...product, model3dUrl: RAMO_PRIMAVERA_MODEL_URL };
     });
   }
 
