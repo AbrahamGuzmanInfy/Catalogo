@@ -13,8 +13,10 @@ dynamodb = boto3.resource('dynamodb')
 
 CATEGORIAS_TABLE = os.environ.get('CATEGORIAS_TABLE', 'catalogo_categorias')
 PRODUCTOS_TABLE = os.environ.get('PRODUCTOS_TABLE', 'catalogo_productos')
+PRODUCTOS_CATEGORIAS_TABLE = os.environ.get('PRODUCTOS_CATEGORIAS_TABLE', 'catalogo_productos_categorias')
 categorias_table = dynamodb.Table(CATEGORIAS_TABLE)
 productos_table = dynamodb.Table(PRODUCTOS_TABLE)
+productos_categorias_table = dynamodb.Table(PRODUCTOS_CATEGORIAS_TABLE)
 
 
 def serialize_value(value):
@@ -96,7 +98,7 @@ def price_text(value) -> str:
     return f'${decimal_value(value):.2f}'
 
 
-def public_product(item: dict) -> dict:
+def public_product(item: dict, categoria_ids: list[str] | None = None) -> dict:
     name = item.get('nombre') or item.get('name') or ''
     image = item.get('imagen_url') or item.get('image') or ''
     detail_image = item.get('detalle_imagen_url') or item.get('detailImage') or image
@@ -109,6 +111,7 @@ def public_product(item: dict) -> dict:
         'alt': item.get('alt') or name,
         'description': item.get('descripcion') or item.get('description') or '',
         'model3dUrl': item.get('model3d_url') or item.get('model3dUrl') or '',
+        'categoriaIds': categoria_ids or [],
         'slug': item.get('slug') or slugify(name),
         'activo': item.get('activo', 'true'),
         'orden': item.get('orden', 0),
@@ -126,7 +129,18 @@ def list_categorias() -> dict:
 
 
 def list_productos() -> dict:
-    items = [public_product(item) for item in scan_all(productos_table)]
+    relaciones = scan_all(productos_categorias_table)
+    categorias_por_producto: dict[str, list[str]] = {}
+    for relacion in relaciones:
+        producto_id = str(relacion.get('producto_id', ''))
+        categoria_id = str(relacion.get('categoria_id', ''))
+        if producto_id and categoria_id:
+            categorias_por_producto.setdefault(producto_id, []).append(categoria_id)
+
+    items = [
+        public_product(item, categorias_por_producto.get(str(item.get('producto_id', '')), []))
+        for item in scan_all(productos_table)
+    ]
     items = [item for item in items if item.get('producto_id') != '__meta__sequence']
     items = [item for item in items if is_active(item, 'activo')]
     items.sort(key=lambda item: (int(item.get('orden') or 0), item.get('name', '').lower()))
@@ -176,7 +190,19 @@ def create_producto(payload: dict) -> dict:
     productos_table.put_item(Item=item)
     return response(201, public_product(item))
 
+def create_producto_categoria(payload: dict) -> dict:
+    categoria_id = str(payload.get('categoria_id', '')).strip()
+    producto_id = str(payload.get('producto_id', '')).strip()
+    if not categoria_id or not producto_id:
+        return response(400, {'message': 'categoria_id y producto_id son obligatorios'})
 
+    item = {
+        'categoria_id': categoria_id,
+        'producto_id': producto_id,
+        'created_at': str(payload.get('created_at') or now_iso()),
+    }
+    productos_categorias_table.put_item(Item=item)
+    return response(201, item)
 def lambda_handler(event, context):
     method = event.get('requestContext', {}).get('http', {}).get('method', '')
     parts = path_parts(event)
@@ -201,6 +227,10 @@ def lambda_handler(event, context):
                 return list_productos()
             if method == 'POST' and len(parts) == 1:
                 return create_producto(parse_body(event))
+
+        if resource in ('productos-categorias', 'productos_categorias'):
+            if method == 'POST' and len(parts) == 1:
+                return create_producto_categoria(parse_body(event))
 
         return response(404, {'message': 'Ruta no encontrada'})
     except ValueError as error:

@@ -18,8 +18,8 @@
       </label>
 
       <nav class="category-row" aria-label="Categor&iacute;as">
-        @for (category of categories.slice(0, 4); track category.categoria_id) {
-          <button type="button" class="category-chip">{{ category.nombre }}</button>
+        @for (category of homeCategories; track category.categoria_id) {
+          <button type="button" class="category-chip" [class.active]="isHomeCategorySelected(category)" [attr.aria-pressed]="isHomeCategorySelected(category)" (click)="selectHomeCategory(category)">{{ category.nombre }}</button>
         }
       </nav>
 

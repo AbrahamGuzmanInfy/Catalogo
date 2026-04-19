@@ -44,6 +44,7 @@ type Product = {
   description: string;
   slug: string;
   model3dUrl?: string;
+  categoriaIds?: string[];
 };
 
 type ProductsResponse = {
@@ -71,6 +72,7 @@ export class App implements OnInit {
   protected productsError = '';
   protected productSearchTerm = '';
   protected categorySearchTerm = '';
+  protected selectedCategoryId = '';
   protected cartItems: CartItem[] = [];
 
   protected readonly shippingAmount = 5;
@@ -128,12 +130,21 @@ export class App implements OnInit {
     this.selectedProduct = this.products.find((product) => product.slug === slug) ?? this.products[0] ?? null;
   }
 
+  protected get homeCategories(): Category[] {
+    return this.categories.slice(0, 4);
+  }
 
   protected get filteredProducts(): Product[] {
     const term = this.normalizeSearch(this.productSearchTerm);
-    if (!term) return this.products;
+    let items = this.products;
 
-    return this.products.filter((product) =>
+    if (this.selectedCategoryId) {
+      items = items.filter((product) => product.categoriaIds?.includes(this.selectedCategoryId));
+    }
+
+    if (!term) return items;
+
+    return items.filter((product) =>
       [product.name, product.description, product.slug]
         .some((value) => this.normalizeSearch(value).includes(term)),
     );
@@ -155,6 +166,14 @@ export class App implements OnInit {
 
   protected updateCategorySearch(event: Event): void {
     this.categorySearchTerm = (event.target as HTMLInputElement).value;
+  }
+
+  protected selectHomeCategory(category: Category): void {
+    this.selectedCategoryId = this.selectedCategoryId === category.categoria_id ? '' : category.categoria_id;
+  }
+
+  protected isHomeCategorySelected(category: Category): boolean {
+    return this.selectedCategoryId === category.categoria_id;
   }
 
   private normalizeSearch(value: string): string {
