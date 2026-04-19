@@ -590,7 +590,7 @@ a {
   align-items: start;
   width: 100%;
   min-height: calc(82px + env(safe-area-inset-bottom, 0px));
-  padding: 12px calc((100vw - min(100vw, var(--screen-max-width))) / 2 + 17px) env(safe-area-inset-bottom, 0px);
+  padding: 6px calc((100vw - min(100vw, var(--screen-max-width))) / 2 + 17px) env(safe-area-inset-bottom, 0px);
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 -6px 16px rgba(12, 12, 18, 0.05);
   backdrop-filter: blur(12px);
@@ -600,7 +600,7 @@ a {
   display: grid;
   place-items: center;
   height: 48px;
-  margin-top: 6px;
+  margin-top: 12px;
   color: #a8a8af;
   border: 0;
   border-radius: 8px;
