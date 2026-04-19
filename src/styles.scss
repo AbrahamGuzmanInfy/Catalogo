@@ -7,6 +7,7 @@ body {
 
 body {
   overflow-x: hidden;
+  touch-action: manipulation;
 }
 
 app-root {
@@ -673,7 +674,7 @@ a {
   outline: 0;
   background: #ffffff;
   color: #07070a;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.35;
   font-weight: 600;
 }
@@ -845,6 +846,25 @@ a {
   cursor: pointer;
 }
 
+.cart-item.has-dedication {
+  min-height: 152px;
+}
+
+.cart-item.has-dedication .cart-item-info {
+  padding-bottom: 46px;
+}
+
+.cart-item.has-dedication .cart-price {
+  bottom: 32px;
+}
+
+.cart-item.has-dedication .quantity-control {
+  bottom: 28px;
+}
+
+.cart-item.has-dedication .cart-dedication-button {
+  bottom: 9px;
+}
 .cart-item:focus-visible {
   outline: 2px solid var(--accent-action);
   outline-offset: 3px;

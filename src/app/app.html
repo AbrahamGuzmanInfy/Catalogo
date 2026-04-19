@@ -93,7 +93,7 @@
     <section class="cart-screen" aria-label="Carrito">
       <section class="cart-list" aria-label="Productos en carrito">
         @for (item of cartItems; track item.product.producto_id) {
-          <article class="cart-item" role="button" tabindex="0" [attr.aria-label]="'Ver detalle de ' + item.product.name" (click)="showProduct(item.product, 'cart')" (keydown.enter)="showProduct(item.product, 'cart')" (keydown.space)="showProduct(item.product, 'cart'); $event.preventDefault()">
+          <article class="cart-item" [class.has-dedication]="item.dedication" role="button" tabindex="0" [attr.aria-label]="'Ver detalle de ' + item.product.name" (click)="showProduct(item.product, 'cart')" (keydown.enter)="showProduct(item.product, 'cart')" (keydown.space)="showProduct(item.product, 'cart'); $event.preventDefault()">
             <img [src]="item.product.image" [alt]="item.product.alt" />
             <div class="cart-item-info">
               <h2>{{ item.product.name }}</h2>
