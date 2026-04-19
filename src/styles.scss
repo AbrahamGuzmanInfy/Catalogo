@@ -38,7 +38,7 @@ a {
   position: relative;
   width: 100%;
   min-height: 100dvh;
-  padding: 35px 17px 104px;
+  padding: 35px 17px calc(128px + env(safe-area-inset-bottom, 0px));
   background: #ffffff;
   overflow-x: hidden;
 }
@@ -580,7 +580,7 @@ a {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   z-index: 20;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -951,7 +951,7 @@ a {
 @media (min-width: 500px) {
   .home-shell {
     padding-top: 70px;
-    padding-bottom: 128px;
+    padding-bottom: calc(152px + env(safe-area-inset-bottom, 0px));
   }
 }
 

@@ -93,6 +93,7 @@ export class App implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     this.loadProducts();
+    this.setupInstallPrompt();
   }
 
 
