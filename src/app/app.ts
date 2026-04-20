@@ -59,6 +59,12 @@ type CartItem = {
   quantity: number;
   dedication?: string;
 };
+
+type CreateVentaResponse = {
+  venta_id: string;
+  estatus: string;
+  total: number;
+};
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
@@ -83,6 +89,9 @@ export class App implements OnInit, OnDestroy {
   protected categorySearchTerm = '';
   protected selectedCategoryId = '';
   protected cartItems: CartItem[] = [];
+  protected checkoutLoading = false;
+  protected checkoutError = '';
+  protected checkoutSuccess = '';
   protected dedicationPanelOpen = false;
   protected dedicationDraft = '';
   protected dedicationProduct: Product | null = null;
@@ -389,6 +398,44 @@ export class App implements OnInit, OnDestroy {
     return `$${value.toFixed(2)}`;
   }
 
+  protected checkout(): void {
+    if (!this.hasCartItems || this.checkoutLoading) return;
+
+    this.checkoutLoading = true;
+    this.checkoutError = '';
+    this.checkoutSuccess = '';
+
+    const payload = {
+      usuario_id: 'INVITADO',
+      estatus: 'pendiente',
+      cliente: { nombre: 'Invitado' },
+      items: this.cartItems.map((item) => ({
+        producto_id: item.product.producto_id,
+        nombre: item.product.name,
+        cantidad: item.quantity,
+        precio_unitario: this.priceToNumber(item.product.price),
+        dedicatoria: item.dedication || '',
+      })),
+      envio: this.hasCartItems ? this.shippingAmount : 0,
+      moneda: 'MXN',
+      metodo_pago: 'pendiente',
+    };
+
+    this.http.post<CreateVentaResponse>(`${API_BASE_URL}/ventas`, payload).subscribe({
+      next: (venta) => {
+        this.cartItems = [];
+        this.productDedications.clear();
+        this.checkoutLoading = false;
+        this.checkoutSuccess = `Pedido creado: ${venta.venta_id}`;
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.checkoutLoading = false;
+        this.checkoutError = 'No se pudo finalizar el pedido. Intenta nuevamente.';
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
   protected get dedicationCounter(): string {
     return `${this.dedicationDraft.length}/${this.dedicationMaxLength}`;
   }

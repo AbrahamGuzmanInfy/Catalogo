@@ -1,0 +1,31 @@
+{
+  "TableName": "catalogo_pagos",
+  "AttributeDefinitions": [
+    { "AttributeName": "pago_id", "AttributeType": "S" },
+    { "AttributeName": "venta_id", "AttributeType": "S" },
+    { "AttributeName": "estatus", "AttributeType": "S" },
+    { "AttributeName": "created_at", "AttributeType": "S" }
+  ],
+  "KeySchema": [
+    { "AttributeName": "pago_id", "KeyType": "HASH" }
+  ],
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "venta_id-created_at-index",
+      "KeySchema": [
+        { "AttributeName": "venta_id", "KeyType": "HASH" },
+        { "AttributeName": "created_at", "KeyType": "RANGE" }
+      ],
+      "Projection": { "ProjectionType": "ALL" }
+    },
+    {
+      "IndexName": "estatus-created_at-index",
+      "KeySchema": [
+        { "AttributeName": "estatus", "KeyType": "HASH" },
+        { "AttributeName": "created_at", "KeyType": "RANGE" }
+      ],
+      "Projection": { "ProjectionType": "ALL" }
+    }
+  ],
+  "BillingMode": "PAY_PER_REQUEST"
+}

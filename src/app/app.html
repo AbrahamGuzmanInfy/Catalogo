@@ -118,7 +118,16 @@
         <div class="total-row"><span>Total</span><strong>{{ total }}</strong></div>
       </section>
 
-      <button class="checkout-button" type="button">Finalizar Pedido</button>
+            @if (checkoutSuccess) {
+        <p class="checkout-message success">{{ checkoutSuccess }}</p>
+      }
+      @if (checkoutError) {
+        <p class="checkout-message error">{{ checkoutError }}</p>
+      }
+
+      <button class="checkout-button" type="button" [disabled]="!hasCartItems || checkoutLoading" (click)="checkout()">
+        {{ checkoutLoading ? 'Creando Pedido...' : 'Finalizar Pedido' }}
+      </button>
     </section>
   } @else {
     <section class="simple-screen profile-screen" aria-label="Perfil">

@@ -1002,6 +1002,24 @@ a {
   font-weight: 600;
 }
 
+.checkout-message {
+  margin: 14px 0 0;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.checkout-message.success {
+  color: #1f6a3a;
+  background: #e7f7ec;
+}
+
+.checkout-message.error {
+  color: #9b2721;
+  background: #ffe8e6;
+}
 .checkout-button {
   width: 100%;
   height: 49px;
@@ -1015,6 +1033,11 @@ a {
   font-weight: 800;
   letter-spacing: 0;
   cursor: pointer;
+}
+
+.checkout-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 @media (max-width: 374px) {

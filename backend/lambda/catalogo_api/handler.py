@@ -14,9 +14,16 @@ dynamodb = boto3.resource('dynamodb')
 CATEGORIAS_TABLE = os.environ.get('CATEGORIAS_TABLE', 'catalogo_categorias')
 PRODUCTOS_TABLE = os.environ.get('PRODUCTOS_TABLE', 'catalogo_productos')
 PRODUCTOS_CATEGORIAS_TABLE = os.environ.get('PRODUCTOS_CATEGORIAS_TABLE', 'catalogo_productos_categorias')
+VENTAS_TABLE = os.environ.get('VENTAS_TABLE', 'catalogo_ventas')
+VENTAS_DETALLE_TABLE = os.environ.get('VENTAS_DETALLE_TABLE', 'catalogo_ventas_detalle')
+PAGOS_TABLE = os.environ.get('PAGOS_TABLE', 'catalogo_pagos')
+
 categorias_table = dynamodb.Table(CATEGORIAS_TABLE)
 productos_table = dynamodb.Table(PRODUCTOS_TABLE)
 productos_categorias_table = dynamodb.Table(PRODUCTOS_CATEGORIAS_TABLE)
+ventas_table = dynamodb.Table(VENTAS_TABLE)
+ventas_detalle_table = dynamodb.Table(VENTAS_DETALLE_TABLE)
+pagos_table = dynamodb.Table(PAGOS_TABLE)
 
 
 def serialize_value(value):
@@ -82,6 +89,20 @@ def decimal_value(value, default='0') -> Decimal:
     return Decimal(str(value))
 
 
+def dynamodb_value(value):
+    if isinstance(value, float):
+        return Decimal(str(value))
+    if isinstance(value, dict):
+        return {key: dynamodb_value(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [dynamodb_value(item) for item in value]
+    return value
+
+
+def query_params(event: dict) -> dict:
+    return event.get('queryStringParameters') or {}
+
+
 def public_category(item: dict) -> dict:
     return {
         'categoria_id': item.get('categoria_id', ''),
@@ -120,6 +141,88 @@ def public_product(item: dict, categoria_ids: list[str] | None = None) -> dict:
     }
 
 
+def public_venta(item: dict) -> dict:
+    return {
+        'venta_id': item.get('venta_id', ''),
+        'usuario_id': item.get('usuario_id', 'INVITADO'),
+        'estatus': item.get('estatus', 'pendiente'),
+        'cliente': item.get('cliente', {}),
+        'direccion_entrega': item.get('direccion_entrega', {}),
+        'items': item.get('items', []),
+        'subtotal': item.get('subtotal', 0),
+        'descuento': item.get('descuento', 0),
+        'envio': item.get('envio', 0),
+        'impuestos': item.get('impuestos', 0),
+        'total': item.get('total', 0),
+        'moneda': item.get('moneda', 'MXN'),
+        'metodo_entrega': item.get('metodo_entrega', 'domicilio'),
+        'metodo_pago': item.get('metodo_pago', 'pendiente'),
+        'fecha_entrega': item.get('fecha_entrega', ''),
+        'created_at': item.get('created_at', ''),
+        'updated_at': item.get('updated_at', ''),
+    }
+
+
+def public_venta_detalle(item: dict) -> dict:
+    return {
+        'venta_id': item.get('venta_id', ''),
+        'detalle_id': item.get('detalle_id', ''),
+        'producto_id': item.get('producto_id', ''),
+        'nombre_producto': item.get('nombre_producto', ''),
+        'cantidad': item.get('cantidad', 0),
+        'precio_unitario': item.get('precio_unitario', 0),
+        'descuento': item.get('descuento', 0),
+        'subtotal': item.get('subtotal', 0),
+        'dedicatoria': item.get('dedicatoria', ''),
+        'created_at': item.get('created_at', ''),
+        'updated_at': item.get('updated_at', ''),
+    }
+
+def public_pago(item: dict) -> dict:
+    return {
+        'pago_id': item.get('pago_id', ''),
+        'venta_id': item.get('venta_id', ''),
+        'estatus': item.get('estatus', 'pendiente'),
+        'metodo_pago': item.get('metodo_pago', ''),
+        'monto': item.get('monto', 0),
+        'moneda': item.get('moneda', 'MXN'),
+        'referencia': item.get('referencia', ''),
+        'created_at': item.get('created_at', ''),
+        'updated_at': item.get('updated_at', ''),
+    }
+
+
+def normalize_venta_items(items: list[dict]) -> tuple[list[dict], Decimal]:
+    normalized_items: list[dict] = []
+    subtotal = Decimal('0')
+
+    for index, raw_item in enumerate(items, start=1):
+        producto_id = str(raw_item.get('producto_id', '')).strip()
+        nombre = str(raw_item.get('nombre') or raw_item.get('nombre_producto') or raw_item.get('name') or '').strip()
+        cantidad = decimal_value(raw_item.get('cantidad', 1), 1)
+        precio_unitario = decimal_value(raw_item.get('precio_unitario') or raw_item.get('precio') or raw_item.get('price'), 0)
+
+        if not producto_id or not nombre:
+            raise ValueError(f'El item {index} requiere producto_id y nombre')
+        if cantidad <= 0:
+            raise ValueError(f'El item {index} requiere cantidad mayor a 0')
+
+        item_subtotal = cantidad * precio_unitario
+        subtotal += item_subtotal
+        normalized_items.append({
+            'detalle_id': str(raw_item.get('detalle_id') or f'DET-{index:03d}'),
+            'producto_id': producto_id,
+            'nombre_producto': nombre,
+            'cantidad': cantidad,
+            'precio_unitario': precio_unitario,
+            'descuento': decimal_value(raw_item.get('descuento', 0)),
+            'subtotal': item_subtotal,
+            'dedicatoria': str(raw_item.get('dedicatoria') or '').strip(),
+        })
+
+    return normalized_items, subtotal
+
+
 def list_categorias() -> dict:
     items = [public_category(item) for item in scan_all(categorias_table)]
     items = [item for item in items if item.get('categoria_id') != '__meta__sequence']
@@ -144,6 +247,79 @@ def list_productos() -> dict:
     items = [item for item in items if item.get('producto_id') != '__meta__sequence']
     items = [item for item in items if is_active(item, 'activo')]
     items.sort(key=lambda item: (int(item.get('orden') or 0), item.get('name', '').lower()))
+    return response(200, {'items': items})
+
+
+def list_ventas(event: dict) -> dict:
+    params = query_params(event)
+    estatus = params.get('estatus')
+    usuario_id = params.get('usuario_id')
+    items = [public_venta(item) for item in scan_all(ventas_table)]
+
+    if estatus:
+        items = [item for item in items if item.get('estatus') == estatus]
+    if usuario_id:
+        items = [item for item in items if item.get('usuario_id') == usuario_id]
+
+    items.sort(key=lambda item: item.get('created_at', ''), reverse=True)
+    return response(200, {'items': items})
+
+
+def get_venta(venta_id: str) -> dict:
+    result = ventas_table.get_item(Key={'venta_id': venta_id})
+    item = result.get('Item')
+    if not item:
+        return response(404, {'message': 'Venta no encontrada'})
+    venta = public_venta(item)
+    venta['items'] = venta_detalle_items(venta_id)
+    return response(200, venta)
+
+
+def venta_detalle_items(venta_id: str) -> list[dict]:
+    result = ventas_detalle_table.query(
+        KeyConditionExpression='venta_id = :venta_id',
+        ExpressionAttributeValues={':venta_id': venta_id},
+    )
+    items = [public_venta_detalle(item) for item in result.get('Items', [])]
+
+    while 'LastEvaluatedKey' in result:
+        result = ventas_detalle_table.query(
+            KeyConditionExpression='venta_id = :venta_id',
+            ExpressionAttributeValues={':venta_id': venta_id},
+            ExclusiveStartKey=result['LastEvaluatedKey'],
+        )
+        items.extend(public_venta_detalle(item) for item in result.get('Items', []))
+
+    items.sort(key=lambda item: item.get('detalle_id', ''))
+    return items
+
+
+def list_ventas_detalle(event: dict) -> dict:
+    params = query_params(event)
+    venta_id = params.get('venta_id')
+    producto_id = params.get('producto_id')
+    items = [public_venta_detalle(item) for item in scan_all(ventas_detalle_table)]
+
+    if venta_id:
+        items = [item for item in items if item.get('venta_id') == venta_id]
+    if producto_id:
+        items = [item for item in items if item.get('producto_id') == producto_id]
+
+    items.sort(key=lambda item: (item.get('venta_id', ''), item.get('detalle_id', '')))
+    return response(200, {'items': items})
+
+def list_pagos(event: dict) -> dict:
+    params = query_params(event)
+    venta_id = params.get('venta_id')
+    estatus = params.get('estatus')
+    items = [public_pago(item) for item in scan_all(pagos_table)]
+
+    if venta_id:
+        items = [item for item in items if item.get('venta_id') == venta_id]
+    if estatus:
+        items = [item for item in items if item.get('estatus') == estatus]
+
+    items.sort(key=lambda item: item.get('created_at', ''), reverse=True)
     return response(200, {'items': items})
 
 
@@ -190,6 +366,7 @@ def create_producto(payload: dict) -> dict:
     productos_table.put_item(Item=item)
     return response(201, public_product(item))
 
+
 def create_producto_categoria(payload: dict) -> dict:
     categoria_id = str(payload.get('categoria_id', '')).strip()
     producto_id = str(payload.get('producto_id', '')).strip()
@@ -203,6 +380,106 @@ def create_producto_categoria(payload: dict) -> dict:
     }
     productos_categorias_table.put_item(Item=item)
     return response(201, item)
+
+
+def create_venta(payload: dict) -> dict:
+    raw_items = payload.get('items') or []
+    if not isinstance(raw_items, list) or not raw_items:
+        return response(400, {'message': 'La venta requiere al menos un item'})
+
+    try:
+        items, subtotal = normalize_venta_items(raw_items)
+    except ValueError as error:
+        return response(400, {'message': str(error)})
+
+    descuento = decimal_value(payload.get('descuento', 0))
+    envio = decimal_value(payload.get('envio', 0))
+    impuestos = decimal_value(payload.get('impuestos', 0))
+    total = decimal_value(payload.get('total'), subtotal - descuento + envio + impuestos)
+    timestamp = now_iso()
+
+    item = {
+        'venta_id': str(payload.get('venta_id') or f'VEN-{uuid.uuid4().hex[:12].upper()}'),
+        'usuario_id': str(payload.get('usuario_id') or 'INVITADO'),
+        'estatus': str(payload.get('estatus') or 'pendiente'),
+        'cliente': dynamodb_value(payload.get('cliente') or {}),
+        'direccion_entrega': dynamodb_value(payload.get('direccion_entrega') or {}),
+        'items_count': len(items),
+        'subtotal': subtotal,
+        'descuento': descuento,
+        'envio': envio,
+        'impuestos': impuestos,
+        'total': total,
+        'moneda': str(payload.get('moneda') or 'MXN'),
+        'metodo_entrega': str(payload.get('metodo_entrega') or 'domicilio'),
+        'metodo_pago': str(payload.get('metodo_pago') or 'pendiente'),
+        'created_at': timestamp,
+        'updated_at': timestamp,
+    }
+    fecha_entrega = str(payload.get('fecha_entrega') or '').strip()
+    if fecha_entrega:
+        item['fecha_entrega'] = fecha_entrega
+
+    ventas_table.put_item(Item=item)
+    for detalle in items:
+        detalle_item = {**detalle, 'venta_id': item['venta_id'], 'created_at': timestamp, 'updated_at': timestamp}
+        ventas_detalle_table.put_item(Item=detalle_item)
+
+    venta = public_venta(item)
+    venta['items'] = items
+    return response(201, venta)
+
+
+def update_venta_estatus(venta_id: str, payload: dict) -> dict:
+    estatus = str(payload.get('estatus', '')).strip()
+    if not estatus:
+        return response(400, {'message': 'El estatus es obligatorio'})
+
+    result = ventas_table.update_item(
+        Key={'venta_id': venta_id},
+        UpdateExpression='SET estatus = :estatus, updated_at = :updated_at',
+        ExpressionAttributeValues={
+            ':estatus': estatus,
+            ':updated_at': now_iso(),
+        },
+        ReturnValues='ALL_NEW',
+    )
+    return response(200, public_venta(result.get('Attributes', {})))
+
+
+def create_pago(payload: dict) -> dict:
+    venta_id = str(payload.get('venta_id', '')).strip()
+    if not venta_id:
+        return response(400, {'message': 'venta_id es obligatorio'})
+
+    timestamp = now_iso()
+    item = {
+        'pago_id': str(payload.get('pago_id') or f'PAGO-{uuid.uuid4().hex[:12].upper()}'),
+        'venta_id': venta_id,
+        'estatus': str(payload.get('estatus') or 'pendiente'),
+        'metodo_pago': str(payload.get('metodo_pago') or '').strip(),
+        'monto': decimal_value(payload.get('monto'), 0),
+        'moneda': str(payload.get('moneda') or 'MXN'),
+        'referencia': str(payload.get('referencia') or '').strip(),
+        'created_at': timestamp,
+        'updated_at': timestamp,
+    }
+    pagos_table.put_item(Item=item)
+
+    if item['estatus'] in ('aprobado', 'pagado'):
+        ventas_table.update_item(
+            Key={'venta_id': venta_id},
+            UpdateExpression='SET estatus = :estatus, metodo_pago = :metodo_pago, updated_at = :updated_at',
+            ExpressionAttributeValues={
+                ':estatus': 'pagada',
+                ':metodo_pago': item['metodo_pago'] or 'registrado',
+                ':updated_at': timestamp,
+            },
+        )
+
+    return response(201, public_pago(item))
+
+
 def lambda_handler(event, context):
     method = event.get('requestContext', {}).get('http', {}).get('method', '')
     parts = path_parts(event)
@@ -231,6 +508,25 @@ def lambda_handler(event, context):
         if resource in ('productos-categorias', 'productos_categorias'):
             if method == 'POST' and len(parts) == 1:
                 return create_producto_categoria(parse_body(event))
+
+        if resource == 'ventas':
+            if method == 'GET' and len(parts) == 1:
+                return list_ventas(event)
+            if method == 'POST' and len(parts) == 1:
+                return create_venta(parse_body(event))
+            if method == 'GET' and len(parts) == 2:
+                return get_venta(parts[1])
+            if method == 'PATCH' and len(parts) == 3 and parts[2] == 'estatus':
+                return update_venta_estatus(parts[1], parse_body(event))
+
+        if resource in ('ventas-detalle', 'ventas_detalle'):
+            if method == 'GET' and len(parts) == 1:
+                return list_ventas_detalle(event)
+        if resource == 'pagos':
+            if method == 'GET' and len(parts) == 1:
+                return list_pagos(event)
+            if method == 'POST' and len(parts) == 1:
+                return create_pago(parse_body(event))
 
         return response(404, {'message': 'Ruta no encontrada'})
     except ValueError as error:

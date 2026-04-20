@@ -1,0 +1,40 @@
+{
+  "TableName": "catalogo_ventas",
+  "AttributeDefinitions": [
+    { "AttributeName": "venta_id", "AttributeType": "S" },
+    { "AttributeName": "usuario_id", "AttributeType": "S" },
+    { "AttributeName": "estatus", "AttributeType": "S" },
+    { "AttributeName": "created_at", "AttributeType": "S" },
+    { "AttributeName": "fecha_entrega", "AttributeType": "S" }
+  ],
+  "KeySchema": [
+    { "AttributeName": "venta_id", "KeyType": "HASH" }
+  ],
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "usuario_id-created_at-index",
+      "KeySchema": [
+        { "AttributeName": "usuario_id", "KeyType": "HASH" },
+        { "AttributeName": "created_at", "KeyType": "RANGE" }
+      ],
+      "Projection": { "ProjectionType": "ALL" }
+    },
+    {
+      "IndexName": "estatus-created_at-index",
+      "KeySchema": [
+        { "AttributeName": "estatus", "KeyType": "HASH" },
+        { "AttributeName": "created_at", "KeyType": "RANGE" }
+      ],
+      "Projection": { "ProjectionType": "ALL" }
+    },
+    {
+      "IndexName": "fecha_entrega-estatus-index",
+      "KeySchema": [
+        { "AttributeName": "fecha_entrega", "KeyType": "HASH" },
+        { "AttributeName": "estatus", "KeyType": "RANGE" }
+      ],
+      "Projection": { "ProjectionType": "ALL" }
+    }
+  ],
+  "BillingMode": "PAY_PER_REQUEST"
+}
