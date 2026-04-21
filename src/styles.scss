@@ -128,6 +128,7 @@ a {
   padding: 0 17px;
   background: #ffffff;
   backdrop-filter: none;
+ // height: 160px;
 }
 
 .topbar-main {
@@ -183,12 +184,12 @@ a {
 }
 
 .topbar-with-tools {
-  padding-bottom: 8px;
+ // padding-bottom: 8px;
 }
 
 .topbar-home-tools {
   width: min(100%, var(--screen-max-width));
-  margin: 4px auto 0;
+  margin: 20px auto 0;
 }
 
 .search-box {
