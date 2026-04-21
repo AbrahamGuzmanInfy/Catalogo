@@ -112,7 +112,7 @@ a {
 .home-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
-  padding-top: calc(126px + var(--topbar-safe-space));
+  padding-top: calc(188px + var(--topbar-safe-space));
 }
 
 .categories-screen {
@@ -1221,7 +1221,7 @@ a {
   }
 
   .home-screen {
-    padding-top: calc(130px + var(--topbar-safe-space));
+    padding-top: calc(192px + var(--topbar-safe-space));
   }
 
   .categories-screen {
