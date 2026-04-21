@@ -16,6 +16,8 @@ app-root {
   --screen-max-width: 365px;
   --topbar-safe-space: max(env(safe-area-inset-top, 0px), 14px);
   --compact-header-offset: calc(82px + var(--topbar-safe-space));
+  --home-header-offset: calc(143px + var(--topbar-safe-space));
+  --categories-header-offset: calc(100px + var(--topbar-safe-space));
   display: block;
   min-height: 100dvh;
   background: #ffffff;
@@ -112,11 +114,11 @@ a {
 .home-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
-  padding-top: calc(188px + var(--topbar-safe-space));
+  padding-top: var(--home-header-offset);
 }
 
 .categories-screen {
-  padding-top: calc(74px + var(--topbar-safe-space));
+  padding-top: var(--categories-header-offset);
 }
 
 .topbar {
@@ -237,7 +239,7 @@ a {
 .category-row {
   display: flex;
   gap: 5px;
-  margin: 19px -17px 19px 0;
+  margin: 19px -17px 10px 0;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -286,6 +288,7 @@ a {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  margin-top: 0;
 }
 
 .product-card {
@@ -1221,11 +1224,11 @@ a {
   }
 
   .home-screen {
-    padding-top: calc(192px + var(--topbar-safe-space));
+    padding-top: var(--home-header-offset);
   }
 
   .categories-screen {
-    padding-top: calc(78px + var(--topbar-safe-space));
+    padding-top: var(--categories-header-offset);
   }
 }
 
