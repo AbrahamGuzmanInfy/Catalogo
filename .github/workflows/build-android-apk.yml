@@ -48,6 +48,9 @@ jobs:
       - name: Build web and sync Capacitor Android
         run: npm run android:sync
 
+      - name: Grant execute permission to Gradle wrapper
+        run: chmod +x android/gradlew
+
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug
