@@ -257,7 +257,9 @@ def list_categorias() -> dict:
     return response(200, {'items': items})
 
 
-def list_productos() -> dict:
+def list_productos(event: dict) -> dict:
+    params = query_params(event)
+    include_inactive = str(params.get('include_inactive', '')).lower() in ('1', 'true', 'yes')
     relaciones = scan_all(productos_categorias_table)
     categorias_por_producto: dict[str, list[str]] = {}
     for relacion in relaciones:
@@ -271,7 +273,8 @@ def list_productos() -> dict:
         for item in scan_all(productos_table)
     ]
     items = [item for item in items if item.get('producto_id') != '__meta__sequence']
-    items = [item for item in items if is_active(item, 'activo')]
+    if not include_inactive:
+        items = [item for item in items if is_active(item, 'activo')]
     items.sort(key=lambda item: (int(item.get('orden') or 0), item.get('name', '').lower()))
     return response(200, {'items': items})
 
@@ -441,6 +444,144 @@ def create_producto_categoria(payload: dict) -> dict:
     return response(201, item)
 
 
+def replace_producto_categorias(producto_id: str, categoria_ids: list[str]) -> None:
+    existing = productos_categorias_table.query(
+        IndexName='producto_id-index',
+        KeyConditionExpression='producto_id = :producto_id',
+        ExpressionAttributeValues={':producto_id': producto_id},
+    )
+    relaciones = existing.get('Items', [])
+
+    while 'LastEvaluatedKey' in existing:
+        existing = productos_categorias_table.query(
+            IndexName='producto_id-index',
+            KeyConditionExpression='producto_id = :producto_id',
+            ExpressionAttributeValues={':producto_id': producto_id},
+            ExclusiveStartKey=existing['LastEvaluatedKey'],
+        )
+        relaciones.extend(existing.get('Items', []))
+
+    with productos_categorias_table.batch_writer() as batch:
+        for relacion in relaciones:
+            categoria_id = str(relacion.get('categoria_id', '')).strip()
+            if categoria_id:
+                batch.delete_item(Key={'categoria_id': categoria_id, 'producto_id': producto_id})
+
+        for categoria_id in categoria_ids:
+            batch.put_item(Item={
+                'categoria_id': categoria_id,
+                'producto_id': producto_id,
+                'created_at': now_iso(),
+            })
+
+
+def delete_categoria_relaciones(categoria_id: str) -> None:
+    existing = productos_categorias_table.query(
+        KeyConditionExpression='categoria_id = :categoria_id',
+        ExpressionAttributeValues={':categoria_id': categoria_id},
+    )
+    relaciones = existing.get('Items', [])
+
+    while 'LastEvaluatedKey' in existing:
+        existing = productos_categorias_table.query(
+            KeyConditionExpression='categoria_id = :categoria_id',
+            ExpressionAttributeValues={':categoria_id': categoria_id},
+            ExclusiveStartKey=existing['LastEvaluatedKey'],
+        )
+        relaciones.extend(existing.get('Items', []))
+
+    with productos_categorias_table.batch_writer() as batch:
+        for relacion in relaciones:
+            producto_id = str(relacion.get('producto_id', '')).strip()
+            if producto_id:
+                batch.delete_item(Key={'categoria_id': categoria_id, 'producto_id': producto_id})
+
+
+def update_categoria(categoria_id: str, payload: dict) -> dict:
+    result = categorias_table.get_item(Key={'categoria_id': categoria_id})
+    existing = result.get('Item')
+    if not existing:
+        return response(404, {'message': 'Categoria no encontrada'})
+
+    nombre = str(payload.get('nombre') or existing.get('nombre') or '').strip()
+    if not nombre:
+        return response(400, {'message': 'El nombre es obligatorio'})
+
+    updated = {
+        **existing,
+        'nombre': nombre,
+        'slug': str(payload.get('slug') or slugify(nombre)).strip().lower(),
+        'activa': 'true' if payload.get('activa', existing.get('activa', 'true')) not in (False, 'false', 'False', 0, '0') else 'false',
+        'imagen_url': str(payload.get('imagen_url') or payload.get('imageUrl') or payload.get('image') or existing.get('imagen_url') or '').strip(),
+        'orden': decimal_value(payload.get('orden', existing.get('orden', 0))),
+        'updated_at': now_iso(),
+    }
+    categorias_table.put_item(Item=updated)
+    return response(200, public_category(updated))
+
+
+def delete_categoria(categoria_id: str) -> dict:
+    result = categorias_table.get_item(Key={'categoria_id': categoria_id})
+    if 'Item' not in result:
+        return response(404, {'message': 'Categoria no encontrada'})
+
+    delete_categoria_relaciones(categoria_id)
+    categorias_table.delete_item(Key={'categoria_id': categoria_id})
+    return response(200, {'deleted': True, 'categoria_id': categoria_id})
+
+
+def update_producto(producto_id: str, payload: dict) -> dict:
+    result = productos_table.get_item(Key={'producto_id': producto_id})
+    existing = result.get('Item')
+    if not existing:
+        return response(404, {'message': 'Producto no encontrado'})
+
+    nombre = str(payload.get('nombre') or payload.get('name') or existing.get('nombre') or '').strip()
+    if not nombre:
+        return response(400, {'message': 'El nombre es obligatorio'})
+
+    imagen_url = str(payload.get('imagen_url') or payload.get('image') or existing.get('imagen_url') or '').strip()
+    descripcion = str(payload.get('descripcion') or payload.get('description') or existing.get('descripcion') or '').strip()
+    if not imagen_url:
+        return response(400, {'message': 'La imagen es obligatoria'})
+    if not descripcion:
+        return response(400, {'message': 'La descripcion es obligatoria'})
+
+    updated = {
+        **existing,
+        'nombre': nombre,
+        'slug': str(payload.get('slug') or slugify(nombre)).strip().lower(),
+        'precio': decimal_value(payload.get('precio') or payload.get('price'), existing.get('precio', 0)),
+        'imagen_url': imagen_url,
+        'detalle_imagen_url': str(payload.get('detalle_imagen_url') or payload.get('detailImage') or imagen_url).strip(),
+        'alt': str(payload.get('alt') or existing.get('alt') or nombre).strip(),
+        'descripcion': descripcion,
+        'model3d_url': str(payload.get('model3d_url') or payload.get('model3dUrl') or existing.get('model3d_url') or '').strip(),
+        'activo': 'true' if payload.get('activo', existing.get('activo', 'true')) not in (False, 'false', 'False', 0, '0') else 'false',
+        'orden': decimal_value(payload.get('orden', existing.get('orden', 0))),
+        'updated_at': now_iso(),
+    }
+    productos_table.put_item(Item=updated)
+
+    raw_categoria_ids = payload.get('categoria_ids')
+    if isinstance(raw_categoria_ids, list):
+        categoria_ids = sorted({str(item).strip() for item in raw_categoria_ids if str(item).strip()})
+        replace_producto_categorias(producto_id, categoria_ids)
+        return response(200, public_product(updated, categoria_ids))
+
+    return response(200, public_product(updated))
+
+
+def delete_producto(producto_id: str) -> dict:
+    result = productos_table.get_item(Key={'producto_id': producto_id})
+    if 'Item' not in result:
+        return response(404, {'message': 'Producto no encontrado'})
+
+    replace_producto_categorias(producto_id, [])
+    productos_table.delete_item(Key={'producto_id': producto_id})
+    return response(200, {'deleted': True, 'producto_id': producto_id})
+
+
 def create_venta(payload: dict) -> dict:
     raw_items = payload.get('items') or []
     if not isinstance(raw_items, list) or not raw_items:
@@ -557,12 +698,20 @@ def lambda_handler(event, context):
                 return list_categorias()
             if method == 'POST' and len(parts) == 1:
                 return create_categoria(parse_body(event))
+            if method == 'PATCH' and len(parts) == 2:
+                return update_categoria(parts[1], parse_body(event))
+            if method == 'DELETE' and len(parts) == 2:
+                return delete_categoria(parts[1])
 
         if resource == 'productos':
             if method == 'GET' and len(parts) == 1:
-                return list_productos()
+                return list_productos(event)
             if method == 'POST' and len(parts) == 1:
                 return create_producto(parse_body(event))
+            if method == 'PATCH' and len(parts) == 2:
+                return update_producto(parts[1], parse_body(event))
+            if method == 'DELETE' and len(parts) == 2:
+                return delete_producto(parts[1])
 
         if resource in ('productos-categorias', 'productos_categorias'):
             if method == 'POST' and len(parts) == 1:

@@ -1521,6 +1521,18 @@ a {
   cursor: not-allowed;
 }
 
+.admin-cancel {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #dedee2;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #09090d;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .admin-upload-block {
   display: grid;
   gap: 10px;
@@ -1566,5 +1578,86 @@ a {
 
 .admin-field.compact {
   gap: 6px;
+}
+
+.admin-existing-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.admin-existing-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-existing-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(10, 10, 16, 0.07);
+}
+
+.admin-existing-info {
+  min-width: 0;
+}
+
+.admin-existing-card strong,
+.admin-existing-card small {
+  display: block;
+}
+
+.admin-existing-card strong {
+  color: #050508;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.admin-existing-card small {
+  margin-top: 5px;
+  color: #72727a;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.admin-existing-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+  width: 100%;
+}
+
+.admin-inline-button {
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 8px 10px;
+  border: 1px solid #dedee2;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #09090d;
+  font-size: 13px;
+  line-height: 1.15;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-inline-button.danger {
+  border-color: #ffd2cf;
+  color: #c24037;
+}
+
+.admin-inline-button.warning {
+  border-color: #ffd9b8;
+  color: #b76a22;
+}
+
+.admin-inline-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 

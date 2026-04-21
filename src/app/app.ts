@@ -56,6 +56,8 @@ type Product = {
   slug: string;
   model3dUrl?: string;
   categoriaIds?: string[];
+  activo?: string;
+  orden?: number;
 };
 
 type ProductsResponse = {
@@ -124,6 +126,7 @@ export class App implements OnInit, OnDestroy {
   protected categories: Category[] = [];
   protected categoriesError = '';
   protected products: Product[] = [];
+  protected adminProducts: Product[] = [];
   protected productsError = '';
   protected productSearchTerm = '';
   protected categorySearchTerm = '';
@@ -146,6 +149,8 @@ export class App implements OnInit, OnDestroy {
   protected categoryUploadLoading = false;
   protected categoryFormSuccess = '';
   protected categoryFormError = '';
+  protected editingCategoryId = '';
+  protected deletingCategoryId = '';
   protected productFormName = '';
   protected productFormPrice = '';
   protected productFormImageUrl = '';
@@ -159,6 +164,9 @@ export class App implements OnInit, OnDestroy {
   protected productDetailUploadLoading = false;
   protected productFormSuccess = '';
   protected productFormError = '';
+  protected editingProductId = '';
+  protected deletingProductId = '';
+  protected togglingProductId = '';
   private readonly productDedications = new Map<string, string>();
   protected showInstallPrompt = false;
   protected canInstallApp = false;
@@ -341,6 +349,19 @@ export class App implements OnInit, OnDestroy {
       error: () => {
         this.products = [];
         this.productsError = 'No se pudieron cargar los productos';
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
+
+  private loadAdminProducts(): void {
+    this.http.get<ProductsResponse>(`${API_BASE_URL}/productos?include_inactive=true`).subscribe({
+      next: (response) => {
+        this.adminProducts = this.withModelFallbacks(response.items ?? []);
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.adminProducts = [];
         this.changeDetector.detectChanges();
       },
     });
@@ -582,11 +603,13 @@ export class App implements OnInit, OnDestroy {
     return this.productFormCategoryIds.includes(categoryId);
   }
 
+  protected isProductActive(product: Product): boolean {
+    return String(product.activo ?? 'true').toLowerCase() === 'true';
+  }
+
   protected openProfileAdmin(view: 'add-product' | 'add-category'): void {
-    this.categoryFormError = '';
-    this.categoryFormSuccess = '';
-    this.productFormError = '';
-    this.productFormSuccess = '';
+    this.resetCategoryMessages();
+    this.resetProductMessages();
     this.showView(view);
   }
 
@@ -611,13 +634,16 @@ export class App implements OnInit, OnDestroy {
       activa: true,
     };
 
-    this.http.post<CreateCategoryResponse>(`${API_BASE_URL}/categorias`, payload).subscribe({
+    const request$ = this.editingCategoryId
+      ? this.http.patch<CreateCategoryResponse>(`${API_BASE_URL}/categorias/${this.editingCategoryId}`, payload)
+      : this.http.post<CreateCategoryResponse>(`${API_BASE_URL}/categorias`, payload);
+
+    const isEditing = Boolean(this.editingCategoryId);
+    request$.subscribe({
       next: () => {
         this.categoryFormLoading = false;
-        this.categoryFormName = '';
-        this.categoryFormOrder = '';
-        this.categoryFormImageUrl = '';
-        this.categoryFormSuccess = 'Categoria creada correctamente.';
+        this.resetCategoryForm();
+        this.categoryFormSuccess = isEditing ? 'Categoria actualizada correctamente.' : 'Categoria creada correctamente.';
         this.loadCategories();
         this.changeDetector.detectChanges();
       },
@@ -676,8 +702,20 @@ export class App implements OnInit, OnDestroy {
       activo: true,
     };
 
-    this.http.post<CreateProductResponse>(`${API_BASE_URL}/productos`, payload).subscribe({
+    const request$ = this.editingProductId
+      ? this.http.patch<CreateProductResponse>(`${API_BASE_URL}/productos/${this.editingProductId}`, {
+          ...payload,
+          categoria_ids: this.productFormCategoryIds,
+        })
+      : this.http.post<CreateProductResponse>(`${API_BASE_URL}/productos`, payload);
+
+    request$.subscribe({
       next: (product) => {
+        if (this.editingProductId) {
+          this.handleProductCreated(product, true);
+          return;
+        }
+
         const categoryIds = [...this.productFormCategoryIds];
         if (!categoryIds.length) {
           this.handleProductCreated(product);
@@ -709,8 +747,34 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  private handleProductCreated(product: CreateProductResponse): void {
+  private handleProductCreated(product: CreateProductResponse, updated = false): void {
     this.productFormLoading = false;
+    this.resetProductForm();
+    this.productFormSuccess = updated ? `${product.name} se actualizo correctamente.` : `${product.name} se agrego correctamente.`;
+    this.loadProducts();
+    this.loadAdminProducts();
+    this.loadCategories();
+    this.changeDetector.detectChanges();
+  }
+
+  private resetCategoryMessages(): void {
+    this.categoryFormError = '';
+    this.categoryFormSuccess = '';
+  }
+
+  private resetProductMessages(): void {
+    this.productFormError = '';
+    this.productFormSuccess = '';
+  }
+
+  private resetCategoryForm(): void {
+    this.categoryFormName = '';
+    this.categoryFormOrder = '';
+    this.categoryFormImageUrl = '';
+    this.editingCategoryId = '';
+  }
+
+  private resetProductForm(): void {
     this.productFormName = '';
     this.productFormPrice = '';
     this.productFormImageUrl = '';
@@ -719,10 +783,127 @@ export class App implements OnInit, OnDestroy {
     this.productFormModel3dUrl = '';
     this.productFormOrder = '';
     this.productFormCategoryIds = [];
-    this.productFormSuccess = `${product.name} se agrego correctamente.`;
-    this.loadProducts();
-    this.loadCategories();
-    this.changeDetector.detectChanges();
+    this.editingProductId = '';
+  }
+
+  protected startEditCategory(category: Category): void {
+    this.editingCategoryId = category.categoria_id;
+    this.categoryFormName = category.nombre;
+    this.categoryFormOrder = String(category.orden ?? 0);
+    this.categoryFormImageUrl = category.imageUrl || '';
+    this.resetCategoryMessages();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  protected cancelEditCategory(): void {
+    this.resetCategoryForm();
+    this.resetCategoryMessages();
+  }
+
+  protected deleteCategory(category: Category): void {
+    if (this.deletingCategoryId) return;
+    if (!window.confirm(`Eliminar la categoria "${category.nombre}"?`)) return;
+
+    this.deletingCategoryId = category.categoria_id;
+    this.resetCategoryMessages();
+
+    this.http.delete(`${API_BASE_URL}/categorias/${category.categoria_id}`).subscribe({
+      next: () => {
+        if (this.editingCategoryId === category.categoria_id) {
+          this.resetCategoryForm();
+        }
+        this.deletingCategoryId = '';
+        this.categoryFormSuccess = 'Categoria eliminada correctamente.';
+        this.loadCategories();
+        this.loadProducts();
+        this.loadAdminProducts();
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.deletingCategoryId = '';
+        this.categoryFormError = 'No se pudo eliminar la categoria.';
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
+
+  protected startEditProduct(product: Product): void {
+    this.editingProductId = product.producto_id;
+    this.productFormName = product.name;
+    this.productFormPrice = String(this.priceToNumber(product.price));
+    this.productFormImageUrl = product.image;
+    this.productFormDetailImageUrl = product.detailImage || product.image;
+    this.productFormDescription = product.description;
+    this.productFormModel3dUrl = product.model3dUrl || '';
+    this.productFormOrder = String(product.orden ?? 0);
+    this.productFormCategoryIds = [...(product.categoriaIds ?? [])];
+    this.resetProductMessages();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  protected cancelEditProduct(): void {
+    this.resetProductForm();
+    this.resetProductMessages();
+  }
+
+  protected deleteProduct(product: Product): void {
+    if (this.deletingProductId) return;
+    if (!window.confirm(`Eliminar el producto "${product.name}"?`)) return;
+
+    this.deletingProductId = product.producto_id;
+    this.resetProductMessages();
+
+    this.http.delete(`${API_BASE_URL}/productos/${product.producto_id}`).subscribe({
+      next: () => {
+        if (this.editingProductId === product.producto_id) {
+          this.resetProductForm();
+        }
+        this.deletingProductId = '';
+        this.productFormSuccess = 'Producto eliminado correctamente.';
+        this.loadProducts();
+        this.loadAdminProducts();
+        this.loadCategories();
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.deletingProductId = '';
+        this.productFormError = 'No se pudo eliminar el producto.';
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
+
+  protected toggleProductActive(product: Product): void {
+    if (this.togglingProductId) return;
+
+    const nextActive = !this.isProductActive(product);
+    this.togglingProductId = product.producto_id;
+    this.resetProductMessages();
+
+    this.http.patch<CreateProductResponse>(`${API_BASE_URL}/productos/${product.producto_id}`, {
+      nombre: product.name,
+      precio: this.priceToNumber(product.price),
+      imagen_url: product.image,
+      detalle_imagen_url: product.detailImage || product.image,
+      descripcion: product.description,
+      model3d_url: product.model3dUrl || '',
+      orden: product.orden ?? 0,
+      activo: nextActive,
+      categoria_ids: product.categoriaIds ?? [],
+    }).subscribe({
+      next: () => {
+        this.togglingProductId = '';
+        this.productFormSuccess = nextActive ? 'Producto reactivado correctamente.' : 'Producto desactivado correctamente.';
+        this.loadProducts();
+        this.loadAdminProducts();
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.togglingProductId = '';
+        this.productFormError = nextActive ? 'No se pudo reactivar el producto.' : 'No se pudo desactivar el producto.';
+        this.changeDetector.detectChanges();
+      },
+    });
   }
 
   private normalizeSearch(value: string): string {
@@ -941,6 +1122,9 @@ export class App implements OnInit, OnDestroy {
     }
     if (view === 'categories' || view === 'add-product' || view === 'add-category') {
       this.loadCategories();
+    }
+    if (view === 'add-product') {
+      this.loadAdminProducts();
     }
     if (view === 'orders') {
       this.loadOrders();

@@ -179,8 +179,34 @@
       }
 
       <button class="admin-submit" type="button" [disabled]="categoryFormLoading || categoryUploadLoading" (click)="submitCategory()">
-        {{ categoryFormLoading ? 'Guardando categor&iacute;a...' : 'Guardar categor&iacute;a' }}
+        {{ categoryFormLoading ? (editingCategoryId ? 'Guardando cambios...' : 'Guardando categor&iacute;a...') : (editingCategoryId ? 'Actualizar categor&iacute;a' : 'Guardar categor&iacute;a') }}
       </button>
+
+      @if (editingCategoryId) {
+        <button class="admin-cancel" type="button" (click)="cancelEditCategory()">Cancelar edici&oacute;n</button>
+      }
+
+      <section class="admin-existing-list" aria-label="Categorias registradas">
+        <div class="admin-picker-header">
+          <span>Categor&iacute;as registradas</span>
+          <small>{{ categories.length }} en total</small>
+        </div>
+
+        <div class="admin-existing-grid">
+          @for (category of categories; track category.categoria_id) {
+            <article class="admin-existing-card">
+              <div class="admin-existing-info">
+                <strong>{{ category.nombre }}</strong>
+                <small>{{ getCategoryProductLabel(category) }}</small>
+              </div>
+              <div class="admin-existing-actions">
+                <button type="button" class="admin-inline-button" (click)="startEditCategory(category)">Editar</button>
+                <button type="button" class="admin-inline-button danger" [disabled]="deletingCategoryId === category.categoria_id" (click)="deleteCategory(category)">{{ deletingCategoryId === category.categoria_id ? 'Eliminando...' : 'Eliminar' }}</button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
     </section>
   } @else if (activeView === 'orders') {
     <section class="simple-screen orders-screen" aria-label="Pedidos">
@@ -303,8 +329,35 @@
       }
 
       <button class="admin-submit" type="button" [disabled]="productFormLoading || productImageUploadLoading || productDetailUploadLoading" (click)="submitProduct()">
-        {{ productFormLoading ? 'Guardando producto...' : 'Guardar producto' }}
+        {{ productFormLoading ? (editingProductId ? 'Guardando cambios...' : 'Guardando producto...') : (editingProductId ? 'Actualizar producto' : 'Guardar producto') }}
       </button>
+
+      @if (editingProductId) {
+        <button class="admin-cancel" type="button" (click)="cancelEditProduct()">Cancelar edici&oacute;n</button>
+      }
+
+      <section class="admin-existing-list" aria-label="Productos registrados">
+        <div class="admin-picker-header">
+          <span>Productos registrados</span>
+          <small>{{ adminProducts.length }} en total</small>
+        </div>
+
+        <div class="admin-existing-grid">
+          @for (product of adminProducts; track product.producto_id) {
+            <article class="admin-existing-card">
+              <div class="admin-existing-info">
+                <strong>{{ product.name }}</strong>
+                <small>{{ product.price }} · {{ isProductActive(product) ? 'Activo' : 'Desactivado' }}</small>
+              </div>
+              <div class="admin-existing-actions">
+                <button type="button" class="admin-inline-button" (click)="startEditProduct(product)">Editar</button>
+                <button type="button" class="admin-inline-button warning" [disabled]="togglingProductId === product.producto_id" (click)="toggleProductActive(product)">{{ togglingProductId === product.producto_id ? 'Guardando...' : (isProductActive(product) ? 'Desactivar' : 'Reactivar') }}</button>
+                <button type="button" class="admin-inline-button danger" [disabled]="deletingProductId === product.producto_id" (click)="deleteProduct(product)">{{ deletingProductId === product.producto_id ? 'Eliminando...' : 'Eliminar' }}</button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
     </section>
   } @else {
     <section class="simple-screen profile-screen" aria-label="Perfil">
@@ -352,6 +405,3 @@
     <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="showView('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>
   </nav>
 </main>
-
-
-
