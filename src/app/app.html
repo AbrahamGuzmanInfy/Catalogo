@@ -182,6 +182,40 @@
         {{ categoryFormLoading ? 'Guardando categor&iacute;a...' : 'Guardar categor&iacute;a' }}
       </button>
     </section>
+  } @else if (activeView === 'orders') {
+    <section class="simple-screen orders-screen" aria-label="Pedidos">
+      @if (ordersLoading) {
+        <p class="orders-state">Cargando pedidos...</p>
+      } @else if (ordersError) {
+        <p class="orders-state error">{{ ordersError }}</p>
+      } @else if (!orders.length) {
+        <p class="orders-state">Todav&iacute;a no hay pedidos registrados.</p>
+      } @else {
+        <section class="orders-list" aria-label="Lista de pedidos">
+          @for (order of orders; track order.venta_id) {
+            <article class="order-card">
+              <div class="order-card-top">
+                <div>
+                  <p class="order-kicker">Pedido</p>
+                  <h2>{{ order.venta_id }}</h2>
+                </div>
+                <span class="order-status">{{ orderStatusLabel(order.estatus) }}</span>
+              </div>
+
+              <div class="order-meta">
+                <span>{{ orderCreatedAt(order) }}</span>
+                <span>{{ orderItemLabel(order) }}</span>
+              </div>
+
+              <div class="order-total-row">
+                <span>Total</span>
+                <strong>${{ order.total.toFixed(2) }}</strong>
+              </div>
+            </article>
+          }
+        </section>
+      }
+    </section>
   } @else if (activeView === 'add-product') {
     <section class="simple-screen admin-screen" aria-label="Agregar producto">
       <button class="admin-back" type="button" (click)="showView('profile')">&#8249; Volver</button>
@@ -282,7 +316,7 @@
 
       <button class="profile-action" type="button" (click)="openProfileAdmin('add-product')">Agregar Producto</button>
       <button class="profile-secondary" type="button" (click)="openProfileAdmin('add-category')">Agregar Categor&iacute;a</button>
-      <button class="profile-secondary" type="button">Mis Pedidos</button>
+      <button class="profile-secondary" type="button" (click)="showView('orders')">Mis Pedidos</button>
       <button class="profile-secondary" type="button">Direcciones</button>
     </section>
   }
@@ -318,7 +352,6 @@
     <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="showView('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>
   </nav>
 </main>
-
 
 
 

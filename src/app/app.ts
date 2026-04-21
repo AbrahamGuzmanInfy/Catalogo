@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angula
 import { firstValueFrom, forkJoin } from 'rxjs';
 import { ProductDetailComponent } from './product-detail/product-detail';
 
-type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile' | 'add-product' | 'add-category';
+type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile' | 'orders' | 'add-product' | 'add-category';
 
 const API_BASE_URL = 'https://hs5rkunm27jueyzgyhqliykv7u0sizsx.lambda-url.us-east-2.on.aws';
 const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
@@ -16,6 +16,7 @@ function viewFromHash(): View {
   if (window.location.hash === '#categorias') return 'categories';
   if (window.location.hash === '#carrito') return 'cart';
   if (window.location.hash === '#perfil') return 'profile';
+  if (window.location.hash === '#pedidos') return 'orders';
   if (window.location.hash === '#agregar-producto') return 'add-product';
   if (window.location.hash === '#agregar-categoria') return 'add-category';
   return 'home';
@@ -25,6 +26,7 @@ function hashForView(view: Exclude<View, 'detail'>): string {
   if (view === 'categories') return '#categorias';
   if (view === 'cart') return '#carrito';
   if (view === 'profile') return '#perfil';
+  if (view === 'orders') return '#pedidos';
   if (view === 'add-product') return '#agregar-producto';
   if (view === 'add-category') return '#agregar-categoria';
   return window.location.pathname;
@@ -72,6 +74,28 @@ type CreateVentaResponse = {
   total: number;
 };
 
+type Venta = {
+  venta_id: string;
+  usuario_id: string;
+  estatus: string;
+  items: Array<{ cantidad?: number; nombre?: string; nombre_producto?: string }>;
+  subtotal: number;
+  descuento: number;
+  envio: number;
+  impuestos: number;
+  total: number;
+  moneda: string;
+  metodo_entrega: string;
+  metodo_pago: string;
+  fecha_entrega: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type VentasResponse = {
+  items: Venta[];
+};
+
 type CreateCategoryResponse = Category;
 type CreateProductResponse = Product;
 
@@ -108,6 +132,9 @@ export class App implements OnInit, OnDestroy {
   protected checkoutLoading = false;
   protected checkoutError = '';
   protected checkoutSuccess = '';
+  protected orders: Venta[] = [];
+  protected ordersLoading = false;
+  protected ordersError = '';
   protected dedicationPanelOpen = false;
   protected dedicationDraft = '';
   protected dedicationProduct: Product | null = null;
@@ -314,6 +341,26 @@ export class App implements OnInit, OnDestroy {
       error: () => {
         this.products = [];
         this.productsError = 'No se pudieron cargar los productos';
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
+
+  private loadOrders(): void {
+    this.ordersLoading = true;
+    this.ordersError = '';
+
+    this.http.get<VentasResponse>(`${API_BASE_URL}/ventas?usuario_id=INVITADO`).subscribe({
+      next: (response) => {
+        this.orders = response.items ?? [];
+        this.ordersLoading = false;
+        this.ordersError = '';
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.orders = [];
+        this.ordersLoading = false;
+        this.ordersError = 'No se pudieron cargar los pedidos.';
         this.changeDetector.detectChanges();
       },
     });
@@ -719,6 +766,40 @@ export class App implements OnInit, OnDestroy {
     return `$${value.toFixed(2)}`;
   }
 
+  protected orderItemCount(order: Venta): number {
+    return (order.items ?? []).reduce((sum, item) => sum + Number(item.cantidad || 0), 0);
+  }
+
+  protected orderItemLabel(order: Venta): string {
+    const count = this.orderItemCount(order);
+    return count === 1 ? '1 producto' : `${count} productos`;
+  }
+
+  protected orderCreatedAt(order: Venta): string {
+    if (!order.created_at) return 'Sin fecha';
+
+    const parsed = new Date(order.created_at);
+    if (Number.isNaN(parsed.getTime())) return order.created_at;
+
+    return parsed.toLocaleDateString('es-MX', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  }
+
+  protected orderStatusLabel(status: string): string {
+    const normalized = String(status || '').trim().toLowerCase();
+    if (normalized === 'pendiente') return 'Pendiente';
+    if (normalized === 'confirmada') return 'Confirmada';
+    if (normalized === 'pagada') return 'Pagada';
+    if (normalized === 'preparando') return 'Preparando';
+    if (normalized === 'en_camino') return 'En camino';
+    if (normalized === 'entregada') return 'Entregada';
+    if (normalized === 'cancelada') return 'Cancelada';
+    return status || 'Sin estatus';
+  }
+
   protected checkout(): void {
     if (!this.hasCartItems || this.checkoutLoading) return;
 
@@ -861,6 +942,9 @@ export class App implements OnInit, OnDestroy {
     if (view === 'categories' || view === 'add-product' || view === 'add-category') {
       this.loadCategories();
     }
+    if (view === 'orders') {
+      this.loadOrders();
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -870,7 +954,7 @@ export class App implements OnInit, OnDestroy {
     }
 
     if (view === 'profile') {
-      return this.activeView === 'profile' || this.activeView === 'add-product' || this.activeView === 'add-category';
+      return this.activeView === 'profile' || this.activeView === 'orders' || this.activeView === 'add-product' || this.activeView === 'add-category';
     }
 
     return this.activeView === view;
