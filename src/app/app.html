@@ -16,30 +16,43 @@
     </section>
   }
 
-  <header class="topbar" aria-label="Encabezado">
-    <div aria-hidden="true"></div>
-    <h1>Petal &amp; Co</h1>
-    <button class="cart-button" type="button" aria-label="Carrito" (click)="showView('cart')">
-      <img class="cart-icon" src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" />
-      @if (hasCartItems) {
-        <span class="cart-dot" aria-hidden="true"></span>
-      }
-    </button>
+  <header class="topbar" [class.topbar-home]="activeView === 'home'" [class.topbar-with-tools]="activeView === 'home' || activeView === 'categories'" aria-label="Encabezado">
+    <div class="topbar-main">
+      <div aria-hidden="true"></div>
+      <h1>Petal &amp; Co</h1>
+      <button class="cart-button" type="button" aria-label="Carrito" (click)="showView('cart')">
+        <img class="cart-icon" src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" />
+        @if (hasCartItems) {
+          <span class="cart-dot" aria-hidden="true"></span>
+        }
+      </button>
+    </div>
+
+    @if (activeView === 'home' || activeView === 'categories') {
+      <div class="topbar-home-tools">
+        @if (activeView === 'home') {
+          <label class="search-box" aria-label="Buscar flores">
+            <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
+            <input type="search" placeholder="Buscar flores..." [value]="productSearchTerm" (input)="updateProductSearch($event)" />
+          </label>
+
+          <nav class="category-row" aria-label="Categor&iacute;as">
+            @for (category of homeCategories; track category.categoria_id) {
+              <button type="button" class="category-chip" [class.active]="isHomeCategorySelected(category)" [attr.aria-pressed]="isHomeCategorySelected(category)" (click)="selectHomeCategory(category)">{{ category.nombre }}</button>
+            }
+          </nav>
+        } @else if (activeView === 'categories') {
+          <label class="search-box" aria-label="Buscar categor&iacute;as">
+            <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
+            <input type="search" placeholder="Buscar categor&iacute;as..." [value]="categorySearchTerm" (input)="updateCategorySearch($event)" />
+          </label>
+        }
+      </div>
+    }
   </header>
 
   @if (activeView === 'home') {
     <section class="home-screen">
-      <label class="search-box" aria-label="Buscar flores">
-        <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
-        <input type="search" placeholder="Buscar flores..." [value]="productSearchTerm" (input)="updateProductSearch($event)" />
-      </label>
-
-      <nav class="category-row" aria-label="Categor&iacute;as">
-        @for (category of homeCategories; track category.categoria_id) {
-          <button type="button" class="category-chip" [class.active]="isHomeCategorySelected(category)" [attr.aria-pressed]="isHomeCategorySelected(category)" (click)="selectHomeCategory(category)">{{ category.nombre }}</button>
-        }
-      </nav>
-
       <section class="product-grid" aria-label="Productos destacados">
         @for (product of filteredProducts; track product.producto_id) {
           <article class="product-card">
@@ -75,11 +88,6 @@
     }
   } @else if (activeView === 'categories') {
     <section class="simple-screen categories-screen" aria-label="Categor&iacute;as">
-      <label class="search-box" aria-label="Buscar categor&iacute;as">
-        <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
-        <input type="search" placeholder="Buscar categor&iacute;as..." [value]="categorySearchTerm" (input)="updateCategorySearch($event)" />
-      </label>
-
       <section class="category-grid" aria-label="Lista de categor&iacute;as">
         @for (category of filteredCategories; track category.categoria_id) {
           <button type="button" class="category-tile" (click)="openCategory(category)">
@@ -160,10 +168,7 @@
         @if (categoryFormImageUrl) {
           <img class="admin-preview" [src]="categoryFormImageUrl" alt="Vista previa categoria" />
         }
-        <label class="admin-field compact">
-          <span>URL imagen</span>
-          <input type="url" placeholder="https://..." [value]="categoryFormImageUrl" (input)="updateCategoryFormImageUrl($event)" />
-        </label>
+
       </section>
 
       @if (categoryFormSuccess) {
@@ -215,10 +220,7 @@
         @if (productFormImageUrl) {
           <img class="admin-preview" [src]="productFormImageUrl" alt="Vista previa imagen principal" />
         }
-        <label class="admin-field compact">
-          <span>URL imagen principal</span>
-          <input type="url" placeholder="https://..." [value]="productFormImageUrl" (input)="updateProductFormImageUrl($event)" />
-        </label>
+
       </section>
 
       <section class="admin-upload-block" aria-label="Imagen detalle del producto">
@@ -233,10 +235,7 @@
         @if (productFormDetailImageUrl) {
           <img class="admin-preview" [src]="productFormDetailImageUrl" alt="Vista previa imagen detalle" />
         }
-        <label class="admin-field compact">
-          <span>URL imagen detalle</span>
-          <input type="url" placeholder="https://..." [value]="productFormDetailImageUrl" (input)="updateProductFormDetailImageUrl($event)" />
-        </label>
+
       </section>
 
       <label class="admin-field">
@@ -319,4 +318,7 @@
     <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="showView('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>
   </nav>
 </main>
+
+
+
 

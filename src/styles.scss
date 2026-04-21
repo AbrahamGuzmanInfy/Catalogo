@@ -110,15 +110,34 @@ a {
 .home-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
+  padding-top: 126px;
+}
+
+.categories-screen {
+  padding-top: 74px;
 }
 
 .topbar {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 0;
+  right: 0;
+  z-index: 25;
+  width: 100%;
+  margin: 0;
+  padding: 0 17px;
+  background: #ffffff;
+  backdrop-filter: none;
+}
+
+.topbar-main {
   display: grid;
   grid-template-columns: 44px 1fr 44px;
   align-items: center;
-  width: min(100%, var(--screen-max-width));
   height: 42px;
-  margin: 0 auto 24px;
+  width: min(100%, var(--screen-max-width));
+  margin: 0 auto;
+  padding-top: 14px;
 }
 
 .topbar h1 {
@@ -161,6 +180,15 @@ a {
   height: 8px;
   border-radius: 999px;
   background: var(--accent-action);
+}
+
+.topbar-with-tools {
+  padding-bottom: 8px;
+}
+
+.topbar-home-tools {
+  width: min(100%, var(--screen-max-width));
+  margin: 4px auto 0;
 }
 
 .search-box {
@@ -801,6 +829,7 @@ a {
 .cart-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
+  padding-top: 0;
 }
 
 .simple-screen {
@@ -1175,6 +1204,14 @@ a {
     padding-top: 70px;
     padding-bottom: calc(152px + env(safe-area-inset-bottom, 0px));
   }
+
+  .home-screen {
+    padding-top: 130px;
+  }
+
+  .categories-screen {
+    padding-top: 78px;
+  }
 }
 
 @media (max-width: 374px) {
@@ -1407,3 +1444,4 @@ a {
 .admin-field.compact {
   gap: 6px;
 }
+
