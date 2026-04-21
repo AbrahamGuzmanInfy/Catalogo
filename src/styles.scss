@@ -14,6 +14,8 @@ body {
 app-root {
   --accent-action: #ff675f;
   --screen-max-width: 365px;
+  --topbar-safe-space: max(env(safe-area-inset-top, 0px), 14px);
+  --compact-header-offset: calc(82px + var(--topbar-safe-space));
   display: block;
   min-height: 100dvh;
   background: #ffffff;
@@ -110,25 +112,24 @@ a {
 .home-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
-  padding-top: 126px;
+  padding-top: calc(126px + var(--topbar-safe-space));
 }
 
 .categories-screen {
-  padding-top: 74px;
+  padding-top: calc(74px + var(--topbar-safe-space));
 }
 
 .topbar {
   position: fixed;
-  top: env(safe-area-inset-top, 0px);
+  top: 0;
   left: 0;
   right: 0;
   z-index: 25;
   width: 100%;
   margin: 0;
-  padding: 0 17px;
+  padding: var(--topbar-safe-space) 17px 0;
   background: #ffffff;
   backdrop-filter: none;
- // height: 160px;
 }
 
 .topbar-main {
@@ -139,6 +140,11 @@ a {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
   padding-top: 14px;
+}
+
+.topbar:not(.topbar-with-tools) .topbar-main {
+  height: 58px;
+  padding-top: 16px;
 }
 
 .topbar h1 {
@@ -458,7 +464,7 @@ a {
 
 
 .detail-mode {
-  padding-top: 35px;
+  padding-top: var(--compact-header-offset);
 }
 
 .detail-screen {
@@ -824,7 +830,7 @@ a {
   -webkit-mask-image: url("/icons/tdesign/user.svg");
 }
 .cart-mode {
-  padding-top: 35px;
+  padding-top: var(--compact-header-offset);
 }
 
 .cart-screen {
@@ -836,6 +842,10 @@ a {
 .simple-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
+}
+
+.simple-screen:not(.categories-screen) {
+  padding-top: var(--compact-header-offset);
 }
 
 .cart-title,
@@ -1150,11 +1160,15 @@ a {
   display: grid;
   place-items: center;
   min-height: 214px;
-  padding: 28px;
+  padding: 8px;
   border-radius: 8px;
   background: #ffffff;
   text-align: center;
   box-shadow: 0 4px 18px rgba(10, 10, 16, 0.09);
+}
+
+.simple-screen.profile-screen {
+  padding-top: 30px;
 }
 
 .profile-card img {
@@ -1207,11 +1221,11 @@ a {
   }
 
   .home-screen {
-    padding-top: 130px;
+    padding-top: calc(130px + var(--topbar-safe-space));
   }
 
   .categories-screen {
-    padding-top: 78px;
+    padding-top: calc(78px + var(--topbar-safe-space));
   }
 }
 
