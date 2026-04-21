@@ -7,9 +7,11 @@ from datetime import datetime, timezone
 from decimal import Decimal
 
 import boto3
+from botocore.config import Config
 
 
 dynamodb = boto3.resource('dynamodb')
+s3_client = boto3.client('s3', region_name=os.environ.get('AWS_REGION', os.environ.get('AWS_DEFAULT_REGION', 'us-east-2')), config=Config(signature_version='s3v4', s3={'addressing_style': 'virtual'}))
 
 CATEGORIAS_TABLE = os.environ.get('CATEGORIAS_TABLE', 'catalogo_categorias')
 PRODUCTOS_TABLE = os.environ.get('PRODUCTOS_TABLE', 'catalogo_productos')
@@ -17,6 +19,9 @@ PRODUCTOS_CATEGORIAS_TABLE = os.environ.get('PRODUCTOS_CATEGORIAS_TABLE', 'catal
 VENTAS_TABLE = os.environ.get('VENTAS_TABLE', 'catalogo_ventas')
 VENTAS_DETALLE_TABLE = os.environ.get('VENTAS_DETALLE_TABLE', 'catalogo_ventas_detalle')
 PAGOS_TABLE = os.environ.get('PAGOS_TABLE', 'catalogo_pagos')
+MEDIA_BUCKET = os.environ.get('MEDIA_BUCKET', 'media-app-1')
+AWS_REGION = os.environ.get('AWS_REGION', os.environ.get('AWS_DEFAULT_REGION', 'us-east-2'))
+MEDIA_BASE_URL = os.environ.get('MEDIA_BASE_URL', f'https://{MEDIA_BUCKET}.s3.{AWS_REGION}.amazonaws.com')
 
 categorias_table = dynamodb.Table(CATEGORIAS_TABLE)
 productos_table = dynamodb.Table(PRODUCTOS_TABLE)
@@ -103,6 +108,25 @@ def query_params(event: dict) -> dict:
     return event.get('queryStringParameters') or {}
 
 
+def safe_file_extension(filename: str, content_type: str) -> str:
+    extension = os.path.splitext(filename or '')[1].lower()
+    if extension in ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.heic'):
+        return extension
+
+    mapping = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'image/webp': '.webp',
+        'image/gif': '.gif',
+        'image/heic': '.heic',
+    }
+    return mapping.get(content_type.lower(), '.jpg')
+
+
+def public_media_url(key: str) -> str:
+    return f"{MEDIA_BASE_URL.rstrip('/')}/{key}"
+
+
 def public_category(item: dict) -> dict:
     return {
         'categoria_id': item.get('categoria_id', ''),
@@ -112,6 +136,7 @@ def public_category(item: dict) -> dict:
         'orden': item.get('orden', 0),
         'created_at': item.get('created_at', ''),
         'updated_at': item.get('updated_at', ''),
+        'imageUrl': item.get('imagen_url', ''),
     }
 
 
@@ -177,6 +202,7 @@ def public_venta_detalle(item: dict) -> dict:
         'created_at': item.get('created_at', ''),
         'updated_at': item.get('updated_at', ''),
     }
+
 
 def public_pago(item: dict) -> dict:
     return {
@@ -308,6 +334,7 @@ def list_ventas_detalle(event: dict) -> dict:
     items.sort(key=lambda item: (item.get('venta_id', ''), item.get('detalle_id', '')))
     return response(200, {'items': items})
 
+
 def list_pagos(event: dict) -> dict:
     params = query_params(event)
     venta_id = params.get('venta_id')
@@ -323,6 +350,37 @@ def list_pagos(event: dict) -> dict:
     return response(200, {'items': items})
 
 
+def create_upload_url(payload: dict) -> dict:
+    file_name = str(payload.get('fileName') or payload.get('file_name') or '').strip()
+    content_type = str(payload.get('contentType') or payload.get('content_type') or 'image/jpeg').strip().lower()
+    folder = str(payload.get('folder') or 'products').strip().lower()
+
+    if not file_name:
+        return response(400, {'message': 'fileName es obligatorio'})
+    if not content_type.startswith('image/'):
+        return response(400, {'message': 'Solo se permiten imagenes'})
+
+    safe_folder = 'categories' if folder == 'categories' else 'products'
+    extension = safe_file_extension(file_name, content_type)
+    key = f"uploads/{safe_folder}/{datetime.now(timezone.utc).strftime('%Y/%m')}/{uuid.uuid4().hex}{extension}"
+    upload_url = s3_client.generate_presigned_url(
+        'put_object',
+        Params={
+            'Bucket': MEDIA_BUCKET,
+            'Key': key,
+            'ContentType': content_type,
+        },
+        ExpiresIn=300,
+    )
+
+    return response(200, {
+        'uploadUrl': upload_url,
+        'fileUrl': public_media_url(key),
+        'key': key,
+        'bucket': MEDIA_BUCKET,
+    })
+
+
 def create_categoria(payload: dict) -> dict:
     nombre = str(payload.get('nombre', '')).strip()
     if not nombre:
@@ -334,6 +392,7 @@ def create_categoria(payload: dict) -> dict:
         'nombre': nombre,
         'slug': str(payload.get('slug') or slugify(nombre)).strip().lower(),
         'activa': 'true' if payload.get('activa', True) else 'false',
+        'imagen_url': str(payload.get('imagen_url') or payload.get('imageUrl') or payload.get('image') or '').strip(),
         'orden': decimal_value(payload.get('orden', 0)),
         'created_at': timestamp,
         'updated_at': timestamp,
@@ -522,6 +581,11 @@ def lambda_handler(event, context):
         if resource in ('ventas-detalle', 'ventas_detalle'):
             if method == 'GET' and len(parts) == 1:
                 return list_ventas_detalle(event)
+
+        if resource == 'uploads':
+            if method == 'POST' and len(parts) == 2 and parts[1] == 'presign':
+                return create_upload_url(parse_body(event))
+
         if resource == 'pagos':
             if method == 'GET' and len(parts) == 1:
                 return list_pagos(event)
@@ -533,3 +597,4 @@ def lambda_handler(event, context):
         return response(400, {'message': str(error)})
     except Exception as error:
         return response(500, {'message': 'Error interno', 'detail': str(error)})
+

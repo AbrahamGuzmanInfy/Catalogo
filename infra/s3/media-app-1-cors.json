@@ -1,0 +1,1 @@
+{"CORSRules":[{"AllowedHeaders":["*"],"AllowedMethods":["GET","HEAD","PUT"],"AllowedOrigins":["http://localhost","http://localhost:4200","http://catalogo-app-1.s3-website.us-east-2.amazonaws.com","https://d22hg1s66g56js.cloudfront.net"],"ExposeHeaders":["ETag"],"MaxAgeSeconds":3000}]}

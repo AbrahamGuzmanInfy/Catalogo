@@ -118,7 +118,7 @@
         <div class="total-row"><span>Total</span><strong>{{ total }}</strong></div>
       </section>
 
-            @if (checkoutSuccess) {
+      @if (checkoutSuccess) {
         <p class="checkout-message success">{{ checkoutSuccess }}</p>
       }
       @if (checkoutError) {
@@ -129,6 +129,150 @@
         {{ checkoutLoading ? 'Creando Pedido...' : 'Finalizar Pedido' }}
       </button>
     </section>
+  } @else if (activeView === 'add-category') {
+    <section class="simple-screen admin-screen" aria-label="Agregar categor&iacute;a">
+      <button class="admin-back" type="button" (click)="showView('profile')">&#8249; Volver</button>
+      <div class="admin-intro">
+        <p class="admin-kicker">Administraci&oacute;n</p>
+        <h2>Agregar categor&iacute;a</h2>
+        <p>Crea una categor&iacute;a nueva para mostrarla en el inicio y usarla en productos.</p>
+      </div>
+
+      <label class="admin-field">
+        <span>Nombre</span>
+        <input type="text" placeholder="Ej. Cumplea&ntilde;os" [value]="categoryFormName" (input)="updateCategoryFormName($event)" />
+      </label>
+
+      <label class="admin-field">
+        <span>Orden</span>
+        <input type="number" inputmode="numeric" placeholder="0" [value]="categoryFormOrder" (input)="updateCategoryFormOrder($event)" />
+      </label>
+
+      <section class="admin-upload-block" aria-label="Imagen de categoria">
+        <div class="admin-picker-header">
+          <span>Imagen</span>
+          <small>{{ categoryUploadLoading ? 'Subiendo...' : 'Desde tu celular' }}</small>
+        </div>
+        <label class="admin-upload-button">
+          <input type="file" accept="image/*" (change)="onCategoryImageSelected($event)" />
+          <span>{{ categoryUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen' }}</span>
+        </label>
+        @if (categoryFormImageUrl) {
+          <img class="admin-preview" [src]="categoryFormImageUrl" alt="Vista previa categoria" />
+        }
+        <label class="admin-field compact">
+          <span>URL imagen</span>
+          <input type="url" placeholder="https://..." [value]="categoryFormImageUrl" (input)="updateCategoryFormImageUrl($event)" />
+        </label>
+      </section>
+
+      @if (categoryFormSuccess) {
+        <p class="form-message success">{{ categoryFormSuccess }}</p>
+      }
+      @if (categoryFormError) {
+        <p class="form-message error">{{ categoryFormError }}</p>
+      }
+
+      <button class="admin-submit" type="button" [disabled]="categoryFormLoading || categoryUploadLoading" (click)="submitCategory()">
+        {{ categoryFormLoading ? 'Guardando categor&iacute;a...' : 'Guardar categor&iacute;a' }}
+      </button>
+    </section>
+  } @else if (activeView === 'add-product') {
+    <section class="simple-screen admin-screen" aria-label="Agregar producto">
+      <button class="admin-back" type="button" (click)="showView('profile')">&#8249; Volver</button>
+      <div class="admin-intro">
+        <p class="admin-kicker">Administraci&oacute;n</p>
+        <h2>Agregar producto</h2>
+        <p>Guarda un nuevo arreglo floral y as&oacutecialo a una o varias categor&iacute;as.</p>
+      </div>
+
+      <label class="admin-field">
+        <span>Nombre</span>
+        <input type="text" placeholder="Ej. Rosas Coral" [value]="productFormName" (input)="updateProductFormName($event)" />
+      </label>
+
+      <div class="admin-field-row">
+        <label class="admin-field">
+          <span>Precio</span>
+          <input type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" [value]="productFormPrice" (input)="updateProductFormPrice($event)" />
+        </label>
+
+        <label class="admin-field">
+          <span>Orden</span>
+          <input type="number" inputmode="numeric" placeholder="0" [value]="productFormOrder" (input)="updateProductFormOrder($event)" />
+        </label>
+      </div>
+
+      <section class="admin-upload-block" aria-label="Imagen principal del producto">
+        <div class="admin-picker-header">
+          <span>Imagen principal</span>
+          <small>{{ productImageUploadLoading ? 'Subiendo...' : 'Desde tu celular' }}</small>
+        </div>
+        <label class="admin-upload-button">
+          <input type="file" accept="image/*" (change)="onProductMainImageSelected($event)" />
+          <span>{{ productImageUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen principal' }}</span>
+        </label>
+        @if (productFormImageUrl) {
+          <img class="admin-preview" [src]="productFormImageUrl" alt="Vista previa imagen principal" />
+        }
+        <label class="admin-field compact">
+          <span>URL imagen principal</span>
+          <input type="url" placeholder="https://..." [value]="productFormImageUrl" (input)="updateProductFormImageUrl($event)" />
+        </label>
+      </section>
+
+      <section class="admin-upload-block" aria-label="Imagen detalle del producto">
+        <div class="admin-picker-header">
+          <span>Imagen detalle</span>
+          <small>{{ productDetailUploadLoading ? 'Subiendo...' : 'Opcional' }}</small>
+        </div>
+        <label class="admin-upload-button secondary">
+          <input type="file" accept="image/*" (change)="onProductDetailImageSelected($event)" />
+          <span>{{ productDetailUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen detalle' }}</span>
+        </label>
+        @if (productFormDetailImageUrl) {
+          <img class="admin-preview" [src]="productFormDetailImageUrl" alt="Vista previa imagen detalle" />
+        }
+        <label class="admin-field compact">
+          <span>URL imagen detalle</span>
+          <input type="url" placeholder="https://..." [value]="productFormDetailImageUrl" (input)="updateProductFormDetailImageUrl($event)" />
+        </label>
+      </section>
+
+      <label class="admin-field">
+        <span>Modelo 3D</span>
+        <input type="url" placeholder="/models/ramo.glb o https://..." [value]="productFormModel3dUrl" (input)="updateProductFormModel3dUrl($event)" />
+      </label>
+
+      <label class="admin-field">
+        <span>Descripci&oacute;n</span>
+        <textarea rows="4" placeholder="Describe el arreglo floral..." [value]="productFormDescription" (input)="updateProductFormDescription($event)"></textarea>
+      </label>
+
+      <section class="admin-category-picker" aria-label="Seleccionar categor&iacute;as">
+        <div class="admin-picker-header">
+          <span>Categor&iacute;as</span>
+          <small>{{ productFormCategoryIds.length }} seleccionadas</small>
+        </div>
+
+        <div class="admin-chip-grid">
+          @for (category of categories; track category.categoria_id) {
+            <button type="button" class="admin-chip" [class.active]="isProductCategorySelected(category.categoria_id)" (click)="toggleProductCategory(category.categoria_id)">{{ category.nombre }}</button>
+          }
+        </div>
+      </section>
+
+      @if (productFormSuccess) {
+        <p class="form-message success">{{ productFormSuccess }}</p>
+      }
+      @if (productFormError) {
+        <p class="form-message error">{{ productFormError }}</p>
+      }
+
+      <button class="admin-submit" type="button" [disabled]="productFormLoading || productImageUploadLoading || productDetailUploadLoading" (click)="submitProduct()">
+        {{ productFormLoading ? 'Guardando producto...' : 'Guardar producto' }}
+      </button>
+    </section>
   } @else {
     <section class="simple-screen profile-screen" aria-label="Perfil">
       <div class="profile-card">
@@ -137,12 +281,12 @@
         <p>Inicia sesi&oacute;n para guardar direcciones, dedicatorias y pedidos.</p>
       </div>
 
-      <button class="profile-action" type="button">Iniciar Sesi&oacute;n</button>
+      <button class="profile-action" type="button" (click)="openProfileAdmin('add-product')">Agregar Producto</button>
+      <button class="profile-secondary" type="button" (click)="openProfileAdmin('add-category')">Agregar Categor&iacute;a</button>
       <button class="profile-secondary" type="button">Mis Pedidos</button>
       <button class="profile-secondary" type="button">Direcciones</button>
     </section>
   }
-
 
   @if (dedicationPanelOpen) {
     <section class="dedication-overlay" aria-label="Dedicatoria">
@@ -167,6 +311,7 @@
       </div>
     </section>
   }
+
   <nav class="bottom-nav" aria-label="Navegaci&oacute;n principal">
     <button [class.active]="isActive('home')" type="button" aria-label="Inicio" (click)="showView('home')"><img src="/icons/tdesign/home-filled.svg" alt="" aria-hidden="true" /></button>
     <button [class.active]="isActive('categories')" type="button" aria-label="Categor&iacute;as" (click)="showView('categories')"><img src="/icons/tdesign/app.svg" alt="" aria-hidden="true" /></button>
@@ -174,3 +319,4 @@
     <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="showView('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>
   </nav>
 </main>
+

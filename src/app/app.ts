@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { firstValueFrom, forkJoin } from 'rxjs';
 import { ProductDetailComponent } from './product-detail/product-detail';
 
-type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile';
+type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile' | 'add-product' | 'add-category';
 
 const API_BASE_URL = 'https://hs5rkunm27jueyzgyhqliykv7u0sizsx.lambda-url.us-east-2.on.aws';
 const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
@@ -15,6 +16,8 @@ function viewFromHash(): View {
   if (window.location.hash === '#categorias') return 'categories';
   if (window.location.hash === '#carrito') return 'cart';
   if (window.location.hash === '#perfil') return 'profile';
+  if (window.location.hash === '#agregar-producto') return 'add-product';
+  if (window.location.hash === '#agregar-categoria') return 'add-category';
   return 'home';
 }
 
@@ -22,6 +25,8 @@ function hashForView(view: Exclude<View, 'detail'>): string {
   if (view === 'categories') return '#categorias';
   if (view === 'cart') return '#carrito';
   if (view === 'profile') return '#perfil';
+  if (view === 'add-product') return '#agregar-producto';
+  if (view === 'add-category') return '#agregar-categoria';
   return window.location.pathname;
 }
 
@@ -31,6 +36,7 @@ type Category = {
   slug: string;
   activa: string;
   orden: number;
+  imageUrl?: string;
 };
 
 type CategoriesResponse = {
@@ -65,11 +71,21 @@ type CreateVentaResponse = {
   estatus: string;
   total: number;
 };
+
+type CreateCategoryResponse = Category;
+type CreateProductResponse = Product;
+
+type PresignUploadResponse = {
+  uploadUrl: string;
+  fileUrl: string;
+  key: string;
+  bucket: string;
+};
+
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 };
-
 
 @Component({
   selector: 'app-root',
@@ -96,6 +112,26 @@ export class App implements OnInit, OnDestroy {
   protected dedicationDraft = '';
   protected dedicationProduct: Product | null = null;
   protected readonly dedicationMaxLength = DEDICATION_MAX_LENGTH;
+  protected categoryFormName = '';
+  protected categoryFormOrder = '';
+  protected categoryFormImageUrl = '';
+  protected categoryFormLoading = false;
+  protected categoryUploadLoading = false;
+  protected categoryFormSuccess = '';
+  protected categoryFormError = '';
+  protected productFormName = '';
+  protected productFormPrice = '';
+  protected productFormImageUrl = '';
+  protected productFormDetailImageUrl = '';
+  protected productFormDescription = '';
+  protected productFormModel3dUrl = '';
+  protected productFormOrder = '';
+  protected productFormCategoryIds: string[] = [];
+  protected productFormLoading = false;
+  protected productImageUploadLoading = false;
+  protected productDetailUploadLoading = false;
+  protected productFormSuccess = '';
+  protected productFormError = '';
   private readonly productDedications = new Map<string, string>();
   protected showInstallPrompt = false;
   protected canInstallApp = false;
@@ -115,7 +151,6 @@ export class App implements OnInit, OnDestroy {
     this.loadProducts();
     this.setupInstallPrompt();
   }
-
 
   ngOnDestroy(): void {
     this.zoomCleanupCallbacks.forEach((cleanup) => cleanup());
@@ -163,6 +198,7 @@ export class App implements OnInit, OnDestroy {
     target.addEventListener(eventName, handler, options);
     this.zoomCleanupCallbacks.push(() => target.removeEventListener(eventName, handler, options));
   }
+
   private setupInstallPrompt(): void {
     if (this.isStandaloneMode()) return;
 
@@ -243,6 +279,7 @@ export class App implements OnInit, OnDestroy {
       // Safari private mode can block storage; the banner can simply reappear later.
     }
   }
+
   private isIosDevice(): boolean {
     const userAgent = navigator.userAgent.toLowerCase();
     const platform = navigator.platform.toLowerCase();
@@ -358,6 +395,289 @@ export class App implements OnInit, OnDestroy {
     return this.selectedCategoryId === category.categoria_id;
   }
 
+  protected updateCategoryFormName(event: Event): void {
+    this.categoryFormName = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateCategoryFormOrder(event: Event): void {
+    this.categoryFormOrder = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateCategoryFormImageUrl(event: Event): void {
+    this.categoryFormImageUrl = (event.target as HTMLInputElement).value;
+  }
+
+  protected async onCategoryImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.categoryUploadLoading = true;
+    this.categoryFormError = '';
+
+    try {
+      this.categoryFormImageUrl = await this.uploadMedia(file, 'categories');
+    } catch {
+      this.categoryFormError = 'No se pudo subir la imagen de la categoria.';
+    } finally {
+      this.categoryUploadLoading = false;
+      input.value = '';
+      this.changeDetector.detectChanges();
+    }
+  }
+
+  protected updateProductFormName(event: Event): void {
+    this.productFormName = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateProductFormPrice(event: Event): void {
+    this.productFormPrice = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateProductFormImageUrl(event: Event): void {
+    this.productFormImageUrl = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateProductFormDetailImageUrl(event: Event): void {
+    this.productFormDetailImageUrl = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateProductFormDescription(event: Event): void {
+    this.productFormDescription = (event.target as HTMLTextAreaElement).value;
+  }
+
+  protected updateProductFormModel3dUrl(event: Event): void {
+    this.productFormModel3dUrl = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateProductFormOrder(event: Event): void {
+    this.productFormOrder = (event.target as HTMLInputElement).value;
+  }
+
+  protected async onProductMainImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.productImageUploadLoading = true;
+    this.productFormError = '';
+
+    try {
+      const uploadedUrl = await this.uploadMedia(file, 'products');
+      this.productFormImageUrl = uploadedUrl;
+      if (!this.productFormDetailImageUrl.trim()) {
+        this.productFormDetailImageUrl = uploadedUrl;
+      }
+    } catch {
+      this.productFormError = 'No se pudo subir la imagen principal.';
+    } finally {
+      this.productImageUploadLoading = false;
+      input.value = '';
+      this.changeDetector.detectChanges();
+    }
+  }
+
+  protected async onProductDetailImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.productDetailUploadLoading = true;
+    this.productFormError = '';
+
+    try {
+      this.productFormDetailImageUrl = await this.uploadMedia(file, 'products');
+    } catch {
+      this.productFormError = 'No se pudo subir la imagen detalle.';
+    } finally {
+      this.productDetailUploadLoading = false;
+      input.value = '';
+      this.changeDetector.detectChanges();
+    }
+  }
+
+  private async uploadMedia(file: File, folder: 'products' | 'categories'): Promise<string> {
+    const presign = await firstValueFrom(this.http.post<PresignUploadResponse>(`${API_BASE_URL}/uploads/presign`, {
+      fileName: file.name,
+      contentType: file.type || 'image/jpeg',
+      folder,
+    }));
+
+    if (!presign?.uploadUrl || !presign.fileUrl) {
+      throw new Error('No se recibio URL de carga');
+    }
+
+    const uploadResponse = await fetch(presign.uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': file.type || 'image/jpeg',
+      },
+      body: file,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error('No se pudo cargar el archivo');
+    }
+
+    return presign.fileUrl;
+  }
+
+  protected toggleProductCategory(categoryId: string): void {
+    if (this.productFormCategoryIds.includes(categoryId)) {
+      this.productFormCategoryIds = this.productFormCategoryIds.filter((item) => item !== categoryId);
+      return;
+    }
+
+    this.productFormCategoryIds = [...this.productFormCategoryIds, categoryId];
+  }
+
+  protected isProductCategorySelected(categoryId: string): boolean {
+    return this.productFormCategoryIds.includes(categoryId);
+  }
+
+  protected openProfileAdmin(view: 'add-product' | 'add-category'): void {
+    this.categoryFormError = '';
+    this.categoryFormSuccess = '';
+    this.productFormError = '';
+    this.productFormSuccess = '';
+    this.showView(view);
+  }
+
+  protected submitCategory(): void {
+    if (this.categoryFormLoading || this.categoryUploadLoading) return;
+
+    const nombre = this.categoryFormName.trim();
+    if (!nombre) {
+      this.categoryFormError = 'Escribe el nombre de la categoria.';
+      this.categoryFormSuccess = '';
+      return;
+    }
+
+    this.categoryFormLoading = true;
+    this.categoryFormError = '';
+    this.categoryFormSuccess = '';
+
+    const payload = {
+      nombre,
+      orden: Number(this.categoryFormOrder || 0),
+      imagen_url: this.categoryFormImageUrl.trim(),
+      activa: true,
+    };
+
+    this.http.post<CreateCategoryResponse>(`${API_BASE_URL}/categorias`, payload).subscribe({
+      next: () => {
+        this.categoryFormLoading = false;
+        this.categoryFormName = '';
+        this.categoryFormOrder = '';
+        this.categoryFormImageUrl = '';
+        this.categoryFormSuccess = 'Categoria creada correctamente.';
+        this.loadCategories();
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.categoryFormLoading = false;
+        this.categoryFormError = 'No se pudo crear la categoria. Intenta nuevamente.';
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
+
+  protected submitProduct(): void {
+    if (this.productFormLoading || this.productImageUploadLoading || this.productDetailUploadLoading) return;
+
+    const nombre = this.productFormName.trim();
+    const imagenUrl = this.productFormImageUrl.trim();
+    const descripcion = this.productFormDescription.trim();
+    const precio = Number(this.productFormPrice || 0);
+
+    if (!nombre) {
+      this.productFormError = 'Escribe el nombre del producto.';
+      this.productFormSuccess = '';
+      return;
+    }
+
+    if (!imagenUrl) {
+      this.productFormError = 'Agrega la imagen principal del producto.';
+      this.productFormSuccess = '';
+      return;
+    }
+
+    if (!descripcion) {
+      this.productFormError = 'Agrega una descripcion del producto.';
+      this.productFormSuccess = '';
+      return;
+    }
+
+    if (!Number.isFinite(precio) || precio <= 0) {
+      this.productFormError = 'El precio debe ser mayor a 0.';
+      this.productFormSuccess = '';
+      return;
+    }
+
+    this.productFormLoading = true;
+    this.productFormError = '';
+    this.productFormSuccess = '';
+
+    const payload = {
+      nombre,
+      precio,
+      imagen_url: imagenUrl,
+      detalle_imagen_url: this.productFormDetailImageUrl.trim() || imagenUrl,
+      descripcion,
+      model3d_url: this.productFormModel3dUrl.trim(),
+      orden: Number(this.productFormOrder || 0),
+      activo: true,
+    };
+
+    this.http.post<CreateProductResponse>(`${API_BASE_URL}/productos`, payload).subscribe({
+      next: (product) => {
+        const categoryIds = [...this.productFormCategoryIds];
+        if (!categoryIds.length) {
+          this.handleProductCreated(product);
+          return;
+        }
+
+        forkJoin(
+          categoryIds.map((categoria_id) =>
+            this.http.post(`${API_BASE_URL}/productos-categorias`, {
+              categoria_id,
+              producto_id: product.producto_id,
+            }),
+          ),
+        ).subscribe({
+          next: () => this.handleProductCreated(product),
+          error: () => {
+            this.productFormLoading = false;
+            this.productFormError = 'El producto se creo, pero no se pudieron guardar sus categorias.';
+            this.loadProducts();
+            this.changeDetector.detectChanges();
+          },
+        });
+      },
+      error: () => {
+        this.productFormLoading = false;
+        this.productFormError = 'No se pudo crear el producto. Intenta nuevamente.';
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
+
+  private handleProductCreated(product: CreateProductResponse): void {
+    this.productFormLoading = false;
+    this.productFormName = '';
+    this.productFormPrice = '';
+    this.productFormImageUrl = '';
+    this.productFormDetailImageUrl = '';
+    this.productFormDescription = '';
+    this.productFormModel3dUrl = '';
+    this.productFormOrder = '';
+    this.productFormCategoryIds = [];
+    this.productFormSuccess = `${product.name} se agrego correctamente.`;
+    this.loadProducts();
+    this.loadCategories();
+    this.changeDetector.detectChanges();
+  }
+
   private normalizeSearch(value: string): string {
     return String(value || '')
       .normalize('NFD')
@@ -365,6 +685,7 @@ export class App implements OnInit, OnDestroy {
       .trim()
       .toLowerCase();
   }
+
   protected get cartQuantity(): number {
     return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }
@@ -436,6 +757,7 @@ export class App implements OnInit, OnDestroy {
       },
     });
   }
+
   protected get dedicationCounter(): string {
     return `${this.dedicationDraft.length}/${this.dedicationMaxLength}`;
   }
@@ -486,6 +808,7 @@ export class App implements OnInit, OnDestroy {
 
     this.closeDedicationPanel();
   }
+
   protected addToCart(product: Product | null): void {
     if (!product) return;
 
@@ -513,6 +836,7 @@ export class App implements OnInit, OnDestroy {
 
     item.quantity -= 1;
   }
+
   protected showProduct(product: Product, returnView: Exclude<View, 'detail'> = 'home'): void {
     this.detailReturnView = returnView;
     this.selectedProduct = product;
@@ -534,7 +858,7 @@ export class App implements OnInit, OnDestroy {
       this.loadCategories();
       this.loadProducts();
     }
-    if (view === 'categories') {
+    if (view === 'categories' || view === 'add-product' || view === 'add-category') {
       this.loadCategories();
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -545,6 +869,19 @@ export class App implements OnInit, OnDestroy {
       return this.detailReturnView === view;
     }
 
+    if (view === 'profile') {
+      return this.activeView === 'profile' || this.activeView === 'add-product' || this.activeView === 'add-category';
+    }
+
     return this.activeView === view;
   }
 }
+
+
+
+
+
+
+
+
+
