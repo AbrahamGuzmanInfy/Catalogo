@@ -1,0 +1,79 @@
+{
+    "Items": [
+        {
+            "updated_at": {
+                "S": "2026-04-21T03:58:17.910980+00:00"
+            },
+            "nombre": {
+                "S": "Categor?a de prueba"
+            },
+            "created_at": {
+                "S": "2026-04-21T03:58:17.910980+00:00"
+            },
+            "activa": {
+                "S": "true"
+            },
+            "categoria_id": {
+                "S": "CAT-46F8CB42F9"
+            },
+            "slug": {
+                "S": "categoria-de-prueba"
+            },
+            "imagen_url": {
+                "S": "https://media-app-1.s3.us-east-2.amazonaws.com/uploads/categories/2026/04/5f6c9353dec144d4b47c3ad076027f55.png"
+            },
+            "orden": {
+                "N": "2"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-18T22:09:09.334152+00:00"
+            },
+            "nombre": {
+                "S": "Populares"
+            },
+            "created_at": {
+                "S": "2026-04-18T22:09:09.334152+00:00"
+            },
+            "activa": {
+                "S": "true"
+            },
+            "categoria_id": {
+                "S": "CAT-858C8EE0DA"
+            },
+            "slug": {
+                "S": "populares"
+            },
+            "orden": {
+                "N": "1"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-19T15:39:13.472865+00:00"
+            },
+            "nombre": {
+                "S": "Rosas"
+            },
+            "created_at": {
+                "S": "2026-04-19T15:39:13.472865+00:00"
+            },
+            "activa": {
+                "S": "true"
+            },
+            "categoria_id": {
+                "S": "CAT-ROSAS"
+            },
+            "slug": {
+                "S": "rosas"
+            },
+            "orden": {
+                "N": "2"
+            }
+        }
+    ],
+    "Count": 3,
+    "ScannedCount": 3,
+    "ConsumedCapacity": null
+}

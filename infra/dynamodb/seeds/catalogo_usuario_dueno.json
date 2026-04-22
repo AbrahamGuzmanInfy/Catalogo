@@ -1,0 +1,10 @@
+{
+  "usuario_id": { "S": "1" },
+  "nombre": { "S": "Dueno Demo" },
+  "email": { "S": "dueno@petalco.test" },
+  "telefono": { "S": "5550000001" },
+  "rol_id": { "S": "1" },
+  "activo": { "S": "true" },
+  "created_at": { "S": "2026-04-21T15:35:00Z" },
+  "updated_at": { "S": "2026-04-21T15:35:00Z" }
+}

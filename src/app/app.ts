@@ -10,6 +10,31 @@ const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
 const INSTALL_DISMISSED_KEY = 'petal-install-dismissed-session';
 const IOS_INSTALL_DISMISSED_KEY = 'petal-ios-install-dismissed-session';
 const DEDICATION_MAX_LENGTH = 160;
+const TEST_USER_ROLE_KEY = 'petal-test-user-role';
+
+type TestRole = 'dueno' | 'cliente';
+
+type TestUser = {
+  usuario_id: string;
+  nombre: string;
+  rol: TestRole;
+  email: string;
+};
+
+const TEST_USERS: Record<TestRole, TestUser> = {
+  dueno: {
+    usuario_id: '1',
+    nombre: 'Dueno Demo',
+    rol: 'dueno',
+    email: 'dueno@petalco.test',
+  },
+  cliente: {
+    usuario_id: '2',
+    nombre: 'Cliente Demo',
+    rol: 'cliente',
+    email: 'cliente@petalco.test',
+  },
+};
 
 function viewFromHash(): View {
   if (window.location.hash.startsWith('#producto-')) return 'detail';
@@ -76,11 +101,26 @@ type CreateVentaResponse = {
   total: number;
 };
 
+type VentaDetalle = {
+  venta_detalle_id?: string;
+  venta_id?: string;
+  detalle_id?: string;
+  producto_id?: string;
+  nombre?: string;
+  nombre_producto?: string;
+  cantidad?: number;
+  precio_unitario?: number;
+  descuento?: number;
+  subtotal?: number;
+  dedicatoria?: string;
+};
+
 type Venta = {
   venta_id: string;
   usuario_id: string;
   estatus: string;
-  items: Array<{ cantidad?: number; nombre?: string; nombre_producto?: string }>;
+  items_count?: number;
+  items: VentaDetalle[];
   subtotal: number;
   descuento: number;
   envio: number;
@@ -92,6 +132,7 @@ type Venta = {
   fecha_entrega: string;
   created_at: string;
   updated_at: string;
+  detailsLoaded?: boolean;
 };
 
 type VentasResponse = {
@@ -138,6 +179,8 @@ export class App implements OnInit, OnDestroy {
   protected orders: Venta[] = [];
   protected ordersLoading = false;
   protected ordersError = '';
+  protected expandedOrderIds = new Set<string>();
+  protected loadingOrderIds = new Set<string>();
   protected dedicationPanelOpen = false;
   protected dedicationDraft = '';
   protected dedicationProduct: Product | null = null;
@@ -167,6 +210,7 @@ export class App implements OnInit, OnDestroy {
   protected editingProductId = '';
   protected deletingProductId = '';
   protected togglingProductId = '';
+  protected currentTestRole: TestRole = 'dueno';
   private readonly productDedications = new Map<string, string>();
   protected showInstallPrompt = false;
   protected canInstallApp = false;
@@ -181,6 +225,7 @@ export class App implements OnInit, OnDestroy {
   private detailReturnView: Exclude<View, 'detail'> = 'home';
 
   ngOnInit(): void {
+    this.restoreCurrentTestRole();
     this.disableBrowserZoom();
     this.loadCategories();
     this.loadProducts();
@@ -232,6 +277,25 @@ export class App implements OnInit, OnDestroy {
     const options: AddEventListenerOptions = { passive: false, capture: true };
     target.addEventListener(eventName, handler, options);
     this.zoomCleanupCallbacks.push(() => target.removeEventListener(eventName, handler, options));
+  }
+
+  private restoreCurrentTestRole(): void {
+    try {
+      const stored = localStorage.getItem(TEST_USER_ROLE_KEY);
+      if (stored === 'dueno' || stored === 'cliente') {
+        this.currentTestRole = stored;
+      }
+    } catch {
+      this.currentTestRole = 'dueno';
+    }
+  }
+
+  private persistCurrentTestRole(): void {
+    try {
+      localStorage.setItem(TEST_USER_ROLE_KEY, this.currentTestRole);
+    } catch {
+      // Ignore storage issues.
+    }
   }
 
   private setupInstallPrompt(): void {
@@ -370,10 +434,11 @@ export class App implements OnInit, OnDestroy {
   private loadOrders(): void {
     this.ordersLoading = true;
     this.ordersError = '';
+    const usuarioId = encodeURIComponent(this.currentTestUser.usuario_id);
 
-    this.http.get<VentasResponse>(`${API_BASE_URL}/ventas?usuario_id=INVITADO`).subscribe({
+    this.http.get<VentasResponse>(`${API_BASE_URL}/ventas?usuario_id=${usuarioId}`).subscribe({
       next: (response) => {
-        this.orders = response.items ?? [];
+        this.orders = (response.items ?? []).map((order) => ({ ...order, detailsLoaded: false }));
         this.ordersLoading = false;
         this.ordersError = '';
         this.changeDetector.detectChanges();
@@ -403,6 +468,14 @@ export class App implements OnInit, OnDestroy {
 
   protected get homeCategories(): Category[] {
     return this.categories.slice(0, 4);
+  }
+
+  protected get currentTestUser(): TestUser {
+    return TEST_USERS[this.currentTestRole];
+  }
+
+  protected get isOwnerRole(): boolean {
+    return this.currentTestRole === 'dueno';
   }
 
   protected get filteredProducts(): Product[] {
@@ -608,9 +681,31 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected openProfileAdmin(view: 'add-product' | 'add-category'): void {
+    if (!this.isOwnerRole) {
+      this.showView('profile');
+      return;
+    }
     this.resetCategoryMessages();
     this.resetProductMessages();
     this.showView(view);
+  }
+
+  protected switchTestRole(role: TestRole): void {
+    if (this.currentTestRole === role) return;
+
+    this.currentTestRole = role;
+    this.persistCurrentTestRole();
+
+    if (!this.isOwnerRole && (this.activeView === 'add-product' || this.activeView === 'add-category')) {
+      this.showView('profile');
+      return;
+    }
+
+    if (this.activeView === 'orders') {
+      this.loadOrders();
+    }
+
+    this.changeDetector.detectChanges();
   }
 
   protected submitCategory(): void {
@@ -948,12 +1043,62 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected orderItemCount(order: Venta): number {
+    if (typeof order.items_count === 'number' && Number.isFinite(order.items_count)) {
+      return order.items_count;
+    }
     return (order.items ?? []).reduce((sum, item) => sum + Number(item.cantidad || 0), 0);
   }
 
   protected orderItemLabel(order: Venta): string {
     const count = this.orderItemCount(order);
     return count === 1 ? '1 producto' : `${count} productos`;
+  }
+
+  protected isOrderExpanded(order: Venta): boolean {
+    return this.expandedOrderIds.has(order.venta_id);
+  }
+
+  protected isOrderLoading(order: Venta): boolean {
+    return this.loadingOrderIds.has(order.venta_id);
+  }
+
+  protected toggleOrderDetails(order: Venta): void {
+    if (this.isOrderExpanded(order)) {
+      this.expandedOrderIds.delete(order.venta_id);
+      this.changeDetector.detectChanges();
+      return;
+    }
+
+    this.expandedOrderIds.add(order.venta_id);
+    if (order.detailsLoaded || this.loadingOrderIds.has(order.venta_id)) {
+      this.changeDetector.detectChanges();
+      return;
+    }
+
+    this.loadingOrderIds.add(order.venta_id);
+    this.http.get<Venta>(`${API_BASE_URL}/ventas/${order.venta_id}`).subscribe({
+      next: (response) => {
+        this.orders = this.orders.map((current) =>
+          current.venta_id === order.venta_id
+            ? { ...current, items: response.items ?? [], items_count: response.items_count ?? current.items_count, detailsLoaded: true }
+            : current,
+        );
+        this.loadingOrderIds.delete(order.venta_id);
+        this.changeDetector.detectChanges();
+      },
+      error: () => {
+        this.loadingOrderIds.delete(order.venta_id);
+        this.changeDetector.detectChanges();
+      },
+    });
+  }
+
+  protected orderItemName(item: VentaDetalle): string {
+    return item.nombre_producto || item.nombre || 'Producto';
+  }
+
+  protected orderItemSubtotal(item: VentaDetalle): string {
+    return this.formatCurrency(Number(item.subtotal || 0));
   }
 
   protected orderCreatedAt(order: Venta): string {
@@ -988,10 +1133,14 @@ export class App implements OnInit, OnDestroy {
     this.checkoutError = '';
     this.checkoutSuccess = '';
 
+    const currentUser = this.currentTestUser;
     const payload = {
-      usuario_id: 'INVITADO',
+      usuario_id: currentUser.usuario_id,
       estatus: 'pendiente',
-      cliente: { nombre: 'Invitado' },
+      cliente: {
+        nombre: currentUser.nombre,
+        email: currentUser.email,
+      },
       items: this.cartItems.map((item) => ({
         producto_id: item.product.producto_id,
         nombre: item.product.name,
@@ -1010,6 +1159,9 @@ export class App implements OnInit, OnDestroy {
         this.productDedications.clear();
         this.checkoutLoading = false;
         this.checkoutSuccess = `Pedido creado: ${venta.venta_id}`;
+        if (this.activeView === 'orders') {
+          this.loadOrders();
+        }
         this.changeDetector.detectChanges();
       },
       error: () => {

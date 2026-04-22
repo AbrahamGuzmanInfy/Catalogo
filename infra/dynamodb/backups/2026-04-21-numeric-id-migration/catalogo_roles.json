@@ -1,0 +1,97 @@
+{
+    "Items": [
+        {
+            "updated_at": {
+                "S": "2026-04-21T15:25:00Z"
+            },
+            "nombre": {
+                "S": "Cliente"
+            },
+            "rol_id": {
+                "S": "ROL-CLIENTE"
+            },
+            "descripcion": {
+                "S": "Consulta catalogo, carrito y pedidos propios."
+            },
+            "created_at": {
+                "S": "2026-04-21T15:25:00Z"
+            },
+            "activo": {
+                "S": "true"
+            },
+            "permisos": {
+                "L": [
+                    {
+                        "S": "catalogo.ver"
+                    },
+                    {
+                        "S": "carrito.usar"
+                    },
+                    {
+                        "S": "ventas.crear"
+                    },
+                    {
+                        "S": "ventas.ver.propias"
+                    }
+                ]
+            },
+            "slug": {
+                "S": "cliente"
+            },
+            "orden": {
+                "N": "2"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-21T15:25:00Z"
+            },
+            "nombre": {
+                "S": "Dueño"
+            },
+            "rol_id": {
+                "S": "ROL-DUENO"
+            },
+            "descripcion": {
+                "S": "Administra productos, categorias y pedidos del catalogo."
+            },
+            "created_at": {
+                "S": "2026-04-21T15:25:00Z"
+            },
+            "activo": {
+                "S": "true"
+            },
+            "permisos": {
+                "L": [
+                    {
+                        "S": "productos.crear"
+                    },
+                    {
+                        "S": "productos.editar"
+                    },
+                    {
+                        "S": "productos.desactivar"
+                    },
+                    {
+                        "S": "categorias.crear"
+                    },
+                    {
+                        "S": "categorias.editar"
+                    },
+                    {
+                        "S": "ventas.ver"
+                    }
+                ]
+            },
+            "slug": {
+                "S": "dueno"
+            },
+            "orden": {
+                "N": "1"
+            }
+        }
+    ],
+    "Count": 2,
+    "ScannedCount": 2,
+    "ConsumedCapacity": null
+}

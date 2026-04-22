@@ -1,0 +1,20 @@
+{
+  "rol_id": { "S": "1" },
+  "nombre": { "S": "Dueño" },
+  "slug": { "S": "dueno" },
+  "descripcion": { "S": "Administra productos, categorias y pedidos del catalogo." },
+  "permisos": {
+    "L": [
+      { "S": "productos.crear" },
+      { "S": "productos.editar" },
+      { "S": "productos.desactivar" },
+      { "S": "categorias.crear" },
+      { "S": "categorias.editar" },
+      { "S": "ventas.ver" }
+    ]
+  },
+  "activo": { "S": "true" },
+  "orden": { "N": "1" },
+  "created_at": { "S": "2026-04-21T15:25:00Z" },
+  "updated_at": { "S": "2026-04-21T15:25:00Z" }
+}

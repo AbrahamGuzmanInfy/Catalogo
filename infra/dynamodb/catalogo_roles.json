@@ -1,0 +1,58 @@
+{
+    "TableName": "catalogo_roles",
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "rol_id",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "slug",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "activo",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "orden",
+            "AttributeType": "N"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "rol_id",
+            "KeyType": "HASH"
+        }
+    ],
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "slug-index",
+            "KeySchema": [
+                {
+                    "AttributeName": "slug",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            }
+        },
+        {
+            "IndexName": "activo-orden-index",
+            "KeySchema": [
+                {
+                    "AttributeName": "activo",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "orden",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            }
+        }
+    ],
+    "BillingMode": "PAY_PER_REQUEST"
+}

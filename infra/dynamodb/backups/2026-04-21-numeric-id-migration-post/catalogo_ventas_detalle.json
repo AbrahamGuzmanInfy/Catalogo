@@ -1,0 +1,182 @@
+{
+    "Items": [
+        {
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "detalle_id": {
+                "S": "1"
+            },
+            "subtotal": {
+                "N": "70"
+            },
+            "created_at": {
+                "S": "2026-04-20T05:02:44.120073+00:00"
+            },
+            "precio_unitario": {
+                "N": "35"
+            },
+            "nombre_producto": {
+                "S": "Ramo Primavera"
+            },
+            "venta_id": {
+                "S": "2"
+            },
+            "dedicatoria": {
+                "S": "Feliz cumplea?os"
+            },
+            "producto_id": {
+                "S": "1"
+            },
+            "cantidad": {
+                "N": "2"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "detalle_id": {
+                "S": "1"
+            },
+            "subtotal": {
+                "N": "35"
+            },
+            "created_at": {
+                "S": "2026-04-20T04:55:29.132464+00:00"
+            },
+            "precio_unitario": {
+                "N": "35"
+            },
+            "nombre_producto": {
+                "S": "Ramo Primavera"
+            },
+            "venta_id": {
+                "S": "1"
+            },
+            "dedicatoria": {
+                "S": "Prueba de dedicatoria"
+            },
+            "producto_id": {
+                "S": "1"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "detalle_id": {
+                "S": "1"
+            },
+            "subtotal": {
+                "N": "35"
+            },
+            "created_at": {
+                "S": "2026-04-21T06:06:23.397238+00:00"
+            },
+            "precio_unitario": {
+                "N": "35"
+            },
+            "nombre_producto": {
+                "S": "Ramo Primavera"
+            },
+            "venta_id": {
+                "S": "5"
+            },
+            "dedicatoria": {
+                "S": ""
+            },
+            "producto_id": {
+                "S": "1"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "detalle_id": {
+                "S": "1"
+            },
+            "subtotal": {
+                "N": "39"
+            },
+            "created_at": {
+                "S": "2026-04-21T05:54:15.229811+00:00"
+            },
+            "precio_unitario": {
+                "N": "39"
+            },
+            "nombre_producto": {
+                "S": "Tulipanes Pastel"
+            },
+            "venta_id": {
+                "S": "4"
+            },
+            "dedicatoria": {
+                "S": ""
+            },
+            "producto_id": {
+                "S": "4"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "detalle_id": {
+                "S": "1"
+            },
+            "subtotal": {
+                "N": "45"
+            },
+            "created_at": {
+                "S": "2026-04-21T05:53:08.486292+00:00"
+            },
+            "precio_unitario": {
+                "N": "45"
+            },
+            "nombre_producto": {
+                "S": "Rosas Romanticas"
+            },
+            "venta_id": {
+                "S": "3"
+            },
+            "dedicatoria": {
+                "S": ""
+            },
+            "producto_id": {
+                "S": "3"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        }
+    ],
+    "Count": 5,
+    "ScannedCount": 5,
+    "ConsumedCapacity": null
+}

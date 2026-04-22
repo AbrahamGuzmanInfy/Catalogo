@@ -1,0 +1,211 @@
+{
+    "catalogo_productos":  [
+                               {
+                                   "PutRequest":  {
+                                                      "Item":  {
+                                                                   "nombre":  {
+                                                                                  "S":  "Ramo Primavera"
+                                                                              },
+                                                                   "detalle_imagen_url":  {
+                                                                                              "S":  "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=1200\u0026auto=format\u0026fit=crop\u0026q=95"
+                                                                                          },
+                                                                   "descripcion":  {
+                                                                                       "S":  "Una mezcla vibrante de tulipanes, jacintos y flores primaverales para alegrar cualquier dia."
+                                                                                   },
+                                                                   "created_at":  {
+                                                                                      "S":  "2026-04-18T22:54:13.500109+00:00"
+                                                                                  },
+                                                                   "activo":  {
+                                                                                  "S":  "true"
+                                                                              },
+                                                                   "slug":  {
+                                                                                "S":  "ramo-primavera"
+                                                                            },
+                                                                   "alt":  {
+                                                                               "S":  "Ramo Primavera"
+                                                                           },
+                                                                   "imagen_url":  {
+                                                                                      "S":  "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=640\u0026auto=format\u0026fit=crop\u0026q=90"
+                                                                                  },
+                                                                   "precio":  {
+                                                                                  "N":  "35"
+                                                                              },
+                                                                   "orden":  {
+                                                                                 "N":  "1"
+                                                                             },
+                                                                   "producto_id":  {
+                                                                                       "S":  "1"
+                                                                                   },
+                                                                   "updated_at":  {
+                                                                                      "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                  }
+                                                               }
+                                                  }
+                               },
+                               {
+                                   "PutRequest":  {
+                                                      "Item":  {
+                                                                   "nombre":  {
+                                                                                  "S":  "Producto de prueba"
+                                                                              },
+                                                                   "created_at":  {
+                                                                                      "S":  "2026-04-21T03:59:58.338107+00:00"
+                                                                                  },
+                                                                   "activo":  {
+                                                                                  "S":  "true"
+                                                                              },
+                                                                   "slug":  {
+                                                                                "S":  "producto-de-prueba"
+                                                                            },
+                                                                   "alt":  {
+                                                                               "S":  "Producto de prueba"
+                                                                           },
+                                                                   "imagen_url":  {
+                                                                                      "S":  "https://media-app-1.s3.us-east-2.amazonaws.com/uploads/products/2026/04/94644743446d426bab665dec30aabc1b.png"
+                                                                                  },
+                                                                   "orden":  {
+                                                                                 "N":  "2"
+                                                                             },
+                                                                   "detalle_imagen_url":  {
+                                                                                              "S":  "https://media-app-1.s3.us-east-2.amazonaws.com/uploads/products/2026/04/94644743446d426bab665dec30aabc1b.png"
+                                                                                          },
+                                                                   "descripcion":  {
+                                                                                       "S":  "Descripci?n de prueba"
+                                                                                   },
+                                                                   "model3d_url":  {
+                                                                                       "S":  ""
+                                                                                   },
+                                                                   "precio":  {
+                                                                                  "N":  "100"
+                                                                              },
+                                                                   "producto_id":  {
+                                                                                       "S":  "2"
+                                                                                   },
+                                                                   "updated_at":  {
+                                                                                      "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                  }
+                                                               }
+                                                  }
+                               },
+                               {
+                                   "PutRequest":  {
+                                                      "Item":  {
+                                                                   "nombre":  {
+                                                                                  "S":  "Rosas Romanticas"
+                                                                              },
+                                                                   "detalle_imagen_url":  {
+                                                                                              "S":  "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=1200\u0026auto=format\u0026fit=crop\u0026q=95"
+                                                                                          },
+                                                                   "descripcion":  {
+                                                                                       "S":  "Rosas rojas intensas para celebrar amor, aniversarios y momentos inolvidables."
+                                                                                   },
+                                                                   "created_at":  {
+                                                                                      "S":  "2026-04-18T22:54:14.020185+00:00"
+                                                                                  },
+                                                                   "activo":  {
+                                                                                  "S":  "true"
+                                                                              },
+                                                                   "slug":  {
+                                                                                "S":  "rosas-romanticas"
+                                                                            },
+                                                                   "alt":  {
+                                                                               "S":  "Rosas Romanticas"
+                                                                           },
+                                                                   "imagen_url":  {
+                                                                                      "S":  "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=640\u0026auto=format\u0026fit=crop\u0026q=90"
+                                                                                  },
+                                                                   "precio":  {
+                                                                                  "N":  "45"
+                                                                              },
+                                                                   "orden":  {
+                                                                                 "N":  "2"
+                                                                             },
+                                                                   "producto_id":  {
+                                                                                       "S":  "3"
+                                                                                   },
+                                                                   "updated_at":  {
+                                                                                      "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                  }
+                                                               }
+                                                  }
+                               },
+                               {
+                                   "PutRequest":  {
+                                                      "Item":  {
+                                                                   "nombre":  {
+                                                                                  "S":  "Tulipanes Pastel"
+                                                                              },
+                                                                   "detalle_imagen_url":  {
+                                                                                              "S":  "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=1200\u0026auto=format\u0026fit=crop\u0026q=95"
+                                                                                          },
+                                                                   "descripcion":  {
+                                                                                       "S":  "Tulipanes suaves y luminosos para regalar calma, color y un detalle fresco."
+                                                                                   },
+                                                                   "created_at":  {
+                                                                                      "S":  "2026-04-18T22:57:28.919420+00:00"
+                                                                                  },
+                                                                   "activo":  {
+                                                                                  "S":  "true"
+                                                                              },
+                                                                   "slug":  {
+                                                                                "S":  "tulipanes-pastel"
+                                                                            },
+                                                                   "alt":  {
+                                                                               "S":  "Tulipanes Pastel"
+                                                                           },
+                                                                   "imagen_url":  {
+                                                                                      "S":  "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=640\u0026auto=format\u0026fit=crop\u0026q=90"
+                                                                                  },
+                                                                   "precio":  {
+                                                                                  "N":  "39"
+                                                                              },
+                                                                   "orden":  {
+                                                                                 "N":  "3"
+                                                                             },
+                                                                   "producto_id":  {
+                                                                                       "S":  "4"
+                                                                                   },
+                                                                   "updated_at":  {
+                                                                                      "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                  }
+                                                               }
+                                                  }
+                               },
+                               {
+                                   "DeleteRequest":  {
+                                                         "Key":  {
+                                                                     "producto_id":  {
+                                                                                         "S":  "PROD-7C2900CE08"
+                                                                                     }
+                                                                 }
+                                                     }
+                               },
+                               {
+                                   "DeleteRequest":  {
+                                                         "Key":  {
+                                                                     "producto_id":  {
+                                                                                         "S":  "PROD-TULIPANES-PASTEL"
+                                                                                     }
+                                                                 }
+                                                     }
+                               },
+                               {
+                                   "DeleteRequest":  {
+                                                         "Key":  {
+                                                                     "producto_id":  {
+                                                                                         "S":  "PROD-ROSAS-ROMANTICAS"
+                                                                                     }
+                                                                 }
+                                                     }
+                               },
+                               {
+                                   "DeleteRequest":  {
+                                                         "Key":  {
+                                                                     "producto_id":  {
+                                                                                         "S":  "PROD-RAMO-PRIMAVERA"
+                                                                                     }
+                                                                 }
+                                                     }
+                               }
+                           ]
+}

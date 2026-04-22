@@ -1,0 +1,59 @@
+{
+    "Items": [
+        {
+            "usuario_id": {
+                "S": "USER-CLIENTE-001"
+            },
+            "updated_at": {
+                "S": "2026-04-21T15:35:00Z"
+            },
+            "nombre": {
+                "S": "Cliente Demo"
+            },
+            "rol_id": {
+                "S": "ROL-CLIENTE"
+            },
+            "created_at": {
+                "S": "2026-04-21T15:35:00Z"
+            },
+            "activo": {
+                "S": "true"
+            },
+            "telefono": {
+                "S": "5550000002"
+            },
+            "email": {
+                "S": "cliente@petalco.test"
+            }
+        },
+        {
+            "usuario_id": {
+                "S": "USER-DUENO-001"
+            },
+            "updated_at": {
+                "S": "2026-04-21T15:35:00Z"
+            },
+            "nombre": {
+                "S": "Dueno Demo"
+            },
+            "rol_id": {
+                "S": "ROL-DUENO"
+            },
+            "created_at": {
+                "S": "2026-04-21T15:35:00Z"
+            },
+            "activo": {
+                "S": "true"
+            },
+            "telefono": {
+                "S": "5550000001"
+            },
+            "email": {
+                "S": "dueno@petalco.test"
+            }
+        }
+    ],
+    "Count": 2,
+    "ScannedCount": 2,
+    "ConsumedCapacity": null
+}

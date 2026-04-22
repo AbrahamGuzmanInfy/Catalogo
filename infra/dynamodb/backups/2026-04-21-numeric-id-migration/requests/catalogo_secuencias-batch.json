@@ -1,0 +1,94 @@
+{
+    "catalogo_secuencias":  [
+                                {
+                                    "PutRequest":  {
+                                                       "Item":  {
+                                                                    "secuencia_id":  {
+                                                                                         "S":  "roles"
+                                                                                     },
+                                                                    "ultimo_valor":  {
+                                                                                         "N":  "2"
+                                                                                     },
+                                                                    "updated_at":  {
+                                                                                       "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                   }
+                                                                }
+                                                   }
+                                },
+                                {
+                                    "PutRequest":  {
+                                                       "Item":  {
+                                                                    "secuencia_id":  {
+                                                                                         "S":  "usuarios"
+                                                                                     },
+                                                                    "ultimo_valor":  {
+                                                                                         "N":  "2"
+                                                                                     },
+                                                                    "updated_at":  {
+                                                                                       "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                   }
+                                                                }
+                                                   }
+                                },
+                                {
+                                    "PutRequest":  {
+                                                       "Item":  {
+                                                                    "secuencia_id":  {
+                                                                                         "S":  "categorias"
+                                                                                     },
+                                                                    "ultimo_valor":  {
+                                                                                         "N":  "3"
+                                                                                     },
+                                                                    "updated_at":  {
+                                                                                       "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                   }
+                                                                }
+                                                   }
+                                },
+                                {
+                                    "PutRequest":  {
+                                                       "Item":  {
+                                                                    "secuencia_id":  {
+                                                                                         "S":  "productos"
+                                                                                     },
+                                                                    "ultimo_valor":  {
+                                                                                         "N":  "4"
+                                                                                     },
+                                                                    "updated_at":  {
+                                                                                       "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                   }
+                                                                }
+                                                   }
+                                },
+                                {
+                                    "PutRequest":  {
+                                                       "Item":  {
+                                                                    "secuencia_id":  {
+                                                                                         "S":  "ventas"
+                                                                                     },
+                                                                    "ultimo_valor":  {
+                                                                                         "N":  "5"
+                                                                                     },
+                                                                    "updated_at":  {
+                                                                                       "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                   }
+                                                                }
+                                                   }
+                                },
+                                {
+                                    "PutRequest":  {
+                                                       "Item":  {
+                                                                    "secuencia_id":  {
+                                                                                         "S":  "pagos"
+                                                                                     },
+                                                                    "ultimo_valor":  {
+                                                                                         "N":  "0"
+                                                                                     },
+                                                                    "updated_at":  {
+                                                                                       "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                   }
+                                                                }
+                                                   }
+                                }
+                            ]
+}

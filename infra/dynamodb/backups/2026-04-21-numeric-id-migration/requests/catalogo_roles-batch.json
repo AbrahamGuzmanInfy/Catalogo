@@ -1,0 +1,120 @@
+{
+    "catalogo_roles":  [
+                           {
+                               "PutRequest":  {
+                                                  "Item":  {
+                                                               "nombre":  {
+                                                                              "S":  "Dueño"
+                                                                          },
+                                                               "descripcion":  {
+                                                                                   "S":  "Administra productos, categorias y pedidos del catalogo."
+                                                                               },
+                                                               "created_at":  {
+                                                                                  "S":  "2026-04-21T15:25:00Z"
+                                                                              },
+                                                               "activo":  {
+                                                                              "S":  "true"
+                                                                          },
+                                                               "permisos":  {
+                                                                                "L":  [
+                                                                                          {
+                                                                                              "S":  "productos.crear"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "productos.editar"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "productos.desactivar"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "categorias.crear"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "categorias.editar"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "ventas.ver"
+                                                                                          }
+                                                                                      ]
+                                                                            },
+                                                               "slug":  {
+                                                                            "S":  "dueno"
+                                                                        },
+                                                               "orden":  {
+                                                                             "N":  "1"
+                                                                         },
+                                                               "rol_id":  {
+                                                                              "S":  "1"
+                                                                          },
+                                                               "updated_at":  {
+                                                                                  "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                              }
+                                                           }
+                                              }
+                           },
+                           {
+                               "PutRequest":  {
+                                                  "Item":  {
+                                                               "nombre":  {
+                                                                              "S":  "Cliente"
+                                                                          },
+                                                               "descripcion":  {
+                                                                                   "S":  "Consulta catalogo, carrito y pedidos propios."
+                                                                               },
+                                                               "created_at":  {
+                                                                                  "S":  "2026-04-21T15:25:00Z"
+                                                                              },
+                                                               "activo":  {
+                                                                              "S":  "true"
+                                                                          },
+                                                               "permisos":  {
+                                                                                "L":  [
+                                                                                          {
+                                                                                              "S":  "catalogo.ver"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "carrito.usar"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "ventas.crear"
+                                                                                          },
+                                                                                          {
+                                                                                              "S":  "ventas.ver.propias"
+                                                                                          }
+                                                                                      ]
+                                                                            },
+                                                               "slug":  {
+                                                                            "S":  "cliente"
+                                                                        },
+                                                               "orden":  {
+                                                                             "N":  "2"
+                                                                         },
+                                                               "rol_id":  {
+                                                                              "S":  "2"
+                                                                          },
+                                                               "updated_at":  {
+                                                                                  "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                              }
+                                                           }
+                                              }
+                           },
+                           {
+                               "DeleteRequest":  {
+                                                     "Key":  {
+                                                                 "rol_id":  {
+                                                                                "S":  "ROL-CLIENTE"
+                                                                            }
+                                                             }
+                                                 }
+                           },
+                           {
+                               "DeleteRequest":  {
+                                                     "Key":  {
+                                                                 "rol_id":  {
+                                                                                "S":  "ROL-DUENO"
+                                                                            }
+                                                             }
+                                                 }
+                           }
+                       ]
+}

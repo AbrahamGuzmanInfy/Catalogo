@@ -1,0 +1,78 @@
+{
+    "TableName": "catalogo_usuarios",
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "usuario_id",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "email",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "rol_id",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "activo",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "created_at",
+            "AttributeType": "S"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "usuario_id",
+            "KeyType": "HASH"
+        }
+    ],
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "email-index",
+            "KeySchema": [
+                {
+                    "AttributeName": "email",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            }
+        },
+        {
+            "IndexName": "rol_id-created_at-index",
+            "KeySchema": [
+                {
+                    "AttributeName": "rol_id",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "created_at",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            }
+        },
+        {
+            "IndexName": "activo-created_at-index",
+            "KeySchema": [
+                {
+                    "AttributeName": "activo",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "created_at",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            }
+        }
+    ],
+    "BillingMode": "PAY_PER_REQUEST"
+}

@@ -1,0 +1,73 @@
+{
+    "Items": [
+        {
+            "secuencia_id": {
+                "S": "categorias"
+            },
+            "ultimo_valor": {
+                "N": "4"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:21:53.019642+00:00"
+            }
+        },
+        {
+            "secuencia_id": {
+                "S": "ventas"
+            },
+            "ultimo_valor": {
+                "N": "6"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:21:53.994797+00:00"
+            }
+        },
+        {
+            "secuencia_id": {
+                "S": "productos"
+            },
+            "ultimo_valor": {
+                "N": "5"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:21:53.659700+00:00"
+            }
+        },
+        {
+            "ultimo_valor": {
+                "N": "0"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "secuencia_id": {
+                "S": "pagos"
+            }
+        },
+        {
+            "ultimo_valor": {
+                "N": "2"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "secuencia_id": {
+                "S": "usuarios"
+            }
+        },
+        {
+            "ultimo_valor": {
+                "N": "2"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:20:20.5852475Z"
+            },
+            "secuencia_id": {
+                "S": "roles"
+            }
+        }
+    ],
+    "Count": 6,
+    "ScannedCount": 6,
+    "ConsumedCapacity": null
+}

@@ -1,0 +1,18 @@
+{
+  "rol_id": { "S": "2" },
+  "nombre": { "S": "Cliente" },
+  "slug": { "S": "cliente" },
+  "descripcion": { "S": "Consulta catalogo, carrito y pedidos propios." },
+  "permisos": {
+    "L": [
+      { "S": "catalogo.ver" },
+      { "S": "carrito.usar" },
+      { "S": "ventas.crear" },
+      { "S": "ventas.ver.propias" }
+    ]
+  },
+  "activo": { "S": "true" },
+  "orden": { "N": "2" },
+  "created_at": { "S": "2026-04-21T15:25:00Z" },
+  "updated_at": { "S": "2026-04-21T15:25:00Z" }
+}

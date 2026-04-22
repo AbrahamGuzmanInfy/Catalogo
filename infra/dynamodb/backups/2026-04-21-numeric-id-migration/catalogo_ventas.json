@@ -1,0 +1,287 @@
+{
+    "Items": [
+        {
+            "impuestos": {
+                "N": "0"
+            },
+            "moneda": {
+                "S": "MXN"
+            },
+            "metodo_pago": {
+                "S": "pendiente"
+            },
+            "created_at": {
+                "S": "2026-04-21T06:06:23.397238+00:00"
+            },
+            "envio": {
+                "N": "5"
+            },
+            "venta_id": {
+                "S": "VEN-698ED75DFF6A"
+            },
+            "total": {
+                "N": "40"
+            },
+            "metodo_entrega": {
+                "S": "domicilio"
+            },
+            "usuario_id": {
+                "S": "INVITADO"
+            },
+            "updated_at": {
+                "S": "2026-04-21T06:06:23.397238+00:00"
+            },
+            "estatus": {
+                "S": "pendiente"
+            },
+            "subtotal": {
+                "N": "35"
+            },
+            "cliente": {
+                "M": {
+                    "nombre": {
+                        "S": "Invitado"
+                    }
+                }
+            },
+            "items_count": {
+                "N": "1"
+            },
+            "direccion_entrega": {
+                "M": {}
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "impuestos": {
+                "N": "0"
+            },
+            "moneda": {
+                "S": "MXN"
+            },
+            "metodo_pago": {
+                "S": "pendiente"
+            },
+            "created_at": {
+                "S": "2026-04-21T05:54:15.229811+00:00"
+            },
+            "envio": {
+                "N": "5"
+            },
+            "venta_id": {
+                "S": "VEN-8E1AD53A6CA4"
+            },
+            "total": {
+                "N": "44"
+            },
+            "metodo_entrega": {
+                "S": "domicilio"
+            },
+            "usuario_id": {
+                "S": "INVITADO"
+            },
+            "updated_at": {
+                "S": "2026-04-21T05:54:15.229811+00:00"
+            },
+            "estatus": {
+                "S": "pendiente"
+            },
+            "subtotal": {
+                "N": "39"
+            },
+            "cliente": {
+                "M": {
+                    "nombre": {
+                        "S": "Invitado"
+                    }
+                }
+            },
+            "items_count": {
+                "N": "1"
+            },
+            "direccion_entrega": {
+                "M": {}
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "impuestos": {
+                "N": "0"
+            },
+            "moneda": {
+                "S": "MXN"
+            },
+            "metodo_pago": {
+                "S": "pendiente"
+            },
+            "created_at": {
+                "S": "2026-04-21T05:53:08.486292+00:00"
+            },
+            "envio": {
+                "N": "5"
+            },
+            "venta_id": {
+                "S": "VEN-260037AA1BA1"
+            },
+            "total": {
+                "N": "50"
+            },
+            "metodo_entrega": {
+                "S": "domicilio"
+            },
+            "usuario_id": {
+                "S": "INVITADO"
+            },
+            "updated_at": {
+                "S": "2026-04-21T05:53:08.486292+00:00"
+            },
+            "estatus": {
+                "S": "pendiente"
+            },
+            "subtotal": {
+                "N": "45"
+            },
+            "cliente": {
+                "M": {
+                    "nombre": {
+                        "S": "Invitado"
+                    }
+                }
+            },
+            "items_count": {
+                "N": "1"
+            },
+            "direccion_entrega": {
+                "M": {}
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "impuestos": {
+                "N": "0"
+            },
+            "moneda": {
+                "S": "MXN"
+            },
+            "metodo_pago": {
+                "S": "pendiente"
+            },
+            "created_at": {
+                "S": "2026-04-20T05:02:44.120073+00:00"
+            },
+            "envio": {
+                "N": "5"
+            },
+            "venta_id": {
+                "S": "VEN-335E5676D56B"
+            },
+            "total": {
+                "N": "75"
+            },
+            "metodo_entrega": {
+                "S": "domicilio"
+            },
+            "usuario_id": {
+                "S": "INVITADO"
+            },
+            "updated_at": {
+                "S": "2026-04-20T05:02:44.120073+00:00"
+            },
+            "estatus": {
+                "S": "pendiente"
+            },
+            "subtotal": {
+                "N": "70"
+            },
+            "cliente": {
+                "M": {
+                    "nombre": {
+                        "S": "Invitado"
+                    }
+                }
+            },
+            "items_count": {
+                "N": "1"
+            },
+            "direccion_entrega": {
+                "M": {}
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "impuestos": {
+                "N": "0"
+            },
+            "moneda": {
+                "S": "MXN"
+            },
+            "metodo_pago": {
+                "S": "pendiente"
+            },
+            "created_at": {
+                "S": "2026-04-20T04:55:29.132464+00:00"
+            },
+            "envio": {
+                "N": "5"
+            },
+            "venta_id": {
+                "S": "VEN-26FD084E0D02"
+            },
+            "total": {
+                "N": "40"
+            },
+            "metodo_entrega": {
+                "S": "domicilio"
+            },
+            "usuario_id": {
+                "S": "INVITADO"
+            },
+            "updated_at": {
+                "S": "2026-04-20T04:55:29.132464+00:00"
+            },
+            "estatus": {
+                "S": "pendiente"
+            },
+            "subtotal": {
+                "N": "35"
+            },
+            "cliente": {
+                "M": {
+                    "telefono": {
+                        "S": "0000000000"
+                    },
+                    "nombre": {
+                        "S": "Prueba"
+                    }
+                }
+            },
+            "items_count": {
+                "N": "1"
+            },
+            "direccion_entrega": {
+                "M": {
+                    "referencias": {
+                        "S": "Registro de prueba API"
+                    },
+                    "ciudad": {
+                        "S": "Prueba"
+                    }
+                }
+            },
+            "descuento": {
+                "N": "0"
+            }
+        }
+    ],
+    "Count": 5,
+    "ScannedCount": 5,
+    "ConsumedCapacity": null
+}

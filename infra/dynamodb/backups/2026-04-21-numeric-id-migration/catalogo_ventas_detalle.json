@@ -1,0 +1,182 @@
+{
+    "Items": [
+        {
+            "updated_at": {
+                "S": "2026-04-21T06:06:23.397238+00:00"
+            },
+            "detalle_id": {
+                "S": "DET-001"
+            },
+            "subtotal": {
+                "N": "35"
+            },
+            "created_at": {
+                "S": "2026-04-21T06:06:23.397238+00:00"
+            },
+            "precio_unitario": {
+                "N": "35"
+            },
+            "nombre_producto": {
+                "S": "Ramo Primavera"
+            },
+            "venta_id": {
+                "S": "VEN-698ED75DFF6A"
+            },
+            "dedicatoria": {
+                "S": ""
+            },
+            "producto_id": {
+                "S": "PROD-RAMO-PRIMAVERA"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-21T05:54:15.229811+00:00"
+            },
+            "detalle_id": {
+                "S": "DET-001"
+            },
+            "subtotal": {
+                "N": "39"
+            },
+            "created_at": {
+                "S": "2026-04-21T05:54:15.229811+00:00"
+            },
+            "precio_unitario": {
+                "N": "39"
+            },
+            "nombre_producto": {
+                "S": "Tulipanes Pastel"
+            },
+            "venta_id": {
+                "S": "VEN-8E1AD53A6CA4"
+            },
+            "dedicatoria": {
+                "S": ""
+            },
+            "producto_id": {
+                "S": "PROD-TULIPANES-PASTEL"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-21T05:53:08.486292+00:00"
+            },
+            "detalle_id": {
+                "S": "DET-001"
+            },
+            "subtotal": {
+                "N": "45"
+            },
+            "created_at": {
+                "S": "2026-04-21T05:53:08.486292+00:00"
+            },
+            "precio_unitario": {
+                "N": "45"
+            },
+            "nombre_producto": {
+                "S": "Rosas Romanticas"
+            },
+            "venta_id": {
+                "S": "VEN-260037AA1BA1"
+            },
+            "dedicatoria": {
+                "S": ""
+            },
+            "producto_id": {
+                "S": "PROD-ROSAS-ROMANTICAS"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-20T05:02:44.120073+00:00"
+            },
+            "detalle_id": {
+                "S": "DET-001"
+            },
+            "subtotal": {
+                "N": "70"
+            },
+            "created_at": {
+                "S": "2026-04-20T05:02:44.120073+00:00"
+            },
+            "precio_unitario": {
+                "N": "35"
+            },
+            "nombre_producto": {
+                "S": "Ramo Primavera"
+            },
+            "venta_id": {
+                "S": "VEN-335E5676D56B"
+            },
+            "dedicatoria": {
+                "S": "Feliz cumplea?os"
+            },
+            "producto_id": {
+                "S": "PROD-RAMO-PRIMAVERA"
+            },
+            "cantidad": {
+                "N": "2"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        },
+        {
+            "updated_at": {
+                "S": "2026-04-20T04:55:29.132464+00:00"
+            },
+            "detalle_id": {
+                "S": "DET-001"
+            },
+            "subtotal": {
+                "N": "35"
+            },
+            "created_at": {
+                "S": "2026-04-20T04:55:29.132464+00:00"
+            },
+            "precio_unitario": {
+                "N": "35"
+            },
+            "nombre_producto": {
+                "S": "Ramo Primavera"
+            },
+            "venta_id": {
+                "S": "VEN-26FD084E0D02"
+            },
+            "dedicatoria": {
+                "S": "Prueba de dedicatoria"
+            },
+            "producto_id": {
+                "S": "PROD-RAMO-PRIMAVERA"
+            },
+            "cantidad": {
+                "N": "1"
+            },
+            "descuento": {
+                "N": "0"
+            }
+        }
+    ],
+    "Count": 5,
+    "ScannedCount": 5,
+    "ConsumedCapacity": null
+}

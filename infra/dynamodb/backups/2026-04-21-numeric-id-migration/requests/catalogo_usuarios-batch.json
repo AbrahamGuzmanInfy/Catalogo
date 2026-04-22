@@ -1,0 +1,82 @@
+{
+    "catalogo_usuarios":  [
+                              {
+                                  "PutRequest":  {
+                                                     "Item":  {
+                                                                  "nombre":  {
+                                                                                 "S":  "Dueno Demo"
+                                                                             },
+                                                                  "created_at":  {
+                                                                                     "S":  "2026-04-21T15:35:00Z"
+                                                                                 },
+                                                                  "activo":  {
+                                                                                 "S":  "true"
+                                                                             },
+                                                                  "telefono":  {
+                                                                                   "S":  "5550000001"
+                                                                               },
+                                                                  "email":  {
+                                                                                "S":  "dueno@petalco.test"
+                                                                            },
+                                                                  "usuario_id":  {
+                                                                                     "S":  "1"
+                                                                                 },
+                                                                  "rol_id":  {
+                                                                                 "S":  "1"
+                                                                             },
+                                                                  "updated_at":  {
+                                                                                     "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                 }
+                                                              }
+                                                 }
+                              },
+                              {
+                                  "PutRequest":  {
+                                                     "Item":  {
+                                                                  "nombre":  {
+                                                                                 "S":  "Cliente Demo"
+                                                                             },
+                                                                  "created_at":  {
+                                                                                     "S":  "2026-04-21T15:35:00Z"
+                                                                                 },
+                                                                  "activo":  {
+                                                                                 "S":  "true"
+                                                                             },
+                                                                  "telefono":  {
+                                                                                   "S":  "5550000002"
+                                                                               },
+                                                                  "email":  {
+                                                                                "S":  "cliente@petalco.test"
+                                                                            },
+                                                                  "usuario_id":  {
+                                                                                     "S":  "2"
+                                                                                 },
+                                                                  "rol_id":  {
+                                                                                 "S":  "2"
+                                                                             },
+                                                                  "updated_at":  {
+                                                                                     "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                 }
+                                                              }
+                                                 }
+                              },
+                              {
+                                  "DeleteRequest":  {
+                                                        "Key":  {
+                                                                    "usuario_id":  {
+                                                                                       "S":  "USER-CLIENTE-001"
+                                                                                   }
+                                                                }
+                                                    }
+                              },
+                              {
+                                  "DeleteRequest":  {
+                                                        "Key":  {
+                                                                    "usuario_id":  {
+                                                                                       "S":  "USER-DUENO-001"
+                                                                                   }
+                                                                }
+                                                    }
+                              }
+                          ]
+}

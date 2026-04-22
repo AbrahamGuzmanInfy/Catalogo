@@ -1,0 +1,91 @@
+{
+    "Items": [
+        {
+            "prefijo": {
+                "S": "CAT"
+            },
+            "ultimo_valor": {
+                "N": "4"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:04:58.371374+00:00"
+            },
+            "secuencia_id": {
+                "S": "categorias"
+            }
+        },
+        {
+            "ultimo_valor": {
+                "N": "5"
+            },
+            "prefijo": {
+                "S": "VEN"
+            },
+            "updated_at": {
+                "S": "2026-04-21T16:00:00Z"
+            },
+            "secuencia_id": {
+                "S": "ventas"
+            }
+        },
+        {
+            "prefijo": {
+                "S": "PROD"
+            },
+            "ultimo_valor": {
+                "N": "5"
+            },
+            "updated_at": {
+                "S": "2026-04-22T04:04:59.058516+00:00"
+            },
+            "secuencia_id": {
+                "S": "productos"
+            }
+        },
+        {
+            "ultimo_valor": {
+                "N": "0"
+            },
+            "prefijo": {
+                "S": "PAG"
+            },
+            "updated_at": {
+                "S": "2026-04-21T16:00:00Z"
+            },
+            "secuencia_id": {
+                "S": "pagos"
+            }
+        },
+        {
+            "ultimo_valor": {
+                "N": "2"
+            },
+            "prefijo": {
+                "S": "USER"
+            },
+            "updated_at": {
+                "S": "2026-04-21T16:00:00Z"
+            },
+            "secuencia_id": {
+                "S": "usuarios"
+            }
+        },
+        {
+            "ultimo_valor": {
+                "N": "2"
+            },
+            "prefijo": {
+                "S": "ROL"
+            },
+            "updated_at": {
+                "S": "2026-04-21T16:00:00Z"
+            },
+            "secuencia_id": {
+                "S": "roles"
+            }
+        }
+    ],
+    "Count": 6,
+    "ScannedCount": 6,
+    "ConsumedCapacity": null
+}

@@ -1,0 +1,357 @@
+{
+    "catalogo_ventas":  [
+                            {
+                                "PutRequest":  {
+                                                   "Item":  {
+                                                                "impuestos":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "moneda":  {
+                                                                               "S":  "MXN"
+                                                                           },
+                                                                "metodo_pago":  {
+                                                                                    "S":  "pendiente"
+                                                                                },
+                                                                "created_at":  {
+                                                                                   "S":  "2026-04-20T04:55:29.132464+00:00"
+                                                                               },
+                                                                "envio":  {
+                                                                              "N":  "5"
+                                                                          },
+                                                                "total":  {
+                                                                              "N":  "40"
+                                                                          },
+                                                                "metodo_entrega":  {
+                                                                                       "S":  "domicilio"
+                                                                                   },
+                                                                "estatus":  {
+                                                                                "S":  "pendiente"
+                                                                            },
+                                                                "subtotal":  {
+                                                                                 "N":  "35"
+                                                                             },
+                                                                "cliente":  {
+                                                                                "M":  {
+                                                                                          "telefono":  {
+                                                                                                           "S":  "0000000000"
+                                                                                                       },
+                                                                                          "nombre":  {
+                                                                                                         "S":  "Prueba"
+                                                                                                     }
+                                                                                      }
+                                                                            },
+                                                                "items_count":  {
+                                                                                    "N":  "1"
+                                                                                },
+                                                                "direccion_entrega":  {
+                                                                                          "M":  {
+                                                                                                    "referencias":  {
+                                                                                                                        "S":  "Registro de prueba API"
+                                                                                                                    },
+                                                                                                    "ciudad":  {
+                                                                                                                   "S":  "Prueba"
+                                                                                                               }
+                                                                                                }
+                                                                                      },
+                                                                "descuento":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "venta_id":  {
+                                                                                 "S":  "1"
+                                                                             },
+                                                                "usuario_id":  {
+                                                                                   "S":  "2"
+                                                                               },
+                                                                "updated_at":  {
+                                                                                   "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                               }
+                                                            }
+                                               }
+                            },
+                            {
+                                "PutRequest":  {
+                                                   "Item":  {
+                                                                "impuestos":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "moneda":  {
+                                                                               "S":  "MXN"
+                                                                           },
+                                                                "metodo_pago":  {
+                                                                                    "S":  "pendiente"
+                                                                                },
+                                                                "created_at":  {
+                                                                                   "S":  "2026-04-20T05:02:44.120073+00:00"
+                                                                               },
+                                                                "envio":  {
+                                                                              "N":  "5"
+                                                                          },
+                                                                "total":  {
+                                                                              "N":  "75"
+                                                                          },
+                                                                "metodo_entrega":  {
+                                                                                       "S":  "domicilio"
+                                                                                   },
+                                                                "estatus":  {
+                                                                                "S":  "pendiente"
+                                                                            },
+                                                                "subtotal":  {
+                                                                                 "N":  "70"
+                                                                             },
+                                                                "cliente":  {
+                                                                                "M":  {
+                                                                                          "nombre":  {
+                                                                                                         "S":  "Invitado"
+                                                                                                     }
+                                                                                      }
+                                                                            },
+                                                                "items_count":  {
+                                                                                    "N":  "1"
+                                                                                },
+                                                                "direccion_entrega":  {
+                                                                                          "M":  {
+
+                                                                                                }
+                                                                                      },
+                                                                "descuento":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "venta_id":  {
+                                                                                 "S":  "2"
+                                                                             },
+                                                                "usuario_id":  {
+                                                                                   "S":  "2"
+                                                                               },
+                                                                "updated_at":  {
+                                                                                   "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                               }
+                                                            }
+                                               }
+                            },
+                            {
+                                "PutRequest":  {
+                                                   "Item":  {
+                                                                "impuestos":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "moneda":  {
+                                                                               "S":  "MXN"
+                                                                           },
+                                                                "metodo_pago":  {
+                                                                                    "S":  "pendiente"
+                                                                                },
+                                                                "created_at":  {
+                                                                                   "S":  "2026-04-21T05:53:08.486292+00:00"
+                                                                               },
+                                                                "envio":  {
+                                                                              "N":  "5"
+                                                                          },
+                                                                "total":  {
+                                                                              "N":  "50"
+                                                                          },
+                                                                "metodo_entrega":  {
+                                                                                       "S":  "domicilio"
+                                                                                   },
+                                                                "estatus":  {
+                                                                                "S":  "pendiente"
+                                                                            },
+                                                                "subtotal":  {
+                                                                                 "N":  "45"
+                                                                             },
+                                                                "cliente":  {
+                                                                                "M":  {
+                                                                                          "nombre":  {
+                                                                                                         "S":  "Invitado"
+                                                                                                     }
+                                                                                      }
+                                                                            },
+                                                                "items_count":  {
+                                                                                    "N":  "1"
+                                                                                },
+                                                                "direccion_entrega":  {
+                                                                                          "M":  {
+
+                                                                                                }
+                                                                                      },
+                                                                "descuento":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "venta_id":  {
+                                                                                 "S":  "3"
+                                                                             },
+                                                                "usuario_id":  {
+                                                                                   "S":  "2"
+                                                                               },
+                                                                "updated_at":  {
+                                                                                   "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                               }
+                                                            }
+                                               }
+                            },
+                            {
+                                "PutRequest":  {
+                                                   "Item":  {
+                                                                "impuestos":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "moneda":  {
+                                                                               "S":  "MXN"
+                                                                           },
+                                                                "metodo_pago":  {
+                                                                                    "S":  "pendiente"
+                                                                                },
+                                                                "created_at":  {
+                                                                                   "S":  "2026-04-21T05:54:15.229811+00:00"
+                                                                               },
+                                                                "envio":  {
+                                                                              "N":  "5"
+                                                                          },
+                                                                "total":  {
+                                                                              "N":  "44"
+                                                                          },
+                                                                "metodo_entrega":  {
+                                                                                       "S":  "domicilio"
+                                                                                   },
+                                                                "estatus":  {
+                                                                                "S":  "pendiente"
+                                                                            },
+                                                                "subtotal":  {
+                                                                                 "N":  "39"
+                                                                             },
+                                                                "cliente":  {
+                                                                                "M":  {
+                                                                                          "nombre":  {
+                                                                                                         "S":  "Invitado"
+                                                                                                     }
+                                                                                      }
+                                                                            },
+                                                                "items_count":  {
+                                                                                    "N":  "1"
+                                                                                },
+                                                                "direccion_entrega":  {
+                                                                                          "M":  {
+
+                                                                                                }
+                                                                                      },
+                                                                "descuento":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "venta_id":  {
+                                                                                 "S":  "4"
+                                                                             },
+                                                                "usuario_id":  {
+                                                                                   "S":  "2"
+                                                                               },
+                                                                "updated_at":  {
+                                                                                   "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                               }
+                                                            }
+                                               }
+                            },
+                            {
+                                "PutRequest":  {
+                                                   "Item":  {
+                                                                "impuestos":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "moneda":  {
+                                                                               "S":  "MXN"
+                                                                           },
+                                                                "metodo_pago":  {
+                                                                                    "S":  "pendiente"
+                                                                                },
+                                                                "created_at":  {
+                                                                                   "S":  "2026-04-21T06:06:23.397238+00:00"
+                                                                               },
+                                                                "envio":  {
+                                                                              "N":  "5"
+                                                                          },
+                                                                "total":  {
+                                                                              "N":  "40"
+                                                                          },
+                                                                "metodo_entrega":  {
+                                                                                       "S":  "domicilio"
+                                                                                   },
+                                                                "estatus":  {
+                                                                                "S":  "pendiente"
+                                                                            },
+                                                                "subtotal":  {
+                                                                                 "N":  "35"
+                                                                             },
+                                                                "cliente":  {
+                                                                                "M":  {
+                                                                                          "nombre":  {
+                                                                                                         "S":  "Invitado"
+                                                                                                     }
+                                                                                      }
+                                                                            },
+                                                                "items_count":  {
+                                                                                    "N":  "1"
+                                                                                },
+                                                                "direccion_entrega":  {
+                                                                                          "M":  {
+
+                                                                                                }
+                                                                                      },
+                                                                "descuento":  {
+                                                                                  "N":  "0"
+                                                                              },
+                                                                "venta_id":  {
+                                                                                 "S":  "5"
+                                                                             },
+                                                                "usuario_id":  {
+                                                                                   "S":  "2"
+                                                                               },
+                                                                "updated_at":  {
+                                                                                   "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                               }
+                                                            }
+                                               }
+                            },
+                            {
+                                "DeleteRequest":  {
+                                                      "Key":  {
+                                                                  "venta_id":  {
+                                                                                   "S":  "VEN-698ED75DFF6A"
+                                                                               }
+                                                              }
+                                                  }
+                            },
+                            {
+                                "DeleteRequest":  {
+                                                      "Key":  {
+                                                                  "venta_id":  {
+                                                                                   "S":  "VEN-8E1AD53A6CA4"
+                                                                               }
+                                                              }
+                                                  }
+                            },
+                            {
+                                "DeleteRequest":  {
+                                                      "Key":  {
+                                                                  "venta_id":  {
+                                                                                   "S":  "VEN-260037AA1BA1"
+                                                                               }
+                                                              }
+                                                  }
+                            },
+                            {
+                                "DeleteRequest":  {
+                                                      "Key":  {
+                                                                  "venta_id":  {
+                                                                                   "S":  "VEN-335E5676D56B"
+                                                                               }
+                                                              }
+                                                  }
+                            },
+                            {
+                                "DeleteRequest":  {
+                                                      "Key":  {
+                                                                  "venta_id":  {
+                                                                                   "S":  "VEN-26FD084E0D02"
+                                                                               }
+                                                              }
+                                                  }
+                            }
+                        ]
+}

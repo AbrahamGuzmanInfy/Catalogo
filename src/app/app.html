@@ -210,6 +210,12 @@
     </section>
   } @else if (activeView === 'orders') {
     <section class="simple-screen orders-screen" aria-label="Pedidos">
+      <button class="admin-back" type="button" (click)="showView('profile')">&#8249; Volver</button>
+      <div class="admin-intro orders-intro">
+        <p class="admin-kicker">Pedidos de prueba</p>
+        <h2>{{ currentTestUser.nombre }}</h2>
+        <p>{{ currentTestUser.email }}</p>
+      </div>
       @if (ordersLoading) {
         <p class="orders-state">Cargando pedidos...</p>
       } @else if (ordersError) {
@@ -223,7 +229,6 @@
               <div class="order-card-top">
                 <div>
                   <p class="order-kicker">Pedido</p>
-                  <h2>{{ order.venta_id }}</h2>
                 </div>
                 <span class="order-status">{{ orderStatusLabel(order.estatus) }}</span>
               </div>
@@ -237,6 +242,33 @@
                 <span>Total</span>
                 <strong>${{ order.total.toFixed(2) }}</strong>
               </div>
+
+              <button class="order-toggle" type="button" (click)="toggleOrderDetails(order)">
+                {{ isOrderExpanded(order) ? 'Ocultar productos' : 'Ver productos' }}
+              </button>
+
+              @if (isOrderExpanded(order)) {
+                <section class="order-items" aria-label="Productos del pedido">
+                  @if (isOrderLoading(order)) {
+                    <p class="order-items-state">Cargando productos...</p>
+                  } @else if (!order.items.length) {
+                    <p class="order-items-state">No hay detalle de productos disponible.</p>
+                  } @else {
+                    @for (item of order.items; track item.venta_detalle_id || item.detalle_id || item.producto_id) {
+                      <article class="order-item-row">
+                        <div class="order-item-copy">
+                          <strong>{{ orderItemName(item) }}</strong>
+                          <small>Cantidad: {{ item.cantidad || 0 }}</small>
+                          @if (item.dedicatoria) {
+                            <small>Dedicatoria: {{ item.dedicatoria }}</small>
+                          }
+                        </div>
+                        <span>{{ orderItemSubtotal(item) }}</span>
+                      </article>
+                    }
+                  }
+                </section>
+              }
             </article>
           }
         </section>
@@ -363,12 +395,25 @@
     <section class="simple-screen profile-screen" aria-label="Perfil">
       <div class="profile-card">
         <img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" />
-        <h2>Invitado</h2>
-        <p>Inicia sesi&oacute;n para guardar direcciones, dedicatorias y pedidos.</p>
+        <h2>{{ currentTestUser.nombre }}</h2>
+        <p>{{ isOwnerRole ? 'Modo de pruebas para administracion del catalogo.' : 'Modo de pruebas para experiencia de cliente.' }}</p>
       </div>
 
-      <button class="profile-action" type="button" (click)="openProfileAdmin('add-product')">Agregar Producto</button>
-      <button class="profile-secondary" type="button" (click)="openProfileAdmin('add-category')">Agregar Categor&iacute;a</button>
+      <section class="profile-role-switch" aria-label="Cambiar rol de prueba">
+        <div class="profile-switch-copy">
+          <strong>Rol activo</strong>
+          <small>{{ isOwnerRole ? 'Due&ntilde;o' : 'Cliente' }}</small>
+        </div>
+        <div class="profile-switch-buttons">
+          <button type="button" [class.active]="currentTestRole === 'dueno'" (click)="switchTestRole('dueno')">Due&ntilde;o</button>
+          <button type="button" [class.active]="currentTestRole === 'cliente'" (click)="switchTestRole('cliente')">Cliente</button>
+        </div>
+      </section>
+
+      @if (isOwnerRole) {
+        <button class="profile-action" type="button" (click)="openProfileAdmin('add-product')">Agregar Producto</button>
+        <button class="profile-secondary" type="button" (click)="openProfileAdmin('add-category')">Agregar Categor&iacute;a</button>
+      }
       <button class="profile-secondary" type="button" (click)="showView('orders')">Mis Pedidos</button>
       <button class="profile-secondary" type="button">Direcciones</button>
     </section>

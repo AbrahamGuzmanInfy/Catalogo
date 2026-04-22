@@ -19,6 +19,7 @@ PRODUCTOS_CATEGORIAS_TABLE = os.environ.get('PRODUCTOS_CATEGORIAS_TABLE', 'catal
 VENTAS_TABLE = os.environ.get('VENTAS_TABLE', 'catalogo_ventas')
 VENTAS_DETALLE_TABLE = os.environ.get('VENTAS_DETALLE_TABLE', 'catalogo_ventas_detalle')
 PAGOS_TABLE = os.environ.get('PAGOS_TABLE', 'catalogo_pagos')
+SECUENCIAS_TABLE = os.environ.get('SECUENCIAS_TABLE', 'catalogo_secuencias')
 MEDIA_BUCKET = os.environ.get('MEDIA_BUCKET', 'media-app-1')
 AWS_REGION = os.environ.get('AWS_REGION', os.environ.get('AWS_DEFAULT_REGION', 'us-east-2'))
 MEDIA_BASE_URL = os.environ.get('MEDIA_BASE_URL', f'https://{MEDIA_BUCKET}.s3.{AWS_REGION}.amazonaws.com')
@@ -29,6 +30,7 @@ productos_categorias_table = dynamodb.Table(PRODUCTOS_CATEGORIAS_TABLE)
 ventas_table = dynamodb.Table(VENTAS_TABLE)
 ventas_detalle_table = dynamodb.Table(VENTAS_DETALLE_TABLE)
 pagos_table = dynamodb.Table(PAGOS_TABLE)
+secuencias_table = dynamodb.Table(SECUENCIAS_TABLE)
 
 
 def serialize_value(value):
@@ -63,6 +65,23 @@ def path_parts(event: dict) -> list[str]:
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def next_sequence_value(sequence_name: str) -> int:
+    result = secuencias_table.update_item(
+        Key={'secuencia_id': sequence_name},
+        UpdateExpression='ADD ultimo_valor :inc SET updated_at = :updated_at',
+        ExpressionAttributeValues={
+            ':inc': Decimal('1'),
+            ':updated_at': now_iso(),
+        },
+        ReturnValues='UPDATED_NEW',
+    )
+    return int(result['Attributes']['ultimo_valor'])
+
+
+def next_sequence_id(sequence_name: str) -> str:
+    return str(next_sequence_value(sequence_name))
 
 
 def slugify(value: str) -> str:
@@ -123,6 +142,13 @@ def safe_file_extension(filename: str, content_type: str) -> str:
     return mapping.get(content_type.lower(), '.jpg')
 
 
+def numeric_sort_key(value) -> tuple[int, int | str]:
+    text = str(value or '').strip()
+    if text.isdigit():
+        return (0, int(text))
+    return (1, text)
+
+
 def public_media_url(key: str) -> str:
     return f"{MEDIA_BASE_URL.rstrip('/')}/{key}"
 
@@ -173,6 +199,7 @@ def public_venta(item: dict) -> dict:
         'estatus': item.get('estatus', 'pendiente'),
         'cliente': item.get('cliente', {}),
         'direccion_entrega': item.get('direccion_entrega', {}),
+        'items_count': item.get('items_count', 0),
         'items': item.get('items', []),
         'subtotal': item.get('subtotal', 0),
         'descuento': item.get('descuento', 0),
@@ -190,6 +217,7 @@ def public_venta(item: dict) -> dict:
 
 def public_venta_detalle(item: dict) -> dict:
     return {
+        'venta_detalle_id': item.get('venta_detalle_id', ''),
         'venta_id': item.get('venta_id', ''),
         'detalle_id': item.get('detalle_id', ''),
         'producto_id': item.get('producto_id', ''),
@@ -236,7 +264,8 @@ def normalize_venta_items(items: list[dict]) -> tuple[list[dict], Decimal]:
         item_subtotal = cantidad * precio_unitario
         subtotal += item_subtotal
         normalized_items.append({
-            'detalle_id': str(raw_item.get('detalle_id') or f'DET-{index:03d}'),
+            'venta_detalle_id': str(raw_item.get('venta_detalle_id') or next_sequence_id('ventas_detalle')),
+            'detalle_id': str(raw_item.get('detalle_id') or index),
             'producto_id': producto_id,
             'nombre_producto': nombre,
             'cantidad': cantidad,
@@ -319,7 +348,7 @@ def venta_detalle_items(venta_id: str) -> list[dict]:
         )
         items.extend(public_venta_detalle(item) for item in result.get('Items', []))
 
-    items.sort(key=lambda item: item.get('detalle_id', ''))
+    items.sort(key=lambda item: numeric_sort_key(item.get('detalle_id', '')))
     return items
 
 
@@ -334,7 +363,7 @@ def list_ventas_detalle(event: dict) -> dict:
     if producto_id:
         items = [item for item in items if item.get('producto_id') == producto_id]
 
-    items.sort(key=lambda item: (item.get('venta_id', ''), item.get('detalle_id', '')))
+    items.sort(key=lambda item: (numeric_sort_key(item.get('venta_id', '')), numeric_sort_key(item.get('detalle_id', ''))))
     return response(200, {'items': items})
 
 
@@ -391,7 +420,7 @@ def create_categoria(payload: dict) -> dict:
 
     timestamp = now_iso()
     item = {
-        'categoria_id': str(payload.get('categoria_id') or f'CAT-{uuid.uuid4().hex[:10].upper()}'),
+        'categoria_id': str(payload.get('categoria_id') or next_sequence_id('categorias')),
         'nombre': nombre,
         'slug': str(payload.get('slug') or slugify(nombre)).strip().lower(),
         'activa': 'true' if payload.get('activa', True) else 'false',
@@ -411,7 +440,7 @@ def create_producto(payload: dict) -> dict:
 
     timestamp = now_iso()
     item = {
-        'producto_id': str(payload.get('producto_id') or f'PROD-{uuid.uuid4().hex[:10].upper()}'),
+        'producto_id': str(payload.get('producto_id') or next_sequence_id('productos')),
         'nombre': nombre,
         'slug': str(payload.get('slug') or slugify(nombre)).strip().lower(),
         'precio': decimal_value(payload.get('precio') or payload.get('price'), 0),
@@ -436,6 +465,7 @@ def create_producto_categoria(payload: dict) -> dict:
         return response(400, {'message': 'categoria_id y producto_id son obligatorios'})
 
     item = {
+        'producto_categoria_id': str(payload.get('producto_categoria_id') or next_sequence_id('productos_categorias')),
         'categoria_id': categoria_id,
         'producto_id': producto_id,
         'created_at': str(payload.get('created_at') or now_iso()),
@@ -469,6 +499,7 @@ def replace_producto_categorias(producto_id: str, categoria_ids: list[str]) -> N
 
         for categoria_id in categoria_ids:
             batch.put_item(Item={
+                'producto_categoria_id': next_sequence_id('productos_categorias'),
                 'categoria_id': categoria_id,
                 'producto_id': producto_id,
                 'created_at': now_iso(),
@@ -599,7 +630,7 @@ def create_venta(payload: dict) -> dict:
     timestamp = now_iso()
 
     item = {
-        'venta_id': str(payload.get('venta_id') or f'VEN-{uuid.uuid4().hex[:12].upper()}'),
+        'venta_id': str(payload.get('venta_id') or next_sequence_id('ventas')),
         'usuario_id': str(payload.get('usuario_id') or 'INVITADO'),
         'estatus': str(payload.get('estatus') or 'pendiente'),
         'cliente': dynamodb_value(payload.get('cliente') or {}),
@@ -654,7 +685,7 @@ def create_pago(payload: dict) -> dict:
 
     timestamp = now_iso()
     item = {
-        'pago_id': str(payload.get('pago_id') or f'PAGO-{uuid.uuid4().hex[:12].upper()}'),
+        'pago_id': str(payload.get('pago_id') or next_sequence_id('pagos')),
         'venta_id': venta_id,
         'estatus': str(payload.get('estatus') or 'pendiente'),
         'metodo_pago': str(payload.get('metodo_pago') or '').strip(),

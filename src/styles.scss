@@ -1175,6 +1175,59 @@ a {
   padding-top: 30px;
 }
 
+.profile-role-switch {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(10, 10, 16, 0.07);
+}
+
+.profile-switch-copy strong,
+.profile-switch-copy small {
+  display: block;
+}
+
+.profile-switch-copy strong {
+  color: #050508;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.profile-switch-copy small {
+  margin-top: 6px;
+  color: #6b6b73;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.profile-switch-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.profile-switch-buttons button {
+  min-height: 40px;
+  border: 1px solid #dedee2;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #09090d;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profile-switch-buttons button.active {
+  border-color: var(--accent-action);
+  background: var(--accent-action);
+  color: #ffffff;
+}
+
 .profile-card img {
   width: 54px;
   height: 54px;
@@ -1320,6 +1373,69 @@ a {
   color: #050508;
   font-size: 22px;
   line-height: 1;
+  font-weight: 800;
+}
+
+.order-toggle {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 14px;
+  border: 1px solid #111111;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111111;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.order-items {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #ececf0;
+}
+
+.order-items-state {
+  margin: 0;
+  color: #68686f;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.order-item-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.order-item-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.order-item-copy strong {
+  color: #050508;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.order-item-copy small {
+  color: #68686f;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.order-item-row span {
+  flex: 0 0 auto;
+  color: #050508;
+  font-size: 15px;
+  line-height: 1.2;
   font-weight: 800;
 }
 @media (min-width: 500px) {

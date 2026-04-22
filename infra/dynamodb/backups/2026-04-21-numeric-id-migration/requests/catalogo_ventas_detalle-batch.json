@@ -1,0 +1,259 @@
+{
+    "catalogo_ventas_detalle":  [
+                                    {
+                                        "PutRequest":  {
+                                                           "Item":  {
+                                                                        "subtotal":  {
+                                                                                         "N":  "35"
+                                                                                     },
+                                                                        "created_at":  {
+                                                                                           "S":  "2026-04-20T04:55:29.132464+00:00"
+                                                                                       },
+                                                                        "precio_unitario":  {
+                                                                                                "N":  "35"
+                                                                                            },
+                                                                        "nombre_producto":  {
+                                                                                                "S":  "Ramo Primavera"
+                                                                                            },
+                                                                        "dedicatoria":  {
+                                                                                            "S":  "Prueba de dedicatoria"
+                                                                                        },
+                                                                        "cantidad":  {
+                                                                                         "N":  "1"
+                                                                                     },
+                                                                        "descuento":  {
+                                                                                          "N":  "0"
+                                                                                      },
+                                                                        "venta_id":  {
+                                                                                         "S":  "1"
+                                                                                     },
+                                                                        "producto_id":  {
+                                                                                            "S":  "1"
+                                                                                        },
+                                                                        "detalle_id":  {
+                                                                                           "S":  "1"
+                                                                                       },
+                                                                        "updated_at":  {
+                                                                                           "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                       }
+                                                                    }
+                                                       }
+                                    },
+                                    {
+                                        "PutRequest":  {
+                                                           "Item":  {
+                                                                        "subtotal":  {
+                                                                                         "N":  "70"
+                                                                                     },
+                                                                        "created_at":  {
+                                                                                           "S":  "2026-04-20T05:02:44.120073+00:00"
+                                                                                       },
+                                                                        "precio_unitario":  {
+                                                                                                "N":  "35"
+                                                                                            },
+                                                                        "nombre_producto":  {
+                                                                                                "S":  "Ramo Primavera"
+                                                                                            },
+                                                                        "dedicatoria":  {
+                                                                                            "S":  "Feliz cumplea?os"
+                                                                                        },
+                                                                        "cantidad":  {
+                                                                                         "N":  "2"
+                                                                                     },
+                                                                        "descuento":  {
+                                                                                          "N":  "0"
+                                                                                      },
+                                                                        "venta_id":  {
+                                                                                         "S":  "2"
+                                                                                     },
+                                                                        "producto_id":  {
+                                                                                            "S":  "1"
+                                                                                        },
+                                                                        "detalle_id":  {
+                                                                                           "S":  "1"
+                                                                                       },
+                                                                        "updated_at":  {
+                                                                                           "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                       }
+                                                                    }
+                                                       }
+                                    },
+                                    {
+                                        "PutRequest":  {
+                                                           "Item":  {
+                                                                        "subtotal":  {
+                                                                                         "N":  "45"
+                                                                                     },
+                                                                        "created_at":  {
+                                                                                           "S":  "2026-04-21T05:53:08.486292+00:00"
+                                                                                       },
+                                                                        "precio_unitario":  {
+                                                                                                "N":  "45"
+                                                                                            },
+                                                                        "nombre_producto":  {
+                                                                                                "S":  "Rosas Romanticas"
+                                                                                            },
+                                                                        "dedicatoria":  {
+                                                                                            "S":  ""
+                                                                                        },
+                                                                        "cantidad":  {
+                                                                                         "N":  "1"
+                                                                                     },
+                                                                        "descuento":  {
+                                                                                          "N":  "0"
+                                                                                      },
+                                                                        "venta_id":  {
+                                                                                         "S":  "3"
+                                                                                     },
+                                                                        "producto_id":  {
+                                                                                            "S":  "3"
+                                                                                        },
+                                                                        "detalle_id":  {
+                                                                                           "S":  "1"
+                                                                                       },
+                                                                        "updated_at":  {
+                                                                                           "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                       }
+                                                                    }
+                                                       }
+                                    },
+                                    {
+                                        "PutRequest":  {
+                                                           "Item":  {
+                                                                        "subtotal":  {
+                                                                                         "N":  "39"
+                                                                                     },
+                                                                        "created_at":  {
+                                                                                           "S":  "2026-04-21T05:54:15.229811+00:00"
+                                                                                       },
+                                                                        "precio_unitario":  {
+                                                                                                "N":  "39"
+                                                                                            },
+                                                                        "nombre_producto":  {
+                                                                                                "S":  "Tulipanes Pastel"
+                                                                                            },
+                                                                        "dedicatoria":  {
+                                                                                            "S":  ""
+                                                                                        },
+                                                                        "cantidad":  {
+                                                                                         "N":  "1"
+                                                                                     },
+                                                                        "descuento":  {
+                                                                                          "N":  "0"
+                                                                                      },
+                                                                        "venta_id":  {
+                                                                                         "S":  "4"
+                                                                                     },
+                                                                        "producto_id":  {
+                                                                                            "S":  "4"
+                                                                                        },
+                                                                        "detalle_id":  {
+                                                                                           "S":  "1"
+                                                                                       },
+                                                                        "updated_at":  {
+                                                                                           "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                       }
+                                                                    }
+                                                       }
+                                    },
+                                    {
+                                        "PutRequest":  {
+                                                           "Item":  {
+                                                                        "subtotal":  {
+                                                                                         "N":  "35"
+                                                                                     },
+                                                                        "created_at":  {
+                                                                                           "S":  "2026-04-21T06:06:23.397238+00:00"
+                                                                                       },
+                                                                        "precio_unitario":  {
+                                                                                                "N":  "35"
+                                                                                            },
+                                                                        "nombre_producto":  {
+                                                                                                "S":  "Ramo Primavera"
+                                                                                            },
+                                                                        "dedicatoria":  {
+                                                                                            "S":  ""
+                                                                                        },
+                                                                        "cantidad":  {
+                                                                                         "N":  "1"
+                                                                                     },
+                                                                        "descuento":  {
+                                                                                          "N":  "0"
+                                                                                      },
+                                                                        "venta_id":  {
+                                                                                         "S":  "5"
+                                                                                     },
+                                                                        "producto_id":  {
+                                                                                            "S":  "1"
+                                                                                        },
+                                                                        "detalle_id":  {
+                                                                                           "S":  "1"
+                                                                                       },
+                                                                        "updated_at":  {
+                                                                                           "S":  "2026-04-22T04:20:20.5852475Z"
+                                                                                       }
+                                                                    }
+                                                       }
+                                    },
+                                    {
+                                        "DeleteRequest":  {
+                                                              "Key":  {
+                                                                          "venta_id":  {
+                                                                                           "S":  "VEN-698ED75DFF6A"
+                                                                                       },
+                                                                          "detalle_id":  {
+                                                                                             "S":  "DET-001"
+                                                                                         }
+                                                                      }
+                                                          }
+                                    },
+                                    {
+                                        "DeleteRequest":  {
+                                                              "Key":  {
+                                                                          "venta_id":  {
+                                                                                           "S":  "VEN-8E1AD53A6CA4"
+                                                                                       },
+                                                                          "detalle_id":  {
+                                                                                             "S":  "DET-001"
+                                                                                         }
+                                                                      }
+                                                          }
+                                    },
+                                    {
+                                        "DeleteRequest":  {
+                                                              "Key":  {
+                                                                          "venta_id":  {
+                                                                                           "S":  "VEN-260037AA1BA1"
+                                                                                       },
+                                                                          "detalle_id":  {
+                                                                                             "S":  "DET-001"
+                                                                                         }
+                                                                      }
+                                                          }
+                                    },
+                                    {
+                                        "DeleteRequest":  {
+                                                              "Key":  {
+                                                                          "venta_id":  {
+                                                                                           "S":  "VEN-335E5676D56B"
+                                                                                       },
+                                                                          "detalle_id":  {
+                                                                                             "S":  "DET-001"
+                                                                                         }
+                                                                      }
+                                                          }
+                                    },
+                                    {
+                                        "DeleteRequest":  {
+                                                              "Key":  {
+                                                                          "venta_id":  {
+                                                                                           "S":  "VEN-26FD084E0D02"
+                                                                                       },
+                                                                          "detalle_id":  {
+                                                                                             "S":  "DET-001"
+                                                                                         }
+                                                                      }
+                                                          }
+                                    }
+                                ]
+}

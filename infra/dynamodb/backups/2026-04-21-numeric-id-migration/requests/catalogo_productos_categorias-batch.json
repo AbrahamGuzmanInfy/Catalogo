@@ -1,0 +1,112 @@
+{
+    "catalogo_productos_categorias":  [
+                                          {
+                                              "PutRequest":  {
+                                                                 "Item":  {
+                                                                              "created_at":  {
+                                                                                                 "S":  "2026-04-19T15:44:35.189478+00:00"
+                                                                                             },
+                                                                              "categoria_id":  {
+                                                                                                   "S":  "1"
+                                                                                               },
+                                                                              "producto_id":  {
+                                                                                                  "S":  "1"
+                                                                                              }
+                                                                          }
+                                                             }
+                                          },
+                                          {
+                                              "PutRequest":  {
+                                                                 "Item":  {
+                                                                              "created_at":  {
+                                                                                                 "S":  "2026-04-19T15:44:35.353986+00:00"
+                                                                                             },
+                                                                              "categoria_id":  {
+                                                                                                   "S":  "1"
+                                                                                               },
+                                                                              "producto_id":  {
+                                                                                                  "S":  "4"
+                                                                                              }
+                                                                          }
+                                                             }
+                                          },
+                                          {
+                                              "PutRequest":  {
+                                                                 "Item":  {
+                                                                              "created_at":  {
+                                                                                                 "S":  "2026-04-21T03:59:58.630764+00:00"
+                                                                                             },
+                                                                              "categoria_id":  {
+                                                                                                   "S":  "2"
+                                                                                               },
+                                                                              "producto_id":  {
+                                                                                                  "S":  "2"
+                                                                                              }
+                                                                          }
+                                                             }
+                                          },
+                                          {
+                                              "PutRequest":  {
+                                                                 "Item":  {
+                                                                              "created_at":  {
+                                                                                                 "S":  "2026-04-19T15:44:34.501865+00:00"
+                                                                                             },
+                                                                              "categoria_id":  {
+                                                                                                   "S":  "3"
+                                                                                               },
+                                                                              "producto_id":  {
+                                                                                                  "S":  "3"
+                                                                                              }
+                                                                          }
+                                                             }
+                                          },
+                                          {
+                                              "DeleteRequest":  {
+                                                                    "Key":  {
+                                                                                "categoria_id":  {
+                                                                                                     "S":  "CAT-46F8CB42F9"
+                                                                                                 },
+                                                                                "producto_id":  {
+                                                                                                    "S":  "PROD-7C2900CE08"
+                                                                                                }
+                                                                            }
+                                                                }
+                                          },
+                                          {
+                                              "DeleteRequest":  {
+                                                                    "Key":  {
+                                                                                "categoria_id":  {
+                                                                                                     "S":  "CAT-858C8EE0DA"
+                                                                                                 },
+                                                                                "producto_id":  {
+                                                                                                    "S":  "PROD-RAMO-PRIMAVERA"
+                                                                                                }
+                                                                            }
+                                                                }
+                                          },
+                                          {
+                                              "DeleteRequest":  {
+                                                                    "Key":  {
+                                                                                "categoria_id":  {
+                                                                                                     "S":  "CAT-858C8EE0DA"
+                                                                                                 },
+                                                                                "producto_id":  {
+                                                                                                    "S":  "PROD-TULIPANES-PASTEL"
+                                                                                                }
+                                                                            }
+                                                                }
+                                          },
+                                          {
+                                              "DeleteRequest":  {
+                                                                    "Key":  {
+                                                                                "categoria_id":  {
+                                                                                                     "S":  "CAT-ROSAS"
+                                                                                                 },
+                                                                                "producto_id":  {
+                                                                                                    "S":  "PROD-ROSAS-ROMANTICAS"
+                                                                                                }
+                                                                            }
+                                                                }
+                                          }
+                                      ]
+}
