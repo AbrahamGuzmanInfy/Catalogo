@@ -2,11 +2,11 @@
   @if (showInstallPrompt) {
     <section class="install-banner" aria-label="Instalar aplicaci&oacute;n">
       <div>
-        <strong>Petal &amp; Co en tu inicio</strong>
+        <strong>Bloomy en tu inicio</strong>
         @if (isIosInstallHelp) {
           <p class="ios-install-copy">En iPhone: toca Compartir y despues Agregar a pantalla de inicio.</p>
         } @else {
-          <p>Abre Petal &amp; Co como app desde tu pantalla principal.</p>
+          <p>Abre Bloomy como app desde tu pantalla principal.</p>
         }
       </div>
       @if (canInstallApp) {
@@ -19,7 +19,7 @@
   <header class="topbar" [class.topbar-home]="activeView === 'home'" [class.topbar-with-tools]="activeView === 'home' || activeView === 'categories'" aria-label="Encabezado">
     <div class="topbar-main">
       <div aria-hidden="true"></div>
-      <h1>Petal &amp; Co</h1>
+      <h1>Bloomy</h1>
       <button class="cart-button" type="button" aria-label="Carrito" (click)="showView('cart')">
         <img class="cart-icon" src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" />
         @if (hasCartItems) {

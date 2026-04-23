@@ -1,0 +1,5 @@
+{
+  "AllowOrigins": ["*"],
+  "AllowMethods": ["GET", "POST", "PATCH", "DELETE"],
+  "AllowHeaders": ["content-type", "authorization"]
+}

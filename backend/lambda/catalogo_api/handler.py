@@ -491,19 +491,31 @@ def replace_producto_categorias(producto_id: str, categoria_ids: list[str]) -> N
         )
         relaciones.extend(existing.get('Items', []))
 
-    with productos_categorias_table.batch_writer() as batch:
-        for relacion in relaciones:
-            categoria_id = str(relacion.get('categoria_id', '')).strip()
-            if categoria_id:
+    existing_by_categoria = {
+        str(relacion.get('categoria_id', '')).strip(): relacion
+        for relacion in relaciones
+        if str(relacion.get('categoria_id', '')).strip()
+    }
+    requested_ids = {categoria_id for categoria_id in categoria_ids if categoria_id}
+    existing_ids = set(existing_by_categoria.keys())
+
+    categoria_ids_to_delete = existing_ids - requested_ids
+    categoria_ids_to_add = requested_ids - existing_ids
+
+    if categoria_ids_to_delete:
+        with productos_categorias_table.batch_writer() as batch:
+            for categoria_id in categoria_ids_to_delete:
                 batch.delete_item(Key={'categoria_id': categoria_id, 'producto_id': producto_id})
 
-        for categoria_id in categoria_ids:
-            batch.put_item(Item={
-                'producto_categoria_id': next_sequence_id('productos_categorias'),
-                'categoria_id': categoria_id,
-                'producto_id': producto_id,
-                'created_at': now_iso(),
-            })
+    if categoria_ids_to_add:
+        with productos_categorias_table.batch_writer() as batch:
+            for categoria_id in sorted(categoria_ids_to_add):
+                batch.put_item(Item={
+                    'producto_categoria_id': next_sequence_id('productos_categorias'),
+                    'categoria_id': categoria_id,
+                    'producto_id': producto_id,
+                    'created_at': now_iso(),
+                })
 
 
 def delete_categoria_relaciones(categoria_id: str) -> None:

@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Petal & Co",
-  "short_name": "Petal",
-  "description": "Catalogo floral Petal & Co.",
+  "name": "Bloomy",
+  "short_name": "Bloomy",
+  "description": "Catalogo floral Bloomy.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

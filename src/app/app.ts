@@ -744,7 +744,9 @@ export class App implements OnInit, OnDestroy {
       },
       error: () => {
         this.categoryFormLoading = false;
-        this.categoryFormError = 'No se pudo crear la categoria. Intenta nuevamente.';
+        this.categoryFormError = isEditing
+          ? 'No se pudo actualizar la categoria. Intenta nuevamente.'
+          : 'No se pudo crear la categoria. Intenta nuevamente.';
         this.changeDetector.detectChanges();
       },
     });
@@ -836,7 +838,9 @@ export class App implements OnInit, OnDestroy {
       },
       error: () => {
         this.productFormLoading = false;
-        this.productFormError = 'No se pudo crear el producto. Intenta nuevamente.';
+        this.productFormError = this.editingProductId
+          ? 'No se pudo actualizar el producto. Intenta nuevamente.'
+          : 'No se pudo crear el producto. Intenta nuevamente.';
         this.changeDetector.detectChanges();
       },
     });
