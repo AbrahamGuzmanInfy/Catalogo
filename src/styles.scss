@@ -1693,10 +1693,10 @@ a {
   bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   display: grid;
   place-items: center;
-  gap: 4px;
-  width: 106px;
-  height: 106px;
-  padding: 16px 10px;
+  gap: 2px;
+  width: 72px;
+  height: 72px;
+  padding: 10px 8px;
   border: 0;
   border-radius: 999px;
   background: var(--accent-action);
@@ -1706,14 +1706,14 @@ a {
 }
 
 .inventory-fab span {
-  font-size: 38px;
+  font-size: 30px;
   line-height: 1;
   font-weight: 300;
 }
 
 .inventory-fab small {
   text-align: center;
-  font-size: 13px;
+  font-size: 11px;
   line-height: 1.2;
   font-weight: 800;
 }
