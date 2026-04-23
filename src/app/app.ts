@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angula
 import { firstValueFrom, forkJoin } from 'rxjs';
 import { ProductDetailComponent } from './product-detail/product-detail';
 
-type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile' | 'orders' | 'add-product' | 'add-category';
+type View = 'home' | 'detail' | 'categories' | 'cart' | 'profile' | 'orders' | 'products' | 'category-admin' | 'add-product' | 'add-category';
 
 const API_BASE_URL = 'https://hs5rkunm27jueyzgyhqliykv7u0sizsx.lambda-url.us-east-2.on.aws';
 const RAMO_PRIMAVERA_MODEL_URL = '/models/ramo-primavera-mobile-draco.glb';
@@ -42,6 +42,8 @@ function viewFromHash(): View {
   if (window.location.hash === '#carrito') return 'cart';
   if (window.location.hash === '#perfil') return 'profile';
   if (window.location.hash === '#pedidos') return 'orders';
+  if (window.location.hash === '#productos-admin') return 'products';
+  if (window.location.hash === '#categorias-admin') return 'category-admin';
   if (window.location.hash === '#agregar-producto') return 'add-product';
   if (window.location.hash === '#agregar-categoria') return 'add-category';
   return 'home';
@@ -52,6 +54,8 @@ function hashForView(view: Exclude<View, 'detail'>): string {
   if (view === 'cart') return '#carrito';
   if (view === 'profile') return '#perfil';
   if (view === 'orders') return '#pedidos';
+  if (view === 'products') return '#productos-admin';
+  if (view === 'category-admin') return '#categorias-admin';
   if (view === 'add-product') return '#agregar-producto';
   if (view === 'add-category') return '#agregar-categoria';
   return window.location.pathname;
@@ -170,7 +174,9 @@ export class App implements OnInit, OnDestroy {
   protected adminProducts: Product[] = [];
   protected productsError = '';
   protected productSearchTerm = '';
+  protected adminProductSearchTerm = '';
   protected categorySearchTerm = '';
+  protected adminCategorySearchTerm = '';
   protected selectedCategoryId = '';
   protected cartItems: CartItem[] = [];
   protected checkoutLoading = false;
@@ -494,6 +500,17 @@ export class App implements OnInit, OnDestroy {
     );
   }
 
+  protected get filteredAdminProducts(): Product[] {
+    const term = this.normalizeSearch(this.adminProductSearchTerm);
+    if (!term) return this.adminProducts;
+
+    return this.adminProducts.filter((product) =>
+      [product.name, product.slug, product.description]
+        .filter((value): value is string => Boolean(value))
+        .some((value) => this.normalizeSearch(value).includes(term)),
+    );
+  }
+
   protected get filteredCategories(): Category[] {
     const term = this.normalizeSearch(this.categorySearchTerm);
     if (!term) return this.categories;
@@ -504,12 +521,31 @@ export class App implements OnInit, OnDestroy {
     );
   }
 
+  protected get filteredAdminCategories(): Category[] {
+    const term = this.normalizeSearch(this.adminCategorySearchTerm);
+    if (!term) return this.categories;
+
+    return this.categories.filter((category) =>
+      [category.nombre, category.slug]
+        .filter((value): value is string => Boolean(value))
+        .some((value) => this.normalizeSearch(value).includes(term)),
+    );
+  }
+
   protected updateProductSearch(event: Event): void {
     this.productSearchTerm = (event.target as HTMLInputElement).value;
   }
 
+  protected updateAdminProductSearch(event: Event): void {
+    this.adminProductSearchTerm = (event.target as HTMLInputElement).value;
+  }
+
   protected updateCategorySearch(event: Event): void {
     this.categorySearchTerm = (event.target as HTMLInputElement).value;
+  }
+
+  protected updateAdminCategorySearch(event: Event): void {
+    this.adminCategorySearchTerm = (event.target as HTMLInputElement).value;
   }
 
   protected selectHomeCategory(category: Category): void {
@@ -690,13 +726,31 @@ export class App implements OnInit, OnDestroy {
     this.showView(view);
   }
 
+  protected openProductsAdmin(): void {
+    if (!this.isOwnerRole) {
+      this.showView('profile');
+      return;
+    }
+    this.resetProductMessages();
+    this.showView('products');
+  }
+
+  protected openCategoryAdmin(): void {
+    if (!this.isOwnerRole) {
+      this.showView('profile');
+      return;
+    }
+    this.resetCategoryMessages();
+    this.showView('category-admin');
+  }
+
   protected switchTestRole(role: TestRole): void {
     if (this.currentTestRole === role) return;
 
     this.currentTestRole = role;
     this.persistCurrentTestRole();
 
-    if (!this.isOwnerRole && (this.activeView === 'add-product' || this.activeView === 'add-category')) {
+    if (!this.isOwnerRole && (this.activeView === 'products' || this.activeView === 'category-admin' || this.activeView === 'add-product' || this.activeView === 'add-category')) {
       this.showView('profile');
       return;
     }
@@ -899,6 +953,17 @@ export class App implements OnInit, OnDestroy {
     this.resetCategoryMessages();
   }
 
+  protected startEditCategoryFromAdmin(category: Category): void {
+    this.startEditCategory(category);
+    this.showView('add-category');
+  }
+
+  protected openNewCategoryForm(): void {
+    this.resetCategoryForm();
+    this.resetCategoryMessages();
+    this.showView('add-category');
+  }
+
   protected deleteCategory(category: Category): void {
     if (this.deletingCategoryId) return;
     if (!window.confirm(`Eliminar la categoria "${category.nombre}"?`)) return;
@@ -943,6 +1008,17 @@ export class App implements OnInit, OnDestroy {
   protected cancelEditProduct(): void {
     this.resetProductForm();
     this.resetProductMessages();
+  }
+
+  protected startEditProductFromInventory(product: Product): void {
+    this.startEditProduct(product);
+    this.showView('add-product');
+  }
+
+  protected openNewProductForm(): void {
+    this.resetProductForm();
+    this.resetProductMessages();
+    this.showView('add-product');
   }
 
   protected deleteProduct(product: Product): void {
@@ -1276,10 +1352,10 @@ export class App implements OnInit, OnDestroy {
       this.loadCategories();
       this.loadProducts();
     }
-    if (view === 'categories' || view === 'add-product' || view === 'add-category') {
+    if (view === 'categories' || view === 'products' || view === 'category-admin' || view === 'add-product' || view === 'add-category') {
       this.loadCategories();
     }
-    if (view === 'add-product') {
+    if (view === 'products' || view === 'add-product') {
       this.loadAdminProducts();
     }
     if (view === 'orders') {
@@ -1294,8 +1370,8 @@ export class App implements OnInit, OnDestroy {
     }
 
     if (view === 'profile') {
-      return this.activeView === 'profile' || this.activeView === 'orders' || this.activeView === 'add-product' || this.activeView === 'add-category';
-    }
+        return this.activeView === 'profile' || this.activeView === 'orders' || this.activeView === 'products' || this.activeView === 'category-admin' || this.activeView === 'add-product' || this.activeView === 'add-category';
+      }
 
     return this.activeView === view;
   }

@@ -137,39 +137,19 @@
         {{ checkoutLoading ? 'Creando Pedido...' : 'Finalizar Pedido' }}
       </button>
     </section>
-  } @else if (activeView === 'add-category') {
-    <section class="simple-screen admin-screen" aria-label="Agregar categor&iacute;a">
+  } @else if (activeView === 'category-admin') {
+    <section class="simple-screen category-admin-screen" aria-label="Categorias">
       <button class="admin-back" type="button" (click)="showView('profile')">&#8249; Volver</button>
-      <div class="admin-intro">
+      <div class="inventory-intro">
         <p class="admin-kicker">Administraci&oacute;n</p>
-        <h2>Agregar categor&iacute;a</h2>
-        <p>Crea una categor&iacute;a nueva para mostrarla en el inicio y usarla en productos.</p>
+        <h2>Gesti&oacute;n de categor&iacute;as</h2>
+        <p>Consulta, edita y organiza las categor&iacute;as visibles del cat&aacute;logo.</p>
       </div>
 
-      <label class="admin-field">
-        <span>Nombre</span>
-        <input type="text" placeholder="Ej. Cumplea&ntilde;os" [value]="categoryFormName" (input)="updateCategoryFormName($event)" />
+      <label class="search-box inventory-search" aria-label="Buscar categorias">
+        <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
+        <input type="search" placeholder="Buscar categor&iacute;as..." [value]="adminCategorySearchTerm" (input)="updateAdminCategorySearch($event)" />
       </label>
-
-      <label class="admin-field">
-        <span>Orden</span>
-        <input type="number" inputmode="numeric" placeholder="0" [value]="categoryFormOrder" (input)="updateCategoryFormOrder($event)" />
-      </label>
-
-      <section class="admin-upload-block" aria-label="Imagen de categoria">
-        <div class="admin-picker-header">
-          <span>Imagen</span>
-          <small>{{ categoryUploadLoading ? 'Subiendo...' : 'Desde tu celular' }}</small>
-        </div>
-        <label class="admin-upload-button">
-          <input type="file" accept="image/*" (change)="onCategoryImageSelected($event)" />
-          <span>{{ categoryUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen' }}</span>
-        </label>
-        @if (categoryFormImageUrl) {
-          <img class="admin-preview" [src]="categoryFormImageUrl" alt="Vista previa categoria" />
-        }
-
-      </section>
 
       @if (categoryFormSuccess) {
         <p class="form-message success">{{ categoryFormSuccess }}</p>
@@ -178,35 +158,78 @@
         <p class="form-message error">{{ categoryFormError }}</p>
       }
 
-      <button class="admin-submit" type="button" [disabled]="categoryFormLoading || categoryUploadLoading" (click)="submitCategory()">
-        {{ categoryFormLoading ? (editingCategoryId ? 'Guardando cambios...' : 'Guardando categor&iacute;a...') : (editingCategoryId ? 'Actualizar categor&iacute;a' : 'Guardar categor&iacute;a') }}
+      <section class="category-admin-list" aria-label="Categorias registradas">
+        @for (category of filteredAdminCategories; track category.categoria_id) {
+          <article class="category-admin-card">
+            <div class="category-admin-copy">
+              <strong>{{ category.nombre }}</strong>
+              <small>{{ getCategoryProductLabel(category) }}</small>
+            </div>
+            <div class="category-admin-meta">
+              <span>Orden {{ category.orden || 0 }}</span>
+            </div>
+            <div class="inventory-actions">
+              <button type="button" class="inventory-action" (click)="startEditCategoryFromAdmin(category)">Editar</button>
+              <button type="button" class="inventory-action danger" [disabled]="deletingCategoryId === category.categoria_id" (click)="deleteCategory(category)">{{ deletingCategoryId === category.categoria_id ? 'Eliminando...' : 'Eliminar' }}</button>
+            </div>
+          </article>
+        } @empty {
+          <p class="orders-state">No hay categor&iacute;as que coincidan con la b&uacute;squeda.</p>
+        }
+      </section>
+
+      <button class="inventory-fab" type="button" (click)="openNewCategoryForm()">
+        <span aria-hidden="true">+</span>
+        <small>A&ntilde;adir categor&iacute;a</small>
+      </button>
+    </section>
+  } @else if (activeView === 'add-category') {
+    <section class="simple-screen admin-screen category-editor-screen" aria-label="Agregar categor&iacute;a">
+      <button class="admin-back" type="button" (click)="showView('category-admin')">&#8249; Volver</button>
+
+      <div class="product-form-intro">
+        <h2>{{ editingCategoryId ? 'Editar Categor&iacute;a' : 'Nueva Categor&iacute;a' }}</h2>
+      </div>
+
+      <section class="product-image-panel" aria-label="Imagen de categoria">
+        @if (categoryFormImageUrl) {
+          <img class="product-image-preview" [src]="categoryFormImageUrl" alt="Vista previa categoria" />
+        } @else {
+          <div class="product-image-placeholder" aria-hidden="true">
+            <span>+</span>
+            <strong>Subir Imagen</strong>
+          </div>
+        }
+
+        <label class="product-image-trigger">
+          <input type="file" accept="image/*" (change)="onCategoryImageSelected($event)" />
+          <span>{{ categoryUploadLoading ? 'Subiendo imagen...' : (categoryFormImageUrl ? 'Cambiar imagen' : 'Seleccionar imagen') }}</span>
+        </label>
+      </section>
+
+      <label class="product-form-field product-form-field-name">
+        <input type="text" placeholder="Nombre de la Categor&iacute;a" [value]="categoryFormName" (input)="updateCategoryFormName($event)" />
+      </label>
+
+      <label class="product-form-field product-form-field-order">
+        <span>Orden</span>
+        <input type="number" inputmode="numeric" placeholder="0" [value]="categoryFormOrder" (input)="updateCategoryFormOrder($event)" />
+      </label>
+
+      @if (categoryFormSuccess) {
+        <p class="form-message success">{{ categoryFormSuccess }}</p>
+      }
+      @if (categoryFormError) {
+        <p class="form-message error">{{ categoryFormError }}</p>
+      }
+
+      <button class="admin-submit product-form-submit" type="button" [disabled]="categoryFormLoading || categoryUploadLoading" (click)="submitCategory()">
+        {{ categoryFormLoading ? (editingCategoryId ? 'Guardando cambios...' : 'Guardando categor&iacute;a...') : (editingCategoryId ? 'Actualizar Categor&iacute;a' : 'Guardar Categor&iacute;a') }}
       </button>
 
       @if (editingCategoryId) {
         <button class="admin-cancel" type="button" (click)="cancelEditCategory()">Cancelar edici&oacute;n</button>
       }
-
-      <section class="admin-existing-list" aria-label="Categorias registradas">
-        <div class="admin-picker-header">
-          <span>Categor&iacute;as registradas</span>
-          <small>{{ categories.length }} en total</small>
-        </div>
-
-        <div class="admin-existing-grid">
-          @for (category of categories; track category.categoria_id) {
-            <article class="admin-existing-card">
-              <div class="admin-existing-info">
-                <strong>{{ category.nombre }}</strong>
-                <small>{{ getCategoryProductLabel(category) }}</small>
-              </div>
-              <div class="admin-existing-actions">
-                <button type="button" class="admin-inline-button" (click)="startEditCategory(category)">Editar</button>
-                <button type="button" class="admin-inline-button danger" [disabled]="deletingCategoryId === category.categoria_id" (click)="deleteCategory(category)">{{ deletingCategoryId === category.categoria_id ? 'Eliminando...' : 'Eliminar' }}</button>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
     </section>
   } @else if (activeView === 'orders') {
     <section class="simple-screen orders-screen" aria-label="Pedidos">
@@ -274,83 +297,128 @@
         </section>
       }
     </section>
-  } @else if (activeView === 'add-product') {
-    <section class="simple-screen admin-screen" aria-label="Agregar producto">
+  } @else if (activeView === 'products') {
+    <section class="simple-screen inventory-screen" aria-label="Productos">
       <button class="admin-back" type="button" (click)="showView('profile')">&#8249; Volver</button>
-      <div class="admin-intro">
+      <div class="inventory-intro">
         <p class="admin-kicker">Administraci&oacute;n</p>
-        <h2>Agregar producto</h2>
-        <p>Guarda un nuevo arreglo floral y as&oacutecialo a una o varias categor&iacute;as.</p>
+        <h2>Gesti&oacute;n de inventario</h2>
+        <p>Consulta, edita y controla los productos disponibles de Bloomy.</p>
       </div>
 
-      <label class="admin-field">
-        <span>Nombre</span>
-        <input type="text" placeholder="Ej. Rosas Coral" [value]="productFormName" (input)="updateProductFormName($event)" />
+      <label class="search-box inventory-search" aria-label="Buscar productos">
+        <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
+        <input type="search" placeholder="Buscar productos..." [value]="adminProductSearchTerm" (input)="updateAdminProductSearch($event)" />
       </label>
 
-      <div class="admin-field-row">
-        <label class="admin-field">
+      @if (productFormSuccess) {
+        <p class="form-message success">{{ productFormSuccess }}</p>
+      }
+      @if (productFormError) {
+        <p class="form-message error">{{ productFormError }}</p>
+      }
+
+      <section class="inventory-list" aria-label="Productos registrados">
+        @for (product of filteredAdminProducts; track product.producto_id) {
+          <article class="inventory-card">
+            <img class="inventory-image" [src]="product.image" [alt]="product.alt" />
+            <div class="inventory-copy">
+              <strong>{{ product.name }}</strong>
+              <small>{{ isProductActive(product) ? 'Activo' : 'Desactivado' }}</small>
+              <span>{{ product.price }}</span>
+            </div>
+            <div class="inventory-actions">
+              <button type="button" class="inventory-action" (click)="startEditProductFromInventory(product)">Editar</button>
+              <button type="button" class="inventory-action danger" [disabled]="deletingProductId === product.producto_id" (click)="deleteProduct(product)">{{ deletingProductId === product.producto_id ? 'Eliminando...' : 'Eliminar' }}</button>
+              <button type="button" class="inventory-action inventory-action-wide" [class.warning]="isProductActive(product)" [disabled]="togglingProductId === product.producto_id" (click)="toggleProductActive(product)">{{ togglingProductId === product.producto_id ? 'Guardando...' : (isProductActive(product) ? 'Desactivar temporalmente' : 'Reactivar producto') }}</button>
+            </div>
+          </article>
+        } @empty {
+          <p class="orders-state">No hay productos que coincidan con la b&uacute;squeda.</p>
+        }
+      </section>
+
+      <button class="inventory-fab" type="button" (click)="openNewProductForm()">
+        <span aria-hidden="true">+</span>
+        <small>A&ntilde;adir producto</small>
+      </button>
+    </section>
+  } @else if (activeView === 'add-product') {
+    <section class="simple-screen admin-screen product-editor-screen" aria-label="Agregar producto">
+      <button class="admin-back" type="button" (click)="showView('products')">&#8249; Volver</button>
+
+      <div class="product-form-intro">
+        <h2>{{ editingProductId ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+      </div>
+
+      <section class="product-image-panel" aria-label="Imagen principal del producto">
+        @if (productFormImageUrl) {
+          <img class="product-image-preview" [src]="productFormImageUrl" alt="Vista previa imagen principal" />
+        } @else {
+          <div class="product-image-placeholder" aria-hidden="true">
+            <span>+</span>
+            <strong>Subir Imagen</strong>
+          </div>
+        }
+
+        <label class="product-image-trigger">
+          <input type="file" accept="image/*" (change)="onProductMainImageSelected($event)" />
+          <span>{{ productImageUploadLoading ? 'Subiendo imagen...' : (productFormImageUrl ? 'Cambiar imagen principal' : 'Seleccionar imagen principal') }}</span>
+        </label>
+      </section>
+
+      <label class="product-form-field product-form-field-name">
+        <input type="text" placeholder="Nombre del Producto" [value]="productFormName" (input)="updateProductFormName($event)" />
+      </label>
+
+      <label class="product-form-field product-form-field-description">
+        <textarea rows="5" placeholder="Descripci&oacute;n" [value]="productFormDescription" (input)="updateProductFormDescription($event)"></textarea>
+      </label>
+
+      <div class="product-form-row">
+        <label class="product-form-field product-form-field-price">
           <span>Precio</span>
           <input type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" [value]="productFormPrice" (input)="updateProductFormPrice($event)" />
         </label>
 
-        <label class="admin-field">
+        <label class="product-form-field product-form-field-order">
           <span>Orden</span>
           <input type="number" inputmode="numeric" placeholder="0" [value]="productFormOrder" (input)="updateProductFormOrder($event)" />
         </label>
       </div>
 
-      <section class="admin-upload-block" aria-label="Imagen principal del producto">
-        <div class="admin-picker-header">
-          <span>Imagen principal</span>
-          <small>{{ productImageUploadLoading ? 'Subiendo...' : 'Desde tu celular' }}</small>
-        </div>
-        <label class="admin-upload-button">
-          <input type="file" accept="image/*" (change)="onProductMainImageSelected($event)" />
-          <span>{{ productImageUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen principal' }}</span>
-        </label>
-        @if (productFormImageUrl) {
-          <img class="admin-preview" [src]="productFormImageUrl" alt="Vista previa imagen principal" />
-        }
-
-      </section>
-
-      <section class="admin-upload-block" aria-label="Imagen detalle del producto">
-        <div class="admin-picker-header">
-          <span>Imagen detalle</span>
-          <small>{{ productDetailUploadLoading ? 'Subiendo...' : 'Opcional' }}</small>
-        </div>
-        <label class="admin-upload-button secondary">
-          <input type="file" accept="image/*" (change)="onProductDetailImageSelected($event)" />
-          <span>{{ productDetailUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen detalle' }}</span>
-        </label>
-        @if (productFormDetailImageUrl) {
-          <img class="admin-preview" [src]="productFormDetailImageUrl" alt="Vista previa imagen detalle" />
-        }
-
-      </section>
-
-      <label class="admin-field">
-        <span>Modelo 3D</span>
-        <input type="url" placeholder="/models/ramo.glb o https://..." [value]="productFormModel3dUrl" (input)="updateProductFormModel3dUrl($event)" />
-      </label>
-
-      <label class="admin-field">
-        <span>Descripci&oacute;n</span>
-        <textarea rows="4" placeholder="Describe el arreglo floral..." [value]="productFormDescription" (input)="updateProductFormDescription($event)"></textarea>
-      </label>
-
-      <section class="admin-category-picker" aria-label="Seleccionar categor&iacute;as">
-        <div class="admin-picker-header">
+      <section class="product-form-select" aria-label="Seleccionar categor&iacute;as">
+        <div class="product-form-select-label">
           <span>Categor&iacute;as</span>
           <small>{{ productFormCategoryIds.length }} seleccionadas</small>
         </div>
 
-        <div class="admin-chip-grid">
+        <div class="admin-chip-grid product-form-chip-grid">
           @for (category of categories; track category.categoria_id) {
             <button type="button" class="admin-chip" [class.active]="isProductCategorySelected(category.categoria_id)" (click)="toggleProductCategory(category.categoria_id)">{{ category.nombre }}</button>
           }
         </div>
+      </section>
+
+      <section class="product-secondary-assets" aria-label="Archivos adicionales">
+        <section class="product-mini-upload">
+          <div class="product-mini-upload-copy">
+            <strong>Imagen detalle</strong>
+            <small>{{ productDetailUploadLoading ? 'Subiendo...' : 'Opcional' }}</small>
+          </div>
+          <label class="admin-upload-button secondary">
+            <input type="file" accept="image/*" (change)="onProductDetailImageSelected($event)" />
+            <span>{{ productDetailUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen detalle' }}</span>
+          </label>
+          @if (productFormDetailImageUrl) {
+            <img class="product-mini-preview" [src]="productFormDetailImageUrl" alt="Vista previa imagen detalle" />
+          }
+        </section>
+
+        <label class="product-form-field product-form-field-3d">
+          <span>Modelo 3D</span>
+          <input type="url" placeholder="/models/ramo.glb o https://..." [value]="productFormModel3dUrl" (input)="updateProductFormModel3dUrl($event)" />
+        </label>
       </section>
 
       @if (productFormSuccess) {
@@ -360,36 +428,13 @@
         <p class="form-message error">{{ productFormError }}</p>
       }
 
-      <button class="admin-submit" type="button" [disabled]="productFormLoading || productImageUploadLoading || productDetailUploadLoading" (click)="submitProduct()">
-        {{ productFormLoading ? (editingProductId ? 'Guardando cambios...' : 'Guardando producto...') : (editingProductId ? 'Actualizar producto' : 'Guardar producto') }}
+      <button class="admin-submit product-form-submit" type="button" [disabled]="productFormLoading || productImageUploadLoading || productDetailUploadLoading" (click)="submitProduct()">
+        {{ productFormLoading ? (editingProductId ? 'Guardando cambios...' : 'Guardando producto...') : (editingProductId ? 'Actualizar Producto' : 'Guardar Producto') }}
       </button>
 
       @if (editingProductId) {
         <button class="admin-cancel" type="button" (click)="cancelEditProduct()">Cancelar edici&oacute;n</button>
       }
-
-      <section class="admin-existing-list" aria-label="Productos registrados">
-        <div class="admin-picker-header">
-          <span>Productos registrados</span>
-          <small>{{ adminProducts.length }} en total</small>
-        </div>
-
-        <div class="admin-existing-grid">
-          @for (product of adminProducts; track product.producto_id) {
-            <article class="admin-existing-card">
-              <div class="admin-existing-info">
-                <strong>{{ product.name }}</strong>
-                <small>{{ product.price }} · {{ isProductActive(product) ? 'Activo' : 'Desactivado' }}</small>
-              </div>
-              <div class="admin-existing-actions">
-                <button type="button" class="admin-inline-button" (click)="startEditProduct(product)">Editar</button>
-                <button type="button" class="admin-inline-button warning" [disabled]="togglingProductId === product.producto_id" (click)="toggleProductActive(product)">{{ togglingProductId === product.producto_id ? 'Guardando...' : (isProductActive(product) ? 'Desactivar' : 'Reactivar') }}</button>
-                <button type="button" class="admin-inline-button danger" [disabled]="deletingProductId === product.producto_id" (click)="deleteProduct(product)">{{ deletingProductId === product.producto_id ? 'Eliminando...' : 'Eliminar' }}</button>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
     </section>
   } @else {
     <section class="simple-screen profile-screen" aria-label="Perfil">
@@ -411,8 +456,8 @@
       </section>
 
       @if (isOwnerRole) {
-        <button class="profile-action" type="button" (click)="openProfileAdmin('add-product')">Agregar Producto</button>
-        <button class="profile-secondary" type="button" (click)="openProfileAdmin('add-category')">Agregar Categor&iacute;a</button>
+        <button class="profile-action" type="button" (click)="openProductsAdmin()">Productos</button>
+        <button class="profile-secondary" type="button" (click)="openCategoryAdmin()">Categor&iacute;as</button>
       }
       <button class="profile-secondary" type="button" (click)="showView('orders')">Mis Pedidos</button>
       <button class="profile-secondary" type="button">Direcciones</button>
@@ -450,3 +495,7 @@
     <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="showView('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>
   </nav>
 </main>
+
+
+
+
