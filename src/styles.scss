@@ -17,7 +17,7 @@ app-root {
   --topbar-safe-space: max(env(safe-area-inset-top, 0px), 14px);
   --compact-header-offset: calc(68px + var(--topbar-safe-space));
   --search-header-offset: calc(86px + var(--topbar-safe-space));
-  --search-chips-header-offset: calc(118px + var(--topbar-safe-space));
+  --search-chips-header-offset: calc(126px + var(--topbar-safe-space));
   display: block;
   min-height: 100dvh;
   background: #ffffff;
@@ -123,7 +123,7 @@ a {
 .home-screen {
   width: min(100%, var(--screen-max-width));
   margin: 0 auto;
-  padding-top: var(--active-header-offset);
+  padding-top: calc(var(--active-header-offset) + 10px);
 }
 
 .categories-screen {
