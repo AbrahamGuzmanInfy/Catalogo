@@ -1,0 +1,25 @@
+<section class="simple-screen profile-screen" aria-label="Perfil">
+  <div class="profile-card">
+    <img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" />
+    <h2>{{ session.currentTestUser.nombre }}</h2>
+    <p>{{ session.isOwnerRole ? 'Modo de pruebas para administración del catálogo.' : 'Modo de pruebas para experiencia de cliente.' }}</p>
+  </div>
+
+  <section class="profile-role-switch" aria-label="Cambiar rol de prueba">
+    <div class="profile-switch-copy">
+      <strong>Rol activo</strong>
+      <small>{{ session.isOwnerRole ? 'Dueño' : 'Cliente' }}</small>
+    </div>
+    <div class="profile-switch-buttons">
+      <button type="button" [class.active]="session.currentTestRole === 'dueno'" (click)="session.switchRole('dueno')">Dueño</button>
+      <button type="button" [class.active]="session.currentTestRole === 'cliente'" (click)="session.switchRole('cliente')">Cliente</button>
+    </div>
+  </section>
+
+  @if (session.isOwnerRole) {
+    <button class="profile-action" type="button" (click)="productsList.emit()">Productos</button>
+    <button class="profile-secondary" type="button" (click)="categoriesList.emit()">Categorías</button>
+  }
+  <button class="profile-secondary" type="button" (click)="orders.emit()">Mis Pedidos</button>
+  <button class="profile-secondary" type="button">Direcciones</button>
+</section>

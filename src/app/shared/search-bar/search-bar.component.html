@@ -1,0 +1,5 @@
+﻿    <label class="search-box" [attr.aria-label]="ariaLabel">
+      <img src="/icons/tdesign/search.svg" alt="" aria-hidden="true" />
+      <input type="search" [placeholder]="placeholder" [value]="value" (input)="valueChange.emit($event)" />
+    </label>
+  

@@ -1,0 +1,92 @@
+<section class="simple-screen admin-screen product-editor-screen" aria-label="Agregar producto">
+  <button class="admin-back" type="button" (click)="back.emit()">&#8249; Volver</button>
+
+  <div class="product-form-intro">
+    <h2>{{ editingProductId ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+  </div>
+
+  <section class="product-image-panel" aria-label="Imagen principal del producto">
+    @if (productFormImageUrl) {
+      <img class="product-image-preview" [src]="productFormImageUrl" alt="Vista previa imagen principal" />
+    } @else {
+      <div class="product-image-placeholder" aria-hidden="true">
+        <span>+</span>
+        <strong>Subir Imagen</strong>
+      </div>
+    }
+
+    <label class="product-image-trigger">
+      <input type="file" accept="image/*" (change)="onProductMainImageSelected($event)" />
+      <span>{{ productImageUploadLoading ? 'Subiendo imagen...' : (productFormImageUrl ? 'Cambiar imagen principal' : 'Seleccionar imagen principal') }}</span>
+    </label>
+  </section>
+
+  <label class="product-form-field product-form-field-name">
+    <input type="text" placeholder="Nombre del Producto" [value]="productFormName" (input)="updateProductFormName($event)" />
+  </label>
+
+  <label class="product-form-field product-form-field-description">
+    <textarea rows="5" placeholder="Descripci&oacute;n" [value]="productFormDescription" (input)="updateProductFormDescription($event)"></textarea>
+  </label>
+
+  <div class="product-form-row">
+    <label class="product-form-field product-form-field-price">
+      <span>Precio</span>
+      <input type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" [value]="productFormPrice" (input)="updateProductFormPrice($event)" />
+    </label>
+
+    <label class="product-form-field product-form-field-order">
+      <span>Orden</span>
+      <input type="number" inputmode="numeric" placeholder="0" [value]="productFormOrder" (input)="updateProductFormOrder($event)" />
+    </label>
+  </div>
+
+  <section class="product-form-select" aria-label="Seleccionar categor&iacute;as">
+    <div class="product-form-select-label">
+      <span>Categor&iacute;as</span>
+      <small>{{ productFormCategoryIds.length }} seleccionadas</small>
+    </div>
+
+    <div class="admin-chip-grid product-form-chip-grid">
+      @for (category of categories; track category.categoria_id) {
+        <button type="button" class="admin-chip" [class.active]="isProductCategorySelected(category.categoria_id)" (click)="toggleProductCategory(category.categoria_id)">{{ category.nombre }}</button>
+      }
+    </div>
+  </section>
+
+  <section class="product-secondary-assets" aria-label="Archivos adicionales">
+    <section class="product-mini-upload">
+      <div class="product-mini-upload-copy">
+        <strong>Imagen detalle</strong>
+        <small>{{ productDetailUploadLoading ? 'Subiendo...' : 'Opcional' }}</small>
+      </div>
+      <label class="admin-upload-button secondary">
+        <input type="file" accept="image/*" (change)="onProductDetailImageSelected($event)" />
+        <span>{{ productDetailUploadLoading ? 'Subiendo imagen...' : 'Seleccionar imagen detalle' }}</span>
+      </label>
+      @if (productFormDetailImageUrl) {
+        <img class="product-mini-preview" [src]="productFormDetailImageUrl" alt="Vista previa imagen detalle" />
+      }
+    </section>
+
+    <label class="product-form-field product-form-field-3d">
+      <span>Modelo 3D</span>
+      <input type="url" placeholder="/models/ramo.glb o https://..." [value]="productFormModel3dUrl" (input)="updateProductFormModel3dUrl($event)" />
+    </label>
+  </section>
+
+  @if (productFormSuccess) {
+    <p class="form-message success">{{ productFormSuccess }}</p>
+  }
+  @if (productFormError) {
+    <p class="form-message error">{{ productFormError }}</p>
+  }
+
+  <button class="admin-submit product-form-submit" type="button" [disabled]="productFormLoading || productImageUploadLoading || productDetailUploadLoading" (click)="submitProduct()">
+    {{ productFormLoading ? (editingProductId ? 'Guardando cambios...' : 'Guardando producto...') : (editingProductId ? 'Actualizar Producto' : 'Guardar Producto') }}
+  </button>
+
+  @if (editingProductId) {
+    <button class="admin-cancel" type="button" (click)="cancelEditProduct()">Cancelar edici&oacute;n</button>
+  }
+</section>

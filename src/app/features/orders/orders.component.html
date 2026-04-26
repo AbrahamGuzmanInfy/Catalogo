@@ -1,0 +1,29 @@
+<section class="simple-screen orders-screen" aria-label="Pedidos">
+  <button class="admin-back" type="button" (click)="back.emit()">&#8249; Volver</button>
+  <div class="admin-intro orders-intro">
+    <p class="admin-kicker">Pedidos de prueba</p>
+    <h2>{{ currentUser.nombre }}</h2>
+    <p>{{ currentUser.email }}</p>
+  </div>
+  @if (ordersLoading()) {
+    <p class="orders-state">Cargando pedidos...</p>
+  } @else if (ordersError()) {
+    <p class="orders-state error">{{ ordersError() }}</p>
+  } @else if (!hasOrders()) {
+    <p class="orders-state">Todav&iacute;a no hay pedidos registrados.</p>
+  } @else {
+    <section class="orders-list" aria-label="Lista de pedidos">
+      @for (order of orders(); track order.venta_id) {
+        <app-order-card
+          [order]="order"
+          [expanded]="isOrderExpanded(order)"
+          [loading]="isOrderLoading(order)"
+          [statusLabel]="orderStatusLabel(order.estatus)"
+          [createdAt]="orderCreatedAt(order)"
+          [itemLabel]="orderItemLabel(order)"
+          (toggle)="toggleOrderDetails($event)"
+        />
+      }
+    </section>
+  }
+</section>

@@ -1,0 +1,2404 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>catalogo documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">catalogo documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  HomeShellComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/home/home-shell.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-home-shell</code></td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../components/AppHeaderComponent.html" target="_self" >AppHeaderComponent</a></code>
+                                <code><a href="../components/AppBottomNavComponent.html" target="_self" >AppBottomNavComponent</a></code>
+                                <code><a href="../components/CatalogComponent.html" target="_self" >CatalogComponent</a></code>
+                                <code><a href="../components/CategoriesComponent.html" target="_self" >CategoriesComponent</a></code>
+                                <code><a href="../components/CartComponent.html" target="_self" >CartComponent</a></code>
+                                <code><a href="../components/UserComponent.html" target="_self" >UserComponent</a></code>
+                                <code><a href="../components/OrdersComponent.html" target="_self" >OrdersComponent</a></code>
+                                <code><a href="../components/ProductsAdminComponent.html" target="_self" >ProductsAdminComponent</a></code>
+                                <code><a href="../components/CategoriesAdminComponent.html" target="_self" >CategoriesAdminComponent</a></code>
+                                <code><a href="../components/ProductFormComponent.html" target="_self" >ProductFormComponent</a></code>
+                                <code><a href="../components/CategoryFormComponent.html" target="_self" >CategoryFormComponent</a></code>
+                                <code><a href="../components/ProductDetailComponent.html" target="_self" >ProductDetailComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./home-shell.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#canInstallApp" >canInstallApp</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#cart" >cart</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#deferredInstallPrompt" >deferredInstallPrompt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#editingCategory" >editingCategory</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#editingProduct" >editingProduct</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#isIosInstallHelp" >isIosInstallHelp</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#navigation" >navigation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#session" >session</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#showInstallPrompt" >showInstallPrompt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#zoomCleanupCallbacks" >zoomCleanupCallbacks</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#addZoomBlocker" >addZoomBlocker</a>
+                            </li>
+                            <li>
+                                <a href="#cancelCategoryEdit" >cancelCategoryEdit</a>
+                            </li>
+                            <li>
+                                <a href="#cancelProductEdit" >cancelProductEdit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#disableBrowserZoom" >disableBrowserZoom</a>
+                            </li>
+                            <li>
+                                <a href="#dismissInstallPrompt" >dismissInstallPrompt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#installApp" >installApp</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isIosDevice" >isIosDevice</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isStandaloneMode" >isStandaloneMode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#markInstallPromptDismissed" >markInstallPromptDismissed</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#markIosInstallPromptDismissed" >markIosInstallPromptDismissed</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onCategorySaved" >onCategorySaved</a>
+                            </li>
+                            <li>
+                                <a href="#onProductSaved" >onProductSaved</a>
+                            </li>
+                            <li>
+                                <a href="#openCategoryAdmin" >openCategoryAdmin</a>
+                            </li>
+                            <li>
+                                <a href="#openNewCategoryForm" >openNewCategoryForm</a>
+                            </li>
+                            <li>
+                                <a href="#openNewProductForm" >openNewProductForm</a>
+                            </li>
+                            <li>
+                                <a href="#openProductsAdmin" >openProductsAdmin</a>
+                            </li>
+                            <li>
+                                <a href="#selectProductFromHash" >selectProductFromHash</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setupInstallPrompt" >setupInstallPrompt</a>
+                            </li>
+                            <li>
+                                <a href="#startEditCategory" >startEditCategory</a>
+                            </li>
+                            <li>
+                                <a href="#startEditProduct" >startEditProduct</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#wasInstallPromptDismissed" >wasInstallPromptDismissed</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#wasIosInstallPromptDismissed" >wasIosInstallPromptDismissed</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addZoomBlocker"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>addZoomBlocker</b></span>
+                        <a href="#addZoomBlocker"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addZoomBlocker(target: EventTarget, eventName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, handler: EventListener)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="247"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:247</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Añade un listener de bloqueo y conserva su cleanup para destrucción posterior.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>target</td>
+                                            <td>
+                                                        <code>EventTarget</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Objetivo donde se registrará el listener.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>eventName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Nombre del evento a escuchar.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>handler</td>
+                                            <td>
+                                                        <code>EventListener</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Función a ejecutar al dispararse el evento.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cancelCategoryEdit"></a>
+                    <span class="name">
+                        <span ><b>cancelCategoryEdit</b></span>
+                        <a href="#cancelCategoryEdit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cancelCategoryEdit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="164"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:164</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Limpia el contexto de edición de categoría sin cambiar de vista.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cancelProductEdit"></a>
+                    <span class="name">
+                        <span ><b>cancelProductEdit</b></span>
+                        <a href="#cancelProductEdit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cancelProductEdit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Limpia el contexto de edición de producto sin cambiar de vista.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="disableBrowserZoom"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>disableBrowserZoom</b></span>
+                        <a href="#disableBrowserZoom"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>disableBrowserZoom()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="205"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:205</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Registra listeners para bloquear gestos de zoom no deseados en móvil.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dismissInstallPrompt"></a>
+                    <span class="name">
+                        <span ><b>dismissInstallPrompt</b></span>
+                        <a href="#dismissInstallPrompt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>dismissInstallPrompt()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Oculta el banner de instalación y persiste su descarte.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="installApp"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>installApp</b></span>
+                        <a href="#installApp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>installApp()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="178"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:178</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Dispara el prompt de instalación cuando el navegador lo permite.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isIosDevice"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isIosDevice</b></span>
+                        <a href="#isIosDevice"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isIosDevice()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="332"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:332</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Detecta si el navegador actual corresponde a un dispositivo iOS.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isStandaloneMode"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isStandaloneMode</b></span>
+                        <a href="#isStandaloneMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isStandaloneMode()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="281"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:281</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Detecta si la app ya está corriendo en modo standalone.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="markInstallPromptDismissed"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>markInstallPromptDismissed</b></span>
+                        <a href="#markInstallPromptDismissed"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>markInstallPromptDismissed()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="299"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:299</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Marca el prompt de instalación estándar como descartado en esta sesión.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="markIosInstallPromptDismissed"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>markIosInstallPromptDismissed</b></span>
+                        <a href="#markIosInstallPromptDismissed"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>markIosInstallPromptDismissed()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="321"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:321</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Marca la ayuda de instalación para iOS como descartada en esta sesión.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Libera listeners registrados por el shell al destruirse.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Inicializa bloqueos de zoom e integra la detección de instalación PWA.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCategorySaved"></a>
+                    <span class="name">
+                        <span ><b>onCategorySaved</b></span>
+                        <a href="#onCategorySaved"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCategorySaved()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="171"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:171</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Limpia el contexto de edición tras guardar una categoría.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onProductSaved"></a>
+                    <span class="name">
+                        <span ><b>onProductSaved</b></span>
+                        <a href="#onProductSaved"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onProductSaved()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:140</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Limpia el contexto de edición tras guardar un producto.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openCategoryAdmin"></a>
+                    <span class="name">
+                        <span ><b>openCategoryAdmin</b></span>
+                        <a href="#openCategoryAdmin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openCategoryAdmin()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:103</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Abre la administración de categorías si el usuario tiene permisos.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openNewCategoryForm"></a>
+                    <span class="name">
+                        <span ><b>openNewCategoryForm</b></span>
+                        <a href="#openNewCategoryForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openNewCategoryForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="156"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:156</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Abre el formulario para crear una categoría nueva.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openNewProductForm"></a>
+                    <span class="name">
+                        <span ><b>openNewProductForm</b></span>
+                        <a href="#openNewProductForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openNewProductForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="125"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:125</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Abre el formulario para crear un producto nuevo.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openProductsAdmin"></a>
+                    <span class="name">
+                        <span ><b>openProductsAdmin</b></span>
+                        <a href="#openProductsAdmin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openProductsAdmin()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Abre la administración de productos si el usuario tiene permisos.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectProductFromHash"></a>
+                    <span class="name">
+                        <span ><b>selectProductFromHash</b></span>
+                        <a href="#selectProductFromHash"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>selectProductFromHash(products: <a href="../interfaces/Product.html" target="_self">Product[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="83"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:83</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Reintenta seleccionar un producto a partir del hash de la URL.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>products</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Product.html" target="_self" >Product[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Productos ya cargados por el catálogo.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setupInstallPrompt"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>setupInstallPrompt</b></span>
+                        <a href="#setupInstallPrompt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setupInstallPrompt()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="256"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:256</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Configura la detección de instalación PWA y el banner de ayuda en iOS.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startEditCategory"></a>
+                    <span class="name">
+                        <span ><b>startEditCategory</b></span>
+                        <a href="#startEditCategory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>startEditCategory(category: <a href="../interfaces/Category.html" target="_self">Category</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="148"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:148</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Prepara el flujo de edición de una categoría y navega al formulario.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>category</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Category.html" target="_self" >Category</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Categoría seleccionada para edición.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startEditProduct"></a>
+                    <span class="name">
+                        <span ><b>startEditProduct</b></span>
+                        <a href="#startEditProduct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>startEditProduct(product: <a href="../interfaces/Product.html" target="_self">Product</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="117"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:117</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Prepara el flujo de edición de un producto y navega al formulario.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>product</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Product.html" target="_self" >Product</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Producto seleccionado para edición.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="wasInstallPromptDismissed"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>wasInstallPromptDismissed</b></span>
+                        <a href="#wasInstallPromptDismissed"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>wasInstallPromptDismissed()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="288"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:288</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Indica si el prompt de instalación estándar ya fue descartado.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="wasIosInstallPromptDismissed"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>wasIosInstallPromptDismissed</b></span>
+                        <a href="#wasIosInstallPromptDismissed"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>wasIosInstallPromptDismissed()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="310"
+                                    class="link-to-prism">src/app/features/home/home-shell.component.ts:310</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Indica si la ayuda de instalación para iOS ya fue descartada.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canInstallApp"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>canInstallApp</b></span>
+                        <a href="#canInstallApp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/app/features/home/home-shell.component.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cart"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>cart</b></span>
+                        <a href="#cart"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CartState)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/features/home/home-shell.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deferredInstallPrompt"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>deferredInstallPrompt</b></span>
+                        <a href="#deferredInstallPrompt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#BeforeInstallPromptEvent" target="_self" >BeforeInstallPromptEvent | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/app/features/home/home-shell.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="editingCategory"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>editingCategory</b></span>
+                        <a href="#editingCategory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Category.html" target="_self" >Category | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/features/home/home-shell.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="editingProduct"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>editingProduct</b></span>
+                        <a href="#editingProduct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Product.html" target="_self" >Product | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/home/home-shell.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isIosInstallHelp"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>isIosInstallHelp</b></span>
+                        <a href="#isIosInstallHelp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/features/home/home-shell.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="navigation"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>navigation</b></span>
+                        <a href="#navigation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NavigationState)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/features/home/home-shell.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="session"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>session</b></span>
+                        <a href="#session"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(SessionState)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/features/home/home-shell.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showInstallPrompt"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>showInstallPrompt</b></span>
+                        <a href="#showInstallPrompt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/features/home/home-shell.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="zoomCleanupCallbacks"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>zoomCleanupCallbacks</b></span>
+                        <a href="#zoomCleanupCallbacks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Array&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/features/home/home-shell.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnDestroy, OnInit, inject } from &#x27;@angular/core&#x27;;
+import type { Category } from &#x27;../../core/models/category.model&#x27;;
+import type { Product } from &#x27;../../core/models/product.model&#x27;;
+import { CartState } from &#x27;../../core/state/cart.state&#x27;;
+import { NavigationState } from &#x27;../../core/state/navigation.state&#x27;;
+import { SessionState } from &#x27;../../core/state/session.state&#x27;;
+import { ProductDetailComponent } from &#x27;../product-detail/product-detail.component&#x27;;
+import { AppBottomNavComponent } from &#x27;../../shared/app-bottom-nav.component&#x27;;
+import { AppHeaderComponent } from &#x27;../../shared/app-header.component&#x27;;
+import { CartComponent } from &#x27;../cart/cart.component&#x27;;
+import { CategoriesComponent } from &#x27;../categories/categories.component&#x27;;
+import { CatalogComponent } from &#x27;../catalog/catalog.component&#x27;;
+import { CategoriesAdminComponent } from &#x27;../categories-admin/categories-admin.component&#x27;;
+import { CategoryFormComponent } from &#x27;../category-form/category-form.component&#x27;;
+import { ProductFormComponent } from &#x27;../product-form/product-form.component&#x27;;
+import { ProductsAdminComponent } from &#x27;../products-admin/products-admin.component&#x27;;
+import { OrdersComponent } from &#x27;../orders/orders.component&#x27;;
+import { UserComponent } from &#x27;../user/user.component&#x27;;
+
+const INSTALL_DISMISSED_KEY &#x3D; &#x27;petal-install-dismissed-session&#x27;;
+const IOS_INSTALL_DISMISSED_KEY &#x3D; &#x27;petal-ios-install-dismissed-session&#x27;;
+
+type BeforeInstallPromptEvent &#x3D; Event &amp; {
+  prompt: () &#x3D;&gt; Promise&lt;void&gt;;
+  userChoice: Promise&lt;{ outcome: &#x27;accepted&#x27; | &#x27;dismissed&#x27;; platform: string }&gt;;
+};
+
+@Component({
+  selector: &#x27;app-home-shell&#x27;,
+  imports: [
+    AppHeaderComponent,
+    AppBottomNavComponent,
+    CatalogComponent,
+    CategoriesComponent,
+    CartComponent,
+    UserComponent,
+    OrdersComponent,
+    ProductsAdminComponent,
+    CategoriesAdminComponent,
+    ProductFormComponent,
+    CategoryFormComponent,
+    ProductDetailComponent,
+  ],
+  templateUrl: &#x27;./home-shell.component.html&#x27;,
+})
+/**
+ * Orquesta el layout principal de la app y la navegación entre features.
+ */
+export class HomeShellComponent implements OnInit, OnDestroy {
+  public readonly navigation &#x3D; inject(NavigationState);
+  public readonly session &#x3D; inject(SessionState);
+  public readonly cart &#x3D; inject(CartState);
+
+  public editingProduct: Product | null &#x3D; null;
+  public editingCategory: Category | null &#x3D; null;
+  public showInstallPrompt &#x3D; false;
+  public canInstallApp &#x3D; false;
+  public isIosInstallHelp &#x3D; false;
+
+  private deferredInstallPrompt: BeforeInstallPromptEvent | null &#x3D; null;
+  private readonly zoomCleanupCallbacks: Array&lt;() &#x3D;&gt; void&gt; &#x3D; [];
+
+  /**
+   * Inicializa bloqueos de zoom e integra la detección de instalación PWA.
+   */
+  ngOnInit(): void {
+    this.disableBrowserZoom();
+    this.setupInstallPrompt();
+  }
+
+  /**
+   * Libera listeners registrados por el shell al destruirse.
+   */
+  ngOnDestroy(): void {
+    this.zoomCleanupCallbacks.forEach((cleanup) &#x3D;&gt; cleanup());
+    this.zoomCleanupCallbacks.length &#x3D; 0;
+  }
+
+  /**
+   * Reintenta seleccionar un producto a partir del hash de la URL.
+   * @param products Productos ya cargados por el catálogo.
+   */
+  selectProductFromHash(products: Product[]): void {
+    this.navigation.selectProductFromHash(products);
+  }
+
+  /**
+   * Abre la administración de productos si el usuario tiene permisos.
+   */
+  openProductsAdmin(): void {
+    if (!this.session.isOwnerRole) {
+      this.navigation.showView(&#x27;profile&#x27;);
+      return;
+    }
+
+    this.editingProduct &#x3D; null;
+    this.navigation.showView(&#x27;products&#x27;);
+  }
+
+  /**
+   * Abre la administración de categorías si el usuario tiene permisos.
+   */
+  openCategoryAdmin(): void {
+    if (!this.session.isOwnerRole) {
+      this.navigation.showView(&#x27;profile&#x27;);
+      return;
+    }
+
+    this.editingCategory &#x3D; null;
+    this.navigation.showView(&#x27;category-admin&#x27;);
+  }
+
+  /**
+   * Prepara el flujo de edición de un producto y navega al formulario.
+   * @param product Producto seleccionado para edición.
+   */
+  startEditProduct(product: Product): void {
+    this.editingProduct &#x3D; product;
+    this.navigation.showView(&#x27;add-product&#x27;);
+  }
+
+  /**
+   * Abre el formulario para crear un producto nuevo.
+   */
+  openNewProductForm(): void {
+    this.editingProduct &#x3D; null;
+    this.navigation.showView(&#x27;add-product&#x27;);
+  }
+
+  /**
+   * Limpia el contexto de edición de producto sin cambiar de vista.
+   */
+  cancelProductEdit(): void {
+    this.editingProduct &#x3D; null;
+  }
+
+  /**
+   * Limpia el contexto de edición tras guardar un producto.
+   */
+  onProductSaved(): void {
+    this.editingProduct &#x3D; null;
+  }
+
+  /**
+   * Prepara el flujo de edición de una categoría y navega al formulario.
+   * @param category Categoría seleccionada para edición.
+   */
+  startEditCategory(category: Category): void {
+    this.editingCategory &#x3D; category;
+    this.navigation.showView(&#x27;add-category&#x27;);
+  }
+
+  /**
+   * Abre el formulario para crear una categoría nueva.
+   */
+  openNewCategoryForm(): void {
+    this.editingCategory &#x3D; null;
+    this.navigation.showView(&#x27;add-category&#x27;);
+  }
+
+  /**
+   * Limpia el contexto de edición de categoría sin cambiar de vista.
+   */
+  cancelCategoryEdit(): void {
+    this.editingCategory &#x3D; null;
+  }
+
+  /**
+   * Limpia el contexto de edición tras guardar una categoría.
+   */
+  onCategorySaved(): void {
+    this.editingCategory &#x3D; null;
+  }
+
+  /**
+   * Dispara el prompt de instalación cuando el navegador lo permite.
+   */
+  async installApp(): Promise&lt;void&gt; {
+    if (!this.deferredInstallPrompt) return;
+
+    const promptEvent &#x3D; this.deferredInstallPrompt;
+    this.deferredInstallPrompt &#x3D; null;
+    await promptEvent.prompt();
+    await promptEvent.userChoice;
+    this.dismissInstallPrompt();
+  }
+
+  /**
+   * Oculta el banner de instalación y persiste su descarte.
+   */
+  dismissInstallPrompt(): void {
+    this.showInstallPrompt &#x3D; false;
+    this.canInstallApp &#x3D; false;
+    this.deferredInstallPrompt &#x3D; null;
+    if (this.isIosInstallHelp) {
+      this.markIosInstallPromptDismissed();
+    } else {
+      this.markInstallPromptDismissed();
+    }
+  }
+
+  /**
+   * Registra listeners para bloquear gestos de zoom no deseados en móvil.
+   */
+  private disableBrowserZoom(): void {
+    let lastTouchEnd &#x3D; 0;
+
+    this.addZoomBlocker(document, &#x27;gesturestart&#x27;, (event) &#x3D;&gt; event.preventDefault());
+    this.addZoomBlocker(document, &#x27;gesturechange&#x27;, (event) &#x3D;&gt; event.preventDefault());
+    this.addZoomBlocker(document, &#x27;gestureend&#x27;, (event) &#x3D;&gt; event.preventDefault());
+
+    this.addZoomBlocker(document, &#x27;touchstart&#x27;, (event) &#x3D;&gt; {
+      const touchEvent &#x3D; event as TouchEvent;
+      if (touchEvent.touches.length &gt; 1) touchEvent.preventDefault();
+    });
+
+    this.addZoomBlocker(document, &#x27;touchmove&#x27;, (event) &#x3D;&gt; {
+      const touchEvent &#x3D; event as TouchEvent;
+      if (touchEvent.touches.length &gt; 1) event.preventDefault();
+    });
+
+    this.addZoomBlocker(document, &#x27;touchend&#x27;, (event) &#x3D;&gt; {
+      const now &#x3D; Date.now();
+      if (now - lastTouchEnd &lt;&#x3D; 300) event.preventDefault();
+      lastTouchEnd &#x3D; now;
+    });
+
+    this.addZoomBlocker(window, &#x27;wheel&#x27;, (event) &#x3D;&gt; {
+      const wheelEvent &#x3D; event as WheelEvent;
+      if (wheelEvent.ctrlKey || wheelEvent.metaKey) wheelEvent.preventDefault();
+    });
+
+    this.addZoomBlocker(window, &#x27;keydown&#x27;, (event) &#x3D;&gt; {
+      const keyboardEvent &#x3D; event as KeyboardEvent;
+      const key &#x3D; keyboardEvent.key.toLowerCase();
+      const isZoomKey &#x3D; key &#x3D;&#x3D;&#x3D; &#x27;+&#x27; || key &#x3D;&#x3D;&#x3D; &#x27;-&#x27; || key &#x3D;&#x3D;&#x3D; &#x27;&#x3D;&#x27; || key &#x3D;&#x3D;&#x3D; &#x27;0&#x27;;
+      if ((keyboardEvent.ctrlKey || keyboardEvent.metaKey) &amp;&amp; isZoomKey) keyboardEvent.preventDefault();
+    });
+  }
+
+  /**
+   * Añade un listener de bloqueo y conserva su cleanup para destrucción posterior.
+   * @param target Objetivo donde se registrará el listener.
+   * @param eventName Nombre del evento a escuchar.
+   * @param handler Función a ejecutar al dispararse el evento.
+   */
+  private addZoomBlocker(target: EventTarget, eventName: string, handler: EventListener): void {
+    const options: AddEventListenerOptions &#x3D; { passive: false, capture: true };
+    target.addEventListener(eventName, handler, options);
+    this.zoomCleanupCallbacks.push(() &#x3D;&gt; target.removeEventListener(eventName, handler, options));
+  }
+
+  /**
+   * Configura la detección de instalación PWA y el banner de ayuda en iOS.
+   */
+  private setupInstallPrompt(): void {
+    if (this.isStandaloneMode()) return;
+
+    this.isIosInstallHelp &#x3D; this.isIosDevice();
+    if (this.isIosInstallHelp) {
+      this.showInstallPrompt &#x3D; !this.wasIosInstallPromptDismissed();
+    } else if (this.wasInstallPromptDismissed()) {
+      return;
+    }
+
+    window.addEventListener(&#x27;beforeinstallprompt&#x27;, (event) &#x3D;&gt; {
+      event.preventDefault();
+      this.deferredInstallPrompt &#x3D; event as BeforeInstallPromptEvent;
+      this.canInstallApp &#x3D; true;
+      this.showInstallPrompt &#x3D; true;
+    });
+
+    window.addEventListener(&#x27;appinstalled&#x27;, () &#x3D;&gt; {
+      this.dismissInstallPrompt();
+    });
+  }
+
+  /**
+   * Detecta si la app ya está corriendo en modo standalone.
+   */
+  private isStandaloneMode(): boolean {
+    return window.matchMedia(&#x27;(display-mode: standalone)&#x27;).matches || Boolean((navigator as Navigator &amp; { standalone?: boolean }).standalone);
+  }
+
+  /**
+   * Indica si el prompt de instalación estándar ya fue descartado.
+   */
+  private wasInstallPromptDismissed(): boolean {
+    try {
+      return sessionStorage.getItem(INSTALL_DISMISSED_KEY) &#x3D;&#x3D;&#x3D; &#x27;true&#x27;;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Marca el prompt de instalación estándar como descartado en esta sesión.
+   */
+  private markInstallPromptDismissed(): void {
+    try {
+      sessionStorage.setItem(INSTALL_DISMISSED_KEY, &#x27;true&#x27;);
+    } catch {
+      // Ignore storage issues.
+    }
+  }
+
+  /**
+   * Indica si la ayuda de instalación para iOS ya fue descartada.
+   */
+  private wasIosInstallPromptDismissed(): boolean {
+    try {
+      return sessionStorage.getItem(IOS_INSTALL_DISMISSED_KEY) &#x3D;&#x3D;&#x3D; &#x27;true&#x27;;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Marca la ayuda de instalación para iOS como descartada en esta sesión.
+   */
+  private markIosInstallPromptDismissed(): void {
+    try {
+      sessionStorage.setItem(IOS_INSTALL_DISMISSED_KEY, &#x27;true&#x27;);
+    } catch {
+      // Ignore storage issues.
+    }
+  }
+
+  /**
+   * Detecta si el navegador actual corresponde a un dispositivo iOS.
+   */
+  private isIosDevice(): boolean {
+    const userAgent &#x3D; navigator.userAgent.toLowerCase();
+    const platform &#x3D; navigator.platform.toLowerCase();
+    const touchPoints &#x3D; navigator.maxTouchPoints || 0;
+
+    return /iphone|ipad|ipod/.test(userAgent) || (platform &#x3D;&#x3D;&#x3D; &#x27;macintel&#x27; &amp;&amp; touchPoints &gt; 1);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;main class&#x3D;&quot;home-shell&quot; [class.detail-mode]&#x3D;&quot;navigation.activeView &#x3D;&#x3D;&#x3D; &#x27;detail&#x27;&quot; [class.cart-mode]&#x3D;&quot;navigation.activeView &#x3D;&#x3D;&#x3D; &#x27;cart&#x27;&quot; aria-label&#x3D;&quot;Catalogo&quot;&gt;
+  @if (showInstallPrompt) {
+    &lt;section class&#x3D;&quot;install-banner&quot; aria-label&#x3D;&quot;Instalar aplicacion&quot;&gt;
+      &lt;div&gt;
+        &lt;strong&gt;Bloomy en tu inicio&lt;/strong&gt;
+        @if (isIosInstallHelp) {
+          &lt;p class&#x3D;&quot;ios-install-copy&quot;&gt;En iPhone: toca Compartir y despues Agregar a pantalla de inicio.&lt;/p&gt;
+        } @else {
+          &lt;p&gt;Abre Bloomy como app desde tu pantalla principal.&lt;/p&gt;
+        }
+      &lt;/div&gt;
+      @if (canInstallApp) {
+        &lt;button class&#x3D;&quot;install-action&quot; type&#x3D;&quot;button&quot; (click)&#x3D;&quot;installApp()&quot;&gt;Instalar&lt;/button&gt;
+      }
+      &lt;button class&#x3D;&quot;install-close&quot; type&#x3D;&quot;button&quot; aria-label&#x3D;&quot;Cerrar aviso&quot; (click)&#x3D;&quot;dismissInstallPrompt()&quot;&gt;&amp;times;&lt;/button&gt;
+    &lt;/section&gt;
+  }
+
+  &lt;app-header [hasCartItems]&#x3D;&quot;cart.hasCartItems&quot; (cartClick)&#x3D;&quot;navigation.showView(&#x27;cart&#x27;)&quot; /&gt;
+  &lt;app-cart [active]&#x3D;&quot;navigation.activeView &#x3D;&#x3D;&#x3D; &#x27;cart&#x27;&quot; (openProduct)&#x3D;&quot;navigation.showProduct($event, &#x27;cart&#x27;)&quot; /&gt;
+
+  @switch (navigation.activeView) {
+    @case (&#x27;home&#x27;) {
+      &lt;app-catalog
+        [selectedCategoryId]&#x3D;&quot;navigation.selectedCategoryId&quot;
+        (selectedCategoryIdChange)&#x3D;&quot;navigation.setSelectedCategory($event)&quot;
+        (productSelected)&#x3D;&quot;navigation.showProduct($event, &#x27;home&#x27;)&quot;
+        (productsLoaded)&#x3D;&quot;selectProductFromHash($event)&quot;
+      /&gt;
+    }
+    @case (&#x27;categories&#x27;) {
+      &lt;app-categories (categoryOpened)&#x3D;&quot;navigation.openCategory($event)&quot; /&gt;
+    }
+    @case (&#x27;profile&#x27;) {
+      &lt;app-user
+        (productsAdmin)&#x3D;&quot;openProductsAdmin()&quot;
+        (categoriesAdmin)&#x3D;&quot;openCategoryAdmin()&quot;
+        (orders)&#x3D;&quot;navigation.showView(&#x27;orders&#x27;)&quot;
+      /&gt;
+    }
+    @case (&#x27;orders&#x27;) {
+      &lt;app-orders [currentUser]&#x3D;&quot;session.currentTestUser&quot; (back)&#x3D;&quot;navigation.showView(&#x27;profile&#x27;)&quot; /&gt;
+    }
+    @case (&#x27;products&#x27;) {
+      &lt;app-products-admin
+        (back)&#x3D;&quot;navigation.showView(&#x27;profile&#x27;)&quot;
+        (createRequested)&#x3D;&quot;openNewProductForm()&quot;
+        (editRequested)&#x3D;&quot;startEditProduct($event)&quot;
+      /&gt;
+    }
+    @case (&#x27;category-admin&#x27;) {
+      &lt;app-categories-admin
+        (back)&#x3D;&quot;navigation.showView(&#x27;profile&#x27;)&quot;
+        (createRequested)&#x3D;&quot;openNewCategoryForm()&quot;
+        (editRequested)&#x3D;&quot;startEditCategory($event)&quot;
+      /&gt;
+    }
+    @case (&#x27;add-product&#x27;) {
+      &lt;app-product-form
+        [editingProduct]&#x3D;&quot;editingProduct&quot;
+        (back)&#x3D;&quot;cancelProductEdit(); navigation.showView(&#x27;products&#x27;)&quot;
+        (cancelEdit)&#x3D;&quot;cancelProductEdit()&quot;
+        (saved)&#x3D;&quot;onProductSaved()&quot;
+      /&gt;
+    }
+    @case (&#x27;add-category&#x27;) {
+      &lt;app-category-form
+        [editingCategory]&#x3D;&quot;editingCategory&quot;
+        (back)&#x3D;&quot;cancelCategoryEdit(); navigation.showView(&#x27;category-admin&#x27;)&quot;
+        (cancelEdit)&#x3D;&quot;cancelCategoryEdit()&quot;
+        (saved)&#x3D;&quot;onCategorySaved()&quot;
+      /&gt;
+    }
+    @case (&#x27;detail&#x27;) {
+      @if (navigation.selectedProduct) {
+        &lt;app-product-detail
+          [product]&#x3D;&quot;navigation.selectedProduct&quot;
+          [dedication]&#x3D;&quot;cart.getProductDedication(navigation.selectedProduct)&quot;
+          (back)&#x3D;&quot;navigation.showDetailBack()&quot;
+          (addToCart)&#x3D;&quot;cart.addToCart(navigation.selectedProduct)&quot;
+          (editDedication)&#x3D;&quot;cart.openDedication(navigation.selectedProduct)&quot;
+        /&gt;
+      }
+    }
+  }
+
+  &lt;app-bottom-nav
+    [activeView]&#x3D;&quot;navigation.activeView&quot;
+    [detailReturnView]&#x3D;&quot;navigation.currentDetailReturnView&quot;
+    (select)&#x3D;&quot;navigation.showView($event)&quot;
+  /&gt;
+&lt;/main&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><main class="home-shell" [class.detail-mode]="navigation.activeView === \'detail\'" [class.cart-mode]="navigation.activeView === \'cart\'" aria-label="Catalogo">  @if (showInstallPrompt) {    <section class="install-banner" aria-label="Instalar aplicacion">      <div>        <strong>Bloomy en tu inicio</strong>        @if (isIosInstallHelp) {          <p class="ios-install-copy">En iPhone: toca Compartir y despues Agregar a pantalla de inicio.</p>        } @else {          <p>Abre Bloomy como app desde tu pantalla principal.</p>        }      </div>      @if (canInstallApp) {        <button class="install-action" type="button" (click)="installApp()">Instalar</button>      }      <button class="install-close" type="button" aria-label="Cerrar aviso" (click)="dismissInstallPrompt()">&times;</button>    </section>  }  <app-header [hasCartItems]="cart.hasCartItems" (cartClick)="navigation.showView(\'cart\')" />  <app-cart [active]="navigation.activeView === \'cart\'" (openProduct)="navigation.showProduct($event, \'cart\')" />  @switch (navigation.activeView) {    @case (\'home\') {      <app-catalog        [selectedCategoryId]="navigation.selectedCategoryId"        (selectedCategoryIdChange)="navigation.setSelectedCategory($event)"        (productSelected)="navigation.showProduct($event, \'home\')"        (productsLoaded)="selectProductFromHash($event)"      />    }    @case (\'categories\') {      <app-categories (categoryOpened)="navigation.openCategory($event)" />    }    @case (\'profile\') {      <app-user        (productsAdmin)="openProductsAdmin()"        (categoriesAdmin)="openCategoryAdmin()"        (orders)="navigation.showView(\'orders\')"      />    }    @case (\'orders\') {      <app-orders [currentUser]="session.currentTestUser" (back)="navigation.showView(\'profile\')" />    }    @case (\'products\') {      <app-products-admin        (back)="navigation.showView(\'profile\')"        (createRequested)="openNewProductForm()"        (editRequested)="startEditProduct($event)"      />    }    @case (\'category-admin\') {      <app-categories-admin        (back)="navigation.showView(\'profile\')"        (createRequested)="openNewCategoryForm()"        (editRequested)="startEditCategory($event)"      />    }    @case (\'add-product\') {      <app-product-form        [editingProduct]="editingProduct"        (back)="cancelProductEdit(); navigation.showView(\'products\')"        (cancelEdit)="cancelProductEdit()"        (saved)="onProductSaved()"      />    }    @case (\'add-category\') {      <app-category-form        [editingCategory]="editingCategory"        (back)="cancelCategoryEdit(); navigation.showView(\'category-admin\')"        (cancelEdit)="cancelCategoryEdit()"        (saved)="onCategorySaved()"      />    }    @case (\'detail\') {      @if (navigation.selectedProduct) {        <app-product-detail          [product]="navigation.selectedProduct"          [dedication]="cart.getProductDedication(navigation.selectedProduct)"          (back)="navigation.showDetailBack()"          (addToCart)="cart.addToCart(navigation.selectedProduct)"          (editDedication)="cart.openDedication(navigation.selectedProduct)"        />      }    }  }  <app-bottom-nav    [activeView]="navigation.activeView"    [detailReturnView]="navigation.currentDetailReturnView"    (select)="navigation.showView($event)"  /></main></div>'
+    var COMPONENTS = [{'name': 'App', 'selector': 'app-root'},{'name': 'AppBottomNavComponent', 'selector': 'app-bottom-nav'},{'name': 'AppHeaderComponent', 'selector': 'app-header'},{'name': 'CartComponent', 'selector': 'app-cart'},{'name': 'CartItemComponent', 'selector': 'app-cart-item'},{'name': 'CatalogComponent', 'selector': 'app-catalog'},{'name': 'CategoriesAdminComponent', 'selector': 'app-categories-admin'},{'name': 'CategoriesComponent', 'selector': 'app-categories'},{'name': 'CategoryChipListComponent', 'selector': 'app-category-chip-list'},{'name': 'CategoryFormComponent', 'selector': 'app-category-form'},{'name': 'HomeShellComponent', 'selector': 'app-home-shell'},{'name': 'OrderCardComponent', 'selector': 'app-order-card'},{'name': 'OrdersComponent', 'selector': 'app-orders'},{'name': 'ProductCardComponent', 'selector': 'app-product-card'},{'name': 'ProductDetailComponent', 'selector': 'app-product-detail'},{'name': 'ProductFormComponent', 'selector': 'app-product-form'},{'name': 'ProductsAdminComponent', 'selector': 'app-products-admin'},{'name': 'ProductViewer3d', 'selector': 'app-product-viewer-3d'},{'name': 'SearchBarComponent', 'selector': 'app-search-bar'},{'name': 'UserComponent', 'selector': 'app-user'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'HomeShellComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'HomeShellComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

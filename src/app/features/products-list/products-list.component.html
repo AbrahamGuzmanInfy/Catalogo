@@ -1,0 +1,52 @@
+<section class="simple-screen inventory-screen" aria-label="Productos">
+  <button class="admin-back" type="button" (click)="back.emit()">&#8249; Volver</button>
+  <div class="inventory-intro">
+    <p class="admin-kicker">Administraci&oacute;n</p>
+    <h2>Gesti&oacute;n de inventario</h2>
+    <p>Consulta, edita y controla los productos disponibles de Bloomy.</p>
+  </div>
+
+  <app-search-bar ariaLabel="Buscar productos" placeholder="Buscar productos..." [value]="productListSearchTerm()" (valueChange)="updateProductListSearch($event)" />
+
+  @if (productFormSuccess) {
+    <p class="form-message success">{{ productFormSuccess }}</p>
+  }
+  @if (productFormError) {
+    <p class="form-message error">{{ productFormError }}</p>
+  }
+
+  <section class="inventory-list" aria-label="Productos registrados">
+    @for (product of filteredProductsList(); track product.producto_id) {
+      <article class="inventory-card">
+        <img class="inventory-image" [src]="product.image" [alt]="product.alt" />
+        <div class="inventory-copy">
+          <strong>{{ product.name }}</strong>
+          <small>{{ isProductActive(product) ? 'Activo' : 'Desactivado' }}</small>
+          <span>{{ product.price }}</span>
+        </div>
+        <div class="inventory-actions">
+          <button type="button" class="inventory-action" (click)="startEditProductFromList(product)">Editar</button>
+          <button type="button" class="inventory-action danger" [disabled]="deletingProductId === product.producto_id" (click)="deleteProduct(product)">
+            {{ deletingProductId === product.producto_id ? 'Eliminando...' : 'Eliminar' }}
+          </button>
+          <button
+            type="button"
+            class="inventory-action inventory-action-wide"
+            [class.warning]="isProductActive(product)"
+            [disabled]="togglingProductId === product.producto_id"
+            (click)="toggleProductActive(product)"
+          >
+            {{ togglingProductId === product.producto_id ? 'Guardando...' : (isProductActive(product) ? 'Desactivar temporalmente' : 'Reactivar producto') }}
+          </button>
+        </div>
+      </article>
+    } @empty {
+      <p class="orders-state">No hay productos que coincidan con la b&uacute;squeda.</p>
+    }
+  </section>
+
+  <button class="inventory-fab" type="button" (click)="openNewProductForm()">
+    <span aria-hidden="true">+</span>
+    <small>A&ntilde;adir</small>
+  </button>
+</section>

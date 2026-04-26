@@ -1,0 +1,593 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>catalogo documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">catalogo documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  CartComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/cart/cart.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-cart</code></td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../components/CartItemComponent.html" target="_self" >CartItemComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./cart.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#cart" >cart</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#session" >session</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#active" >active</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#openProduct" >openProduct</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="active"></a>
+                        <b>active</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/app/features/cart/cart.component.ts:15</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="openProduct"></a>
+                        <b>openProduct</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/features/cart/cart.component.ts:17</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cart"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>cart</b></span>
+                        <a href="#cart"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CartState)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/features/cart/cart.component.ts:13</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="session"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>session</b></span>
+                        <a href="#session"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(SessionState)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/features/cart/cart.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, EventEmitter, Input, Output, inject } from &#x27;@angular/core&#x27;;
+import type { Product } from &#x27;../../core/models/product.model&#x27;;
+import { CartState } from &#x27;../../core/state/cart.state&#x27;;
+import { SessionState } from &#x27;../../core/state/session.state&#x27;;
+import { CartItemComponent } from &#x27;../../shared/cart-item.component&#x27;;
+
+@Component({
+  selector: &#x27;app-cart&#x27;,
+  imports: [CartItemComponent],
+  templateUrl: &#x27;./cart.component.html&#x27;,
+})
+export class CartComponent {
+  public readonly cart &#x3D; inject(CartState);
+  public readonly session &#x3D; inject(SessionState);
+  @Input() active &#x3D; false;
+
+  @Output() openProduct &#x3D; new EventEmitter&lt;Product&gt;();
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;section class&#x3D;&quot;cart-screen&quot; aria-label&#x3D;&quot;Carrito&quot; [hidden]&#x3D;&quot;!active&quot;&gt;
+  &lt;section class&#x3D;&quot;cart-list&quot; aria-label&#x3D;&quot;Productos en carrito&quot;&gt;
+    @for (item of cart.cartItems; track item.product.producto_id) {
+      &lt;app-cart-item
+        [item]&#x3D;&quot;item&quot;
+        (openProduct)&#x3D;&quot;openProduct.emit($event)&quot;
+        (editDedication)&#x3D;&quot;cart.openDedication($event)&quot;
+        (increase)&#x3D;&quot;cart.increaseCartItem($event)&quot;
+        (decrease)&#x3D;&quot;cart.decreaseCartItem($event)&quot;
+      /&gt;
+    }
+  &lt;/section&gt;
+
+  &lt;section class&#x3D;&quot;order-summary&quot; aria-label&#x3D;&quot;Resumen de compra&quot;&gt;
+    &lt;div&gt;&lt;span&gt;Subtotal&lt;/span&gt;&lt;strong&gt;{{ cart.subtotal }}&lt;/strong&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;span&gt;Envio&lt;/span&gt;&lt;strong&gt;{{ cart.shipping }}&lt;/strong&gt;&lt;/div&gt;
+    &lt;div class&#x3D;&quot;total-row&quot;&gt;&lt;span&gt;Total&lt;/span&gt;&lt;strong&gt;{{ cart.total }}&lt;/strong&gt;&lt;/div&gt;
+  &lt;/section&gt;
+
+  @if (cart.checkoutSuccess) {
+    &lt;p class&#x3D;&quot;checkout-message success&quot;&gt;{{ cart.checkoutSuccess }}&lt;/p&gt;
+  }
+  @if (cart.checkoutError) {
+    &lt;p class&#x3D;&quot;checkout-message error&quot;&gt;{{ cart.checkoutError }}&lt;/p&gt;
+  }
+
+  &lt;button class&#x3D;&quot;checkout-button&quot; type&#x3D;&quot;button&quot; [disabled]&#x3D;&quot;!cart.hasCartItems || cart.checkoutLoading&quot; (click)&#x3D;&quot;cart.checkout(session.currentTestUser)&quot;&gt;
+    {{ cart.checkoutLoading ? &#x27;Creando Pedido...&#x27; : &#x27;Finalizar Pedido&#x27; }}
+  &lt;/button&gt;
+&lt;/section&gt;
+
+@if (cart.dedicationPanelOpen) {
+  &lt;section class&#x3D;&quot;dedication-overlay&quot; aria-label&#x3D;&quot;Dedicatoria&quot;&gt;
+    &lt;div class&#x3D;&quot;dedication-sheet&quot;&gt;
+      &lt;header&gt;
+        &lt;div&gt;
+          &lt;h2&gt;Dedicatoria&lt;/h2&gt;
+          &lt;p&gt;La agregaremos a tu tarjeta floral.&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;button type&#x3D;&quot;button&quot; aria-label&#x3D;&quot;Cerrar dedicatoria&quot; (click)&#x3D;&quot;cart.closeDedicationPanel()&quot;&gt;&amp;times;&lt;/button&gt;
+      &lt;/header&gt;
+
+      &lt;label class&#x3D;&quot;dedication-field&quot;&gt;
+        &lt;span&gt;Mensaje&lt;/span&gt;
+        &lt;textarea
+          [attr.maxlength]&#x3D;&quot;cart.dedicationMaxLength&quot;
+          [value]&#x3D;&quot;cart.dedicationDraft&quot;
+          placeholder&#x3D;&quot;Escribe tu dedicatoria...&quot;
+          (input)&#x3D;&quot;cart.updateDedicationDraft($event)&quot;
+        &gt;&lt;/textarea&gt;
+      &lt;/label&gt;
+
+      &lt;p class&#x3D;&quot;dedication-count&quot;&gt;{{ cart.dedicationCounter }}&lt;/p&gt;
+
+      &lt;button class&#x3D;&quot;dedication-save&quot; type&#x3D;&quot;button&quot; (click)&#x3D;&quot;cart.saveDedication()&quot;&gt;Guardar Dedicatoria&lt;/button&gt;
+      &lt;button class&#x3D;&quot;dedication-cancel&quot; type&#x3D;&quot;button&quot; (click)&#x3D;&quot;cart.closeDedicationPanel()&quot;&gt;Cancelar&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><section class="cart-screen" aria-label="Carrito" [hidden]="!active">  <section class="cart-list" aria-label="Productos en carrito">    @for (item of cart.cartItems; track item.product.producto_id) {      <app-cart-item        [item]="item"        (openProduct)="openProduct.emit($event)"        (editDedication)="cart.openDedication($event)"        (increase)="cart.increaseCartItem($event)"        (decrease)="cart.decreaseCartItem($event)"      />    }  </section>  <section class="order-summary" aria-label="Resumen de compra">    <div><span>Subtotal</span><strong>{{ cart.subtotal }}</strong></div>    <div><span>Envio</span><strong>{{ cart.shipping }}</strong></div>    <div class="total-row"><span>Total</span><strong>{{ cart.total }}</strong></div>  </section>  @if (cart.checkoutSuccess) {    <p class="checkout-message success">{{ cart.checkoutSuccess }}</p>  }  @if (cart.checkoutError) {    <p class="checkout-message error">{{ cart.checkoutError }}</p>  }  <button class="checkout-button" type="button" [disabled]="!cart.hasCartItems || cart.checkoutLoading" (click)="cart.checkout(session.currentTestUser)">    {{ cart.checkoutLoading ? \'Creando Pedido...\' : \'Finalizar Pedido\' }}  </button></section>@if (cart.dedicationPanelOpen) {  <section class="dedication-overlay" aria-label="Dedicatoria">    <div class="dedication-sheet">      <header>        <div>          <h2>Dedicatoria</h2>          <p>La agregaremos a tu tarjeta floral.</p>        </div>        <button type="button" aria-label="Cerrar dedicatoria" (click)="cart.closeDedicationPanel()">&times;</button>      </header>      <label class="dedication-field">        <span>Mensaje</span>        <textarea          [attr.maxlength]="cart.dedicationMaxLength"          [value]="cart.dedicationDraft"          placeholder="Escribe tu dedicatoria..."          (input)="cart.updateDedicationDraft($event)"        ></textarea>      </label>      <p class="dedication-count">{{ cart.dedicationCounter }}</p>      <button class="dedication-save" type="button" (click)="cart.saveDedication()">Guardar Dedicatoria</button>      <button class="dedication-cancel" type="button" (click)="cart.closeDedicationPanel()">Cancelar</button>    </div>  </section>}</div>'
+    var COMPONENTS = [{'name': 'App', 'selector': 'app-root'},{'name': 'AppBottomNavComponent', 'selector': 'app-bottom-nav'},{'name': 'AppHeaderComponent', 'selector': 'app-header'},{'name': 'CartComponent', 'selector': 'app-cart'},{'name': 'CartItemComponent', 'selector': 'app-cart-item'},{'name': 'CatalogComponent', 'selector': 'app-catalog'},{'name': 'CategoriesAdminComponent', 'selector': 'app-categories-admin'},{'name': 'CategoriesComponent', 'selector': 'app-categories'},{'name': 'CategoryChipListComponent', 'selector': 'app-category-chip-list'},{'name': 'CategoryFormComponent', 'selector': 'app-category-form'},{'name': 'HomeShellComponent', 'selector': 'app-home-shell'},{'name': 'OrderCardComponent', 'selector': 'app-order-card'},{'name': 'OrdersComponent', 'selector': 'app-orders'},{'name': 'ProductCardComponent', 'selector': 'app-product-card'},{'name': 'ProductDetailComponent', 'selector': 'app-product-detail'},{'name': 'ProductFormComponent', 'selector': 'app-product-form'},{'name': 'ProductsAdminComponent', 'selector': 'app-products-admin'},{'name': 'ProductViewer3d', 'selector': 'app-product-viewer-3d'},{'name': 'SearchBarComponent', 'selector': 'app-search-bar'},{'name': 'UserComponent', 'selector': 'app-user'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'CartComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'CartComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

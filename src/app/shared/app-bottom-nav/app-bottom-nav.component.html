@@ -1,0 +1,7 @@
+﻿    <nav class="bottom-nav" aria-label="NavegaciÃ³n principal">
+      <button [class.active]="isActive('home')" type="button" aria-label="Inicio" (click)="select.emit('home')"><img src="/icons/tdesign/home-filled.svg" alt="" aria-hidden="true" /></button>
+      <button [class.active]="isActive('categories')" type="button" aria-label="CategorÃ­as" (click)="select.emit('categories')"><img src="/icons/tdesign/app.svg" alt="" aria-hidden="true" /></button>
+      <button [class.active]="isActive('cart')" type="button" aria-label="Carrito" (click)="select.emit('cart')"><img src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" /></button>
+      <button [class.active]="isActive('profile')" type="button" aria-label="Perfil" (click)="select.emit('profile')"><img src="/icons/tdesign/user.svg" alt="" aria-hidden="true" /></button>
+    </nav>
+  

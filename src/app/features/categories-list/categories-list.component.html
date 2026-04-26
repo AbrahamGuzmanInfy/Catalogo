@@ -1,0 +1,44 @@
+<section class="simple-screen category-list-screen" aria-label="Categor&iacute;as">
+  <button class="admin-back" type="button" (click)="back.emit()">&#8249; Volver</button>
+  <div class="inventory-intro">
+    <p class="admin-kicker">Administraci&oacute;n</p>
+    <h2>Gesti&oacute;n de categor&iacute;as</h2>
+    <p>Consulta, edita y organiza las categor&iacute;as visibles del cat&aacute;logo.</p>
+  </div>
+
+  <app-search-bar ariaLabel="Buscar categor&iacute;as" placeholder="Buscar categor&iacute;as..." [value]="categoryListSearchTerm()" (valueChange)="updateCategoryListSearch($event)" />
+
+  @if (categoryFormSuccess) {
+    <p class="form-message success">{{ categoryFormSuccess }}</p>
+  }
+  @if (categoryFormError) {
+    <p class="form-message error">{{ categoryFormError }}</p>
+  }
+
+  <section class="category-list-list" aria-label="Categor&iacute;as registradas">
+    @for (category of filteredCategoriesList(); track category.categoria_id) {
+      <article class="category-list-card">
+        <div class="category-list-copy">
+          <strong>{{ category.nombre }}</strong>
+          <small>{{ getCategoryProductLabel(category) }}</small>
+        </div>
+        <div class="category-list-meta">
+          <span>Orden {{ category.orden || 0 }}</span>
+        </div>
+        <div class="inventory-actions">
+          <button type="button" class="inventory-action" (click)="startEditCategoryFromList(category)">Editar</button>
+          <button type="button" class="inventory-action danger" [disabled]="deletingCategoryId === category.categoria_id" (click)="deleteCategory(category)">
+            {{ deletingCategoryId === category.categoria_id ? 'Eliminando...' : 'Eliminar' }}
+          </button>
+        </div>
+      </article>
+    } @empty {
+      <p class="orders-state">No hay categor&iacute;as que coincidan con la b&uacute;squeda.</p>
+    }
+  </section>
+
+  <button class="inventory-fab" type="button" (click)="openNewCategoryForm()">
+    <span aria-hidden="true">+</span>
+    <small>A&ntilde;adir</small>
+  </button>
+</section>

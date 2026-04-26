@@ -1,0 +1,17 @@
+﻿    <article class="cart-item" [class.has-dedication]="item.dedication" role="button" tabindex="0" [attr.aria-label]="'Ver detalle de ' + item.product.name" (click)="openProduct.emit(item.product)" (keydown.enter)="openProduct.emit(item.product)" (keydown.space)="openProduct.emit(item.product); $event.preventDefault()">
+      <img [src]="item.product.image" [alt]="item.product.alt" />
+      <div class="cart-item-info">
+        <h2>{{ item.product.name }}</h2>
+        <p class="cart-price">{{ item.product.price }}</p>
+        @if (item.dedication) {
+          <p class="cart-dedication">{{ item.dedication }}</p>
+        }
+        <button class="cart-dedication-button" type="button" (click)="editDedication.emit(item.product); $event.stopPropagation()">{{ item.dedication ? 'Editar dedicatoria' : 'Agregar dedicatoria' }}</button>
+      </div>
+      <div class="quantity-control" aria-label="Cantidad" (keydown)="$event.stopPropagation()">
+        <button type="button" aria-label="Quitar" (click)="decrease.emit(item); $event.stopPropagation()">&#8722;</button>
+        <span>{{ item.quantity }}</span>
+        <button class="plus" type="button" aria-label="Agregar" (click)="increase.emit(item); $event.stopPropagation()">+</button>
+      </div>
+    </article>
+  

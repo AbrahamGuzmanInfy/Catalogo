@@ -1,0 +1,46 @@
+﻿    <article class="order-card">
+      <div class="order-card-top">
+        <div>
+          <p class="order-kicker">Pedido</p>
+        </div>
+        <span class="order-status">{{ statusLabel }}</span>
+      </div>
+
+      <div class="order-meta">
+        <span>{{ createdAt }}</span>
+        <span>{{ itemLabel }}</span>
+      </div>
+
+      <div class="order-total-row">
+        <span>Total</span>
+        <strong>$ {{ order.total.toFixed(2) }}</strong>
+      </div>
+
+      <button class="order-toggle" type="button" (click)="toggle.emit(order)">
+        {{ expanded ? 'Ocultar productos' : 'Ver productos' }}
+      </button>
+
+      @if (expanded) {
+        <section class="order-items" aria-label="Productos del pedido">
+          @if (loading) {
+            <p class="order-items-state">Cargando productos...</p>
+          } @else if (!order.items.length) {
+            <p class="order-items-state">No hay detalle de productos disponible.</p>
+          } @else {
+            @for (item of order.items; track item.venta_detalle_id || item.detalle_id || item.producto_id) {
+              <article class="order-item-row">
+                <div class="order-item-copy">
+                  <strong>{{ item.nombre_producto || item.nombre || 'Producto' }}</strong>
+                  <small>Cantidad: {{ item.cantidad || 0 }}</small>
+                  @if (item.dedicatoria) {
+                    <small>Dedicatoria: {{ item.dedicatoria }}</small>
+                  }
+                </div>
+                <span>$ {{ subtotalLabel(item.subtotal) }}</span>
+              </article>
+            }
+          }
+        </section>
+      }
+    </article>
+  

@@ -1,0 +1,13 @@
+﻿    <nav class="category-row" aria-label="CategorÃ­as">
+      @for (category of categories; track category.categoria_id) {
+        <button
+          type="button"
+          class="category-chip"
+          [class.active]="selectedCategoryId === category.categoria_id"
+          [attr.aria-pressed]="selectedCategoryId === category.categoria_id"
+          (click)="select.emit(category)">
+          {{ category.nombre }}
+        </button>
+      }
+    </nav>
+  

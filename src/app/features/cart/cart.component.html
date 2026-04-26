@@ -1,0 +1,59 @@
+<section class="cart-screen" aria-label="Carrito" [hidden]="!active">
+  <section class="cart-list" aria-label="Productos en carrito">
+    @for (item of cart.cartItems; track item.product.producto_id) {
+      <app-cart-item
+        [item]="item"
+        (openProduct)="openProduct.emit($event)"
+        (editDedication)="cart.openDedication($event)"
+        (increase)="cart.increaseCartItem($event)"
+        (decrease)="cart.decreaseCartItem($event)"
+      />
+    }
+  </section>
+
+  <section class="order-summary" aria-label="Resumen de compra">
+    <div><span>Subtotal</span><strong>{{ cart.subtotal }}</strong></div>
+    <div><span>Envio</span><strong>{{ cart.shipping }}</strong></div>
+    <div class="total-row"><span>Total</span><strong>{{ cart.total }}</strong></div>
+  </section>
+
+  @if (cart.checkoutSuccess) {
+    <p class="checkout-message success">{{ cart.checkoutSuccess }}</p>
+  }
+  @if (cart.checkoutError) {
+    <p class="checkout-message error">{{ cart.checkoutError }}</p>
+  }
+
+  <button class="checkout-button" type="button" [disabled]="!cart.hasCartItems || cart.checkoutLoading" (click)="cart.checkout(session.currentTestUser)">
+    {{ cart.checkoutLoading ? 'Creando Pedido...' : 'Finalizar Pedido' }}
+  </button>
+</section>
+
+@if (cart.dedicationPanelOpen) {
+  <section class="dedication-overlay" aria-label="Dedicatoria">
+    <div class="dedication-sheet">
+      <header>
+        <div>
+          <h2>Dedicatoria</h2>
+          <p>La agregaremos a tu tarjeta floral.</p>
+        </div>
+        <button type="button" aria-label="Cerrar dedicatoria" (click)="cart.closeDedicationPanel()">&times;</button>
+      </header>
+
+      <label class="dedication-field">
+        <span>Mensaje</span>
+        <textarea
+          [attr.maxlength]="cart.dedicationMaxLength"
+          [value]="cart.dedicationDraft"
+          placeholder="Escribe tu dedicatoria..."
+          (input)="cart.updateDedicationDraft($event)"
+        ></textarea>
+      </label>
+
+      <p class="dedication-count">{{ cart.dedicationCounter }}</p>
+
+      <button class="dedication-save" type="button" (click)="cart.saveDedication()">Guardar Dedicatoria</button>
+      <button class="dedication-cancel" type="button" (click)="cart.closeDedicationPanel()">Cancelar</button>
+    </div>
+  </section>
+}

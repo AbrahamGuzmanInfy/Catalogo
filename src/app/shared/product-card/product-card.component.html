@@ -1,0 +1,10 @@
+﻿    <article class="product-card">
+      <img [src]="product.image" [alt]="product.alt" />
+      <div class="product-body">
+        <h2>{{ product.name }}</h2>
+        <p class="rating" aria-label="5 estrellas">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+        <p class="price">{{ product.price }}</p>
+        <button type="button" (click)="viewMore.emit(product)">Ver m&aacute;s</button>
+      </div>
+    </article>
+  

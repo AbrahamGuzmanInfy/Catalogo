@@ -1,0 +1,47 @@
+<section class="simple-screen admin-screen category-editor-screen" aria-label="Agregar categor&iacute;a">
+  <button class="admin-back" type="button" (click)="back.emit()">&#8249; Volver</button>
+
+  <div class="product-form-intro">
+    <h2>{{ editingCategoryId ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+  </div>
+
+  <section class="product-image-panel" aria-label="Imagen de categor&iacute;a">
+    @if (categoryFormImageUrl) {
+      <img class="product-image-preview" [src]="categoryFormImageUrl" alt="Vista previa categor&iacute;a" />
+    } @else {
+      <div class="product-image-placeholder" aria-hidden="true">
+        <span>+</span>
+        <strong>Subir Imagen</strong>
+      </div>
+    }
+
+    <label class="product-image-trigger">
+      <input type="file" accept="image/*" (change)="onCategoryImageSelected($event)" />
+      <span>{{ categoryUploadLoading ? 'Subiendo imagen...' : (categoryFormImageUrl ? 'Cambiar imagen' : 'Seleccionar imagen') }}</span>
+    </label>
+  </section>
+
+  <label class="product-form-field product-form-field-name">
+    <input type="text" placeholder="Nombre de la Categor&iacute;a" [value]="categoryFormName" (input)="updateCategoryFormName($event)" />
+  </label>
+
+  <label class="product-form-field product-form-field-order">
+    <span>Orden</span>
+    <input type="number" inputmode="numeric" placeholder="0" [value]="categoryFormOrder" (input)="updateCategoryFormOrder($event)" />
+  </label>
+
+  @if (categoryFormSuccess) {
+    <p class="form-message success">{{ categoryFormSuccess }}</p>
+  }
+  @if (categoryFormError) {
+    <p class="form-message error">{{ categoryFormError }}</p>
+  }
+
+  <button class="admin-submit product-form-submit" type="button" [disabled]="categoryFormLoading || categoryUploadLoading" (click)="submitCategory()">
+    {{ categoryFormLoading ? (editingCategoryId ? 'Guardando cambios...' : 'Guardando categoría...') : (editingCategoryId ? 'Actualizar Categoría' : 'Guardar Categoría') }}
+  </button>
+
+  @if (editingCategoryId) {
+    <button class="admin-cancel" type="button" (click)="cancelEditCategory()">Cancelar edici&oacute;n</button>
+  }
+</section>

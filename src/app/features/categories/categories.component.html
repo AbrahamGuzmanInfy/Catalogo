@@ -1,0 +1,10 @@
+<section class="simple-screen categories-screen" aria-label="Categor&iacute;as">
+  <section class="category-grid" aria-label="Lista de categor&iacute;as">
+    @for (category of filteredCategories(); track category.categoria_id) {
+      <button type="button" class="category-tile" (click)="openCategory(category)">
+        <span>{{ category.nombre }}</span>
+        <small>{{ getCategoryProductLabel(category) }}</small>
+      </button>
+    }
+  </section>
+</section>

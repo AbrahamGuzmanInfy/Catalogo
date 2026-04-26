@@ -1,0 +1,129 @@
+<main
+  class="home-shell"
+  [class.detail-mode]="navigation.activeView === 'detail'"
+  [class.cart-mode]="navigation.activeView === 'cart'"
+  [class.header-with-search]="headerHasSearch"
+  [class.header-with-search-chips]="headerHasCategoryChips"
+  aria-label="Cat&aacute;logo"
+>
+  @if (showInstallPrompt) {
+    <section class="install-banner" aria-label="Instalar aplicaci&oacute;n">
+      <div>
+        <strong>Bloomy en tu inicio</strong>
+        @if (isIosInstallHelp) {
+          <p class="ios-install-copy">En iPhone: toca Compartir y despu&eacute;s Agregar a pantalla de inicio.</p>
+        } @else {
+          <p>Abre Bloomy como app desde tu pantalla principal.</p>
+        }
+      </div>
+      @if (canInstallApp) {
+        <button class="install-action" type="button" (click)="installApp()">Instalar</button>
+      }
+      <button class="install-close" type="button" aria-label="Cerrar aviso" (click)="dismissInstallPrompt()">&times;</button>
+    </section>
+  }
+
+  <app-header [hasCartItems]="cart.hasCartItems" [hasTools]="headerHasTools" (cartClick)="navigation.showView('cart')">
+    @if (navigation.activeView === 'home') {
+      <section class="topbar-tools topbar-tools-home" aria-label="Herramientas de cat&aacute;logo">
+        <app-search-bar
+          ariaLabel="Buscar flores"
+          placeholder="Buscar flores..."
+          [value]="homeProductSearchTerm"
+          (valueChange)="updateHomeProductSearch($event)"
+        />
+        <app-category-chip-list
+          [categories]="homeCategories"
+          [selectedCategoryId]="navigation.selectedCategoryId"
+          (select)="selectHomeCategory($event)"
+        />
+      </section>
+    }
+
+    @if (navigation.activeView === 'categories') {
+      <section class="topbar-tools" aria-label="Herramientas de categor&iacute;as">
+        <app-search-bar
+          ariaLabel="Buscar categor&iacute;as"
+          placeholder="Buscar categor&iacute;as..."
+          [value]="categoriesSearchTerm"
+          (valueChange)="updateCategoriesSearch($event)"
+        />
+      </section>
+    }
+  </app-header>
+
+  <app-cart [active]="navigation.activeView === 'cart'" (openProduct)="navigation.showProduct($event, 'cart')" />
+
+  @switch (navigation.activeView) {
+    @case ('home') {
+      <app-catalog
+        [selectedCategoryId]="navigation.selectedCategoryId"
+        [productSearchTerm]="homeProductSearchTerm"
+        (selectedCategoryIdChange)="navigation.setSelectedCategory($event)"
+        (productSelected)="navigation.showProduct($event, 'home')"
+        (productsLoaded)="selectProductFromHash($event)"
+        (categoriesLoaded)="updateHomeCategories($event)"
+      />
+    }
+    @case ('categories') {
+      <app-categories [categorySearchTerm]="categoriesSearchTerm" (categoryOpened)="navigation.openCategory($event)" />
+    }
+    @case ('profile') {
+      <app-user
+        (productsList)="openProductsList()"
+        (categoriesList)="openCategoryList()"
+        (orders)="navigation.showView('orders')"
+      />
+    }
+    @case ('orders') {
+      <app-orders [currentUser]="session.currentTestUser" (back)="navigation.showView('profile')" />
+    }
+    @case ('products') {
+      <app-products-list
+        (back)="navigation.showView('profile')"
+        (createRequested)="openNewProductForm()"
+        (editRequested)="startEditProduct($event)"
+      />
+    }
+    @case ('category-list') {
+      <app-categories-list
+        (back)="navigation.showView('profile')"
+        (createRequested)="openNewCategoryForm()"
+        (editRequested)="startEditCategory($event)"
+      />
+    }
+    @case ('add-product') {
+      <app-product-form
+        [editingProduct]="editingProduct"
+        (back)="cancelProductEdit(); navigation.showView('products')"
+        (cancelEdit)="cancelProductEdit()"
+        (saved)="onProductSaved()"
+      />
+    }
+    @case ('add-category') {
+      <app-category-form
+        [editingCategory]="editingCategory"
+        (back)="cancelCategoryEdit(); navigation.showView('category-list')"
+        (cancelEdit)="cancelCategoryEdit()"
+        (saved)="onCategorySaved()"
+      />
+    }
+    @case ('detail') {
+      @if (navigation.selectedProduct) {
+        <app-product-detail
+          [product]="navigation.selectedProduct"
+          [dedication]="cart.getProductDedication(navigation.selectedProduct)"
+          (back)="navigation.showDetailBack()"
+          (addToCart)="cart.addToCart(navigation.selectedProduct)"
+          (editDedication)="cart.openDedication(navigation.selectedProduct)"
+        />
+      }
+    }
+  }
+
+  <app-bottom-nav
+    [activeView]="navigation.activeView"
+    [detailReturnView]="navigation.currentDetailReturnView"
+    (select)="navigation.showView($event)"
+  />
+</main>

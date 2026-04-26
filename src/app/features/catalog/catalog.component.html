@@ -1,0 +1,22 @@
+<section class="home-screen">
+  <section class="product-grid" aria-label="Productos destacados">
+    @for (product of filteredProducts; track product.producto_id) {
+      <app-product-card [product]="product" (viewMore)="showProduct($event)" />
+    }
+  </section>
+
+  <section class="offer-banner" aria-label="Ofertas especiales">
+    <div>
+      <h2>Ofertas Especiales.</h2>
+      <p>&iexcl;Env&iacute;a hoy y ahorra!</p>
+      <a href="/" aria-label="Ver ofertas">Ver Ofertas <span aria-hidden="true">&#8250;</span></a>
+    </div>
+    <div class="gift-art" aria-hidden="true">
+      <div class="gift-lid"></div>
+      <div class="gift-box"></div>
+      <div class="gift-bow gift-bow-left"></div>
+      <div class="gift-bow gift-bow-right"></div>
+      <div class="gift-ribbon"></div>
+    </div>
+  </section>
+</section>

@@ -1,0 +1,13 @@
+<header class="topbar" [class.topbar-with-tools]="hasTools" aria-label="Encabezado">
+  <div class="topbar-main">
+    <div aria-hidden="true"></div>
+    <h1>{{ title }}</h1>
+    <button class="cart-button" type="button" aria-label="Carrito" (click)="cartClick.emit()">
+      <img class="cart-icon" src="/icons/ic/baseline-shopping-cart.svg" alt="" aria-hidden="true" />
+      @if (hasCartItems) {
+        <span class="cart-dot" aria-hidden="true"></span>
+      }
+    </button>
+  </div>
+  <ng-content />
+</header>
