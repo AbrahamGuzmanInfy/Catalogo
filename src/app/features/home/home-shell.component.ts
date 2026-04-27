@@ -23,14 +23,6 @@ import { ProductsListComponent } from '../products-list/products-list.component'
 import { OrdersComponent } from '../orders/orders.component';
 import { UserComponent } from '../user/user.component';
 
-const INSTALL_DISMISSED_KEY = 'petal-install-dismissed-session';
-const IOS_INSTALL_DISMISSED_KEY = 'petal-ios-install-dismissed-session';
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
-};
-
 @Component({
   selector: 'app-home-shell',
   imports: [
@@ -68,11 +60,7 @@ export class HomeShellComponent implements OnInit, OnDestroy {
   public homeCategories: Category[] = [];
   public homeProductSearchTerm = '';
   public categoriesSearchTerm = '';
-  public showInstallPrompt = false;
-  public canInstallApp = false;
-  public isIosInstallHelp = false;
 
-  private deferredInstallPrompt: BeforeInstallPromptEvent | null = null;
   private readonly zoomCleanupCallbacks: Array<() => void> = [];
 
   /**
@@ -80,6 +68,19 @@ export class HomeShellComponent implements OnInit, OnDestroy {
    */
   get headerHasTools(): boolean {
     return this.navigation.activeView === 'home' || this.navigation.activeView === 'categories';
+  }
+
+  /**
+   * Indica si la vista activa corresponde al flujo de autenticacion
+   * y debe mostrarse sin header global ni barra inferior.
+   */
+  get isAuthView(): boolean {
+    return (
+      (this.navigation.activeView === 'profile' && !this.session.isAuthenticated)
+      || this.navigation.activeView === 'register'
+      || this.navigation.activeView === 'confirm-sign-up'
+      || this.navigation.activeView === 'reset-password'
+    );
   }
 
   /**
@@ -101,7 +102,6 @@ export class HomeShellComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.disableBrowserZoom();
-    this.setupInstallPrompt();
   }
 
   /**
@@ -178,7 +178,7 @@ export class HomeShellComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Navega a la pantalla de recuperacion de contraseña.
+   * Navega a la pantalla de recuperacion de contraseï¿½a.
    */
   openPasswordReset(): void {
     this.session.clearAuthError();
@@ -295,33 +295,6 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     this.navigation.showView('profile');
   }
 
-  /**
-   * Dispara el prompt de instalacion cuando el navegador lo permite.
-   */
-  async installApp(): Promise<void> {
-    if (!this.deferredInstallPrompt) return;
-
-    const promptEvent = this.deferredInstallPrompt;
-    this.deferredInstallPrompt = null;
-    await promptEvent.prompt();
-    await promptEvent.userChoice;
-    this.dismissInstallPrompt();
-  }
-
-  /**
-   * Oculta el banner de instalacion y persiste su descarte.
-   */
-  dismissInstallPrompt(): void {
-    this.showInstallPrompt = false;
-    this.canInstallApp = false;
-    this.deferredInstallPrompt = null;
-    if (this.isIosInstallHelp) {
-      this.markIosInstallPromptDismissed();
-    } else {
-      this.markInstallPromptDismissed();
-    }
-  }
-
   private disableBrowserZoom(): void {
     let lastTouchEnd = 0;
 
@@ -364,69 +337,4 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     this.zoomCleanupCallbacks.push(() => target.removeEventListener(eventName, handler, options));
   }
 
-  private setupInstallPrompt(): void {
-    if (this.isStandaloneMode()) return;
-
-    this.isIosInstallHelp = this.isIosDevice();
-    if (this.isIosInstallHelp) {
-      this.showInstallPrompt = !this.wasIosInstallPromptDismissed();
-    } else if (this.wasInstallPromptDismissed()) {
-      return;
-    }
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-      event.preventDefault();
-      this.deferredInstallPrompt = event as BeforeInstallPromptEvent;
-      this.canInstallApp = true;
-      this.showInstallPrompt = true;
-    });
-
-    window.addEventListener('appinstalled', () => {
-      this.dismissInstallPrompt();
-    });
-  }
-
-  private isStandaloneMode(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
-  }
-
-  private wasInstallPromptDismissed(): boolean {
-    try {
-      return sessionStorage.getItem(INSTALL_DISMISSED_KEY) === 'true';
-    } catch {
-      return false;
-    }
-  }
-
-  private markInstallPromptDismissed(): void {
-    try {
-      sessionStorage.setItem(INSTALL_DISMISSED_KEY, 'true');
-    } catch {
-      // Ignore storage issues.
-    }
-  }
-
-  private wasIosInstallPromptDismissed(): boolean {
-    try {
-      return sessionStorage.getItem(IOS_INSTALL_DISMISSED_KEY) === 'true';
-    } catch {
-      return false;
-    }
-  }
-
-  private markIosInstallPromptDismissed(): void {
-    try {
-      sessionStorage.setItem(IOS_INSTALL_DISMISSED_KEY, 'true');
-    } catch {
-      // Ignore storage issues.
-    }
-  }
-
-  private isIosDevice(): boolean {
-    const userAgent = navigator.userAgent.toLowerCase();
-    const platform = navigator.platform.toLowerCase();
-    const touchPoints = navigator.maxTouchPoints || 0;
-
-    return /iphone|ipad|ipod/.test(userAgent) || (platform === 'macintel' && touchPoints > 1);
-  }
 }

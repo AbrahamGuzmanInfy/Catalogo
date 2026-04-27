@@ -2,8 +2,11 @@
   <section class="category-grid" aria-label="Lista de categor&iacute;as">
     @for (category of filteredCategories(); track category.categoria_id) {
       <button type="button" class="category-tile" (click)="openCategory(category)">
-        <span>{{ category.nombre }}</span>
-        <small>{{ getCategoryProductLabel(category) }}</small>
+        <img class="category-tile-image" [src]="getCategoryImage(category)" [alt]="category.nombre" />
+        <span class="category-tile-copy">
+          <strong>{{ category.nombre }}</strong>
+          <small>{{ getCategoryProductLabel(category) }}</small>
+        </span>
       </button>
     }
   </section>

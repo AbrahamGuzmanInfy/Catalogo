@@ -50,6 +50,28 @@ export class CategoriesComponent implements OnInit {
   }
 
   /**
+   * Resuelve la imagen visible de una categoria.
+   * Usa la imagen propia cuando existe; si no, toma la primera imagen
+   * de un producto asociado y, como ultimo recurso, usa el icono de la app.
+   * @param category Categoria a representar.
+   */
+  getCategoryImage(category: Category): string {
+    if (category.imageUrl?.trim()) {
+      return category.imageUrl.trim();
+    }
+
+    const relatedProduct = this.products().find((product) =>
+      product.categoriaIds?.includes(category.categoria_id) && product.image?.trim(),
+    );
+
+    if (relatedProduct?.image?.trim()) {
+      return relatedProduct.image.trim();
+    }
+
+    return '/icons/app/icon-192.png';
+  }
+
+  /**
    * Calcula la etiqueta visible con el numero de productos asociados a una categoria.
    * @param category Categoria a evaluar.
    */
