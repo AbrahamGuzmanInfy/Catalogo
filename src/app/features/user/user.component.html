@@ -6,13 +6,6 @@
       <p>{{ user.email }}</p>
     </div>
 
-    <section class="profile-role-switch" aria-label="Rol de cuenta">
-      <div class="profile-switch-copy">
-        <strong>Rol activo</strong>
-        <small>{{ user.rol === 'dueno' ? 'Dueño' : user.rol === 'admin' ? 'Administrador' : 'Cliente' }}</small>
-      </div>
-    </section>
-
     @if (session.isOwnerRole) {
       <button class="profile-action" type="button" (click)="productsList.emit()">Productos</button>
       <button class="profile-secondary" type="button" (click)="categoriesList.emit()">Categorías</button>

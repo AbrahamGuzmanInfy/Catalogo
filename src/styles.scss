@@ -17,7 +17,7 @@ app-root {
   --topbar-safe-space: max(env(safe-area-inset-top, 0px), 14px);
   --compact-header-offset: calc(68px + var(--topbar-safe-space));
   --search-header-offset: calc(86px + var(--topbar-safe-space));
-  --search-chips-header-offset: calc(126px + var(--topbar-safe-space));
+  --search-chips-header-offset: calc(142px + var(--topbar-safe-space));
   display: block;
   min-height: 100dvh;
   background: #ffffff;
@@ -208,11 +208,11 @@ a {
 
 .topbar-tools {
   width: min(100%, var(--screen-max-width));
-  margin: 18px auto 0;
+  margin: 24px auto 0;
 }
 
 .topbar-tools-home {
-  margin-top: 18px;
+  margin-top: 24px;
 }
 
 .search-box {
@@ -254,7 +254,8 @@ a {
 .category-row {
   display: flex;
   gap: 5px;
-  margin: 14px -17px 0 0;
+  margin: 20px -17px 0 0;
+  padding-top: 8px;
   overflow-x: auto;
   overflow-y: hidden;
   align-items: stretch;
@@ -288,8 +289,8 @@ a {
 
 .category-chip.active {
   border-color: var(--accent-action);
-  color: #ffffff;
-  background: var(--accent-action);
+  color: var(--accent-action);
+  background: #ffffff;
   transform: translateY(-1px);
 }
 
