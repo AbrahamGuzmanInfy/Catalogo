@@ -10,6 +10,9 @@ function viewFromHash(): View {
   if (window.location.hash === '#categorias') return 'categories';
   if (window.location.hash === '#carrito') return 'cart';
   if (window.location.hash === '#perfil') return 'profile';
+  if (window.location.hash === '#registro') return 'register';
+  if (window.location.hash === '#confirmar-cuenta') return 'confirm-sign-up';
+  if (window.location.hash === '#restablecer-contrasena') return 'reset-password';
   if (window.location.hash === '#pedidos') return 'orders';
   if (window.location.hash === '#productos-list') return 'products';
   if (window.location.hash === '#categorias-list') return 'category-list';
@@ -26,6 +29,9 @@ function hashForView(view: Exclude<View, 'detail'>): string {
   if (view === 'categories') return '#categorias';
   if (view === 'cart') return '#carrito';
   if (view === 'profile') return '#perfil';
+  if (view === 'register') return '#registro';
+  if (view === 'confirm-sign-up') return '#confirmar-cuenta';
+  if (view === 'reset-password') return '#restablecer-contrasena';
   if (view === 'orders') return '#pedidos';
   if (view === 'products') return '#productos-list';
   if (view === 'category-list') return '#categorias-list';

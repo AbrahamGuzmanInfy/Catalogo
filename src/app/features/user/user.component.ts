@@ -11,4 +11,5 @@ export class UserComponent {
   @Output() productsList = new EventEmitter<void>();
   @Output() categoriesList = new EventEmitter<void>();
   @Output() orders = new EventEmitter<void>();
+  @Output() signOutRequested = new EventEmitter<void>();
 }

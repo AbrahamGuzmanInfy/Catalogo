@@ -9,6 +9,10 @@ import { AppBottomNavComponent } from '../../shared/app-bottom-nav/app-bottom-na
 import { AppHeaderComponent } from '../../shared/app-header/app-header.component';
 import { CategoryChipListComponent } from '../../shared/category-chip-list/category-chip-list.component';
 import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
+import { AuthConfirmSignUpComponent } from '../auth-confirm-sign-up/auth-confirm-sign-up.component';
+import { AuthLoginComponent } from '../auth-login/auth-login.component';
+import { AuthPasswordResetComponent } from '../auth-password-reset/auth-password-reset.component';
+import { AuthRegisterComponent } from '../auth-register/auth-register.component';
 import { CartComponent } from '../cart/cart.component';
 import { CategoriesComponent } from '../categories/categories.component';
 import { CatalogComponent } from '../catalog/catalog.component';
@@ -34,6 +38,10 @@ type BeforeInstallPromptEvent = Event & {
     AppBottomNavComponent,
     SearchBarComponent,
     CategoryChipListComponent,
+    AuthLoginComponent,
+    AuthRegisterComponent,
+    AuthConfirmSignUpComponent,
+    AuthPasswordResetComponent,
     CatalogComponent,
     CategoriesComponent,
     CartComponent,
@@ -146,6 +154,50 @@ export class HomeShellComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Navega a la pantalla de registro.
+   */
+  openRegister(): void {
+    this.session.clearAuthError();
+    this.navigation.showView('register');
+  }
+
+  /**
+   * Navega a la pantalla de inicio de sesion.
+   */
+  openLogin(): void {
+    this.session.clearAuthError();
+    this.navigation.showView('profile');
+  }
+
+  /**
+   * Navega a la pantalla de confirmacion de cuenta.
+   */
+  openConfirmation(): void {
+    this.session.clearAuthError();
+    this.navigation.showView('confirm-sign-up');
+  }
+
+  /**
+   * Navega a la pantalla de recuperacion de contraseña.
+   */
+  openPasswordReset(): void {
+    this.session.clearAuthError();
+    this.navigation.showView('reset-password');
+  }
+
+  /**
+   * Navega a pedidos si existe sesion autenticada; de lo contrario abre login.
+   */
+  openOrders(): void {
+    if (!this.session.isAuthenticated) {
+      this.openLogin();
+      return;
+    }
+
+    this.navigation.showView('orders');
+  }
+
+  /**
    * Abre la administracion de productos si el usuario tiene permisos.
    */
   openProductsList(): void {
@@ -200,6 +252,7 @@ export class HomeShellComponent implements OnInit, OnDestroy {
    */
   onProductSaved(): void {
     this.editingProduct = null;
+    this.navigation.showView('products');
   }
 
   /**
@@ -231,6 +284,15 @@ export class HomeShellComponent implements OnInit, OnDestroy {
    */
   onCategorySaved(): void {
     this.editingCategory = null;
+    this.navigation.showView('category-list');
+  }
+
+  /**
+   * Cierra la sesion actual y devuelve al login dentro del perfil.
+   */
+  async signOut(): Promise<void> {
+    await this.session.signOut();
+    this.navigation.showView('profile');
   }
 
   /**
@@ -260,9 +322,6 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Registra listeners para bloquear gestos de zoom no deseados en movil.
-   */
   private disableBrowserZoom(): void {
     let lastTouchEnd = 0;
 
@@ -299,21 +358,12 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Añade un listener de bloqueo y conserva su cleanup para destruccion posterior.
-   * @param target Objetivo donde se registrara el listener.
-   * @param eventName Nombre del evento a escuchar.
-   * @param handler Funcion a ejecutar al dispararse el evento.
-   */
   private addZoomBlocker(target: EventTarget, eventName: string, handler: EventListener): void {
     const options: AddEventListenerOptions = { passive: false, capture: true };
     target.addEventListener(eventName, handler, options);
     this.zoomCleanupCallbacks.push(() => target.removeEventListener(eventName, handler, options));
   }
 
-  /**
-   * Configura la deteccion de instalacion PWA y el banner de ayuda en iOS.
-   */
   private setupInstallPrompt(): void {
     if (this.isStandaloneMode()) return;
 
@@ -336,16 +386,10 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Detecta si la app ya esta corriendo en modo standalone.
-   */
   private isStandaloneMode(): boolean {
     return window.matchMedia('(display-mode: standalone)').matches || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
   }
 
-  /**
-   * Indica si el prompt de instalacion estandar ya fue descartado.
-   */
   private wasInstallPromptDismissed(): boolean {
     try {
       return sessionStorage.getItem(INSTALL_DISMISSED_KEY) === 'true';
@@ -354,9 +398,6 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Marca el prompt de instalacion estandar como descartado en esta sesion.
-   */
   private markInstallPromptDismissed(): void {
     try {
       sessionStorage.setItem(INSTALL_DISMISSED_KEY, 'true');
@@ -365,9 +406,6 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Indica si la ayuda de instalacion para iOS ya fue descartada.
-   */
   private wasIosInstallPromptDismissed(): boolean {
     try {
       return sessionStorage.getItem(IOS_INSTALL_DISMISSED_KEY) === 'true';
@@ -376,9 +414,6 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Marca la ayuda de instalacion para iOS como descartada en esta sesion.
-   */
   private markIosInstallPromptDismissed(): void {
     try {
       sessionStorage.setItem(IOS_INSTALL_DISMISSED_KEY, 'true');
@@ -387,9 +422,6 @@ export class HomeShellComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Detecta si el navegador actual corresponde a un dispositivo iOS.
-   */
   private isIosDevice(): boolean {
     const userAgent = navigator.userAgent.toLowerCase();
     const platform = navigator.platform.toLowerCase();

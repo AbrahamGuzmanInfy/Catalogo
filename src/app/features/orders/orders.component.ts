@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, computed, inject, signal } from '@angular/core';
 import type { Venta, VentaDetalle } from '../../core/models/order.model';
-import type { TestUser } from '../../core/models/user.model';
+import type { AppUserProfile } from '../../core/models/user.model';
 import { OrderService } from '../../core/services/order.service';
 import { OrderCardComponent } from '../../shared/order-card/order-card.component';
 
@@ -15,7 +15,7 @@ import { OrderCardComponent } from '../../shared/order-card/order-card.component
 export class OrdersComponent implements OnChanges {
   private readonly orderService = inject(OrderService);
 
-  @Input({ required: true }) currentUser!: TestUser;
+  @Input({ required: true }) currentUser!: AppUserProfile;
   @Output() back = new EventEmitter<void>();
 
   public readonly orders = signal<Venta[]>([]);

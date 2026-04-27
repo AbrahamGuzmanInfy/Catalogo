@@ -15,4 +15,14 @@ export class CartComponent {
   @Input() active = false;
 
   @Output() openProduct = new EventEmitter<Product>();
+  @Output() authRequired = new EventEmitter<void>();
+
+  checkout(): void {
+    if (!this.session.user) {
+      this.authRequired.emit();
+      return;
+    }
+
+    this.cart.checkout(this.session.user);
+  }
 }

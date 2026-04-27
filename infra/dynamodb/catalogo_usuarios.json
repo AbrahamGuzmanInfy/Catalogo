@@ -10,6 +10,10 @@
             "AttributeType": "S"
         },
         {
+            "AttributeName": "cognito_sub",
+            "AttributeType": "S"
+        },
+        {
             "AttributeName": "rol_id",
             "AttributeType": "S"
         },
@@ -34,6 +38,18 @@
             "KeySchema": [
                 {
                     "AttributeName": "email",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            }
+        },
+        {
+            "IndexName": "cognito_sub-index",
+            "KeySchema": [
+                {
+                    "AttributeName": "cognito_sub",
                     "KeyType": "HASH"
                 }
             ],

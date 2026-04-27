@@ -24,7 +24,7 @@
     <p class="checkout-message error">{{ cart.checkoutError }}</p>
   }
 
-  <button class="checkout-button" type="button" [disabled]="!cart.hasCartItems || cart.checkoutLoading" (click)="cart.checkout(session.currentTestUser)">
+  <button class="checkout-button" type="button" [disabled]="!cart.hasCartItems || cart.checkoutLoading" (click)="checkout()">
     {{ cart.checkoutLoading ? 'Creando Pedido...' : 'Finalizar Pedido' }}
   </button>
 </section>

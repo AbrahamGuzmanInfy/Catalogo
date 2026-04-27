@@ -52,7 +52,11 @@
     }
   </app-header>
 
-  <app-cart [active]="navigation.activeView === 'cart'" (openProduct)="navigation.showProduct($event, 'cart')" />
+  <app-cart
+    [active]="navigation.activeView === 'cart'"
+    (openProduct)="navigation.showProduct($event, 'cart')"
+    (authRequired)="openLogin()"
+  />
 
   @switch (navigation.activeView) {
     @case ('home') {
@@ -69,14 +73,39 @@
       <app-categories [categorySearchTerm]="categoriesSearchTerm" (categoryOpened)="navigation.openCategory($event)" />
     }
     @case ('profile') {
-      <app-user
-        (productsList)="openProductsList()"
-        (categoriesList)="openCategoryList()"
-        (orders)="navigation.showView('orders')"
+      @if (session.isAuthenticated) {
+        <app-user
+          (productsList)="openProductsList()"
+          (categoriesList)="openCategoryList()"
+          (orders)="openOrders()"
+          (signOutRequested)="signOut()"
+        />
+      } @else {
+        <app-auth-login
+          (registerRequested)="openRegister()"
+          (forgotPasswordRequested)="openPasswordReset()"
+          (signedIn)="navigation.showView('home')"
+          (confirmationRequired)="openConfirmation()"
+          (passwordResetRequired)="openPasswordReset()"
+        />
+      }
+    }
+    @case ('register') {
+      <app-auth-register
+        (loginRequested)="openLogin()"
+        (confirmationRequired)="openConfirmation()"
       />
     }
+    @case ('confirm-sign-up') {
+      <app-auth-confirm-sign-up (loginRequested)="openLogin()" />
+    }
+    @case ('reset-password') {
+      <app-auth-password-reset (loginRequested)="openLogin()" />
+    }
     @case ('orders') {
-      <app-orders [currentUser]="session.currentTestUser" (back)="navigation.showView('profile')" />
+      @if (session.user; as currentUser) {
+        <app-orders [currentUser]="currentUser" (back)="navigation.showView('profile')" />
+      }
     }
     @case ('products') {
       <app-products-list

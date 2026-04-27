@@ -1,0 +1,53 @@
+<section class="simple-screen auth-screen" aria-label="Iniciar sesión">
+  <div class="auth-card auth-card-login">
+    <div class="auth-hero">
+      <div class="auth-floral-art" aria-hidden="true">
+        <span class="auth-bloom auth-bloom-center"></span>
+        <span class="auth-bloom auth-bloom-left"></span>
+        <span class="auth-bloom auth-bloom-right"></span>
+        <span class="auth-leaf auth-leaf-left"></span>
+        <span class="auth-leaf auth-leaf-right"></span>
+      </div>
+      <p class="auth-brand">Bloomy</p>
+    </div>
+
+    @if (!cognitoConfigured) {
+      <p class="form-message error">Falta configurar Cognito en el frontend antes de usar el acceso.</p>
+    }
+
+    <label class="auth-field auth-field-lilac">
+      <span class="auth-field-label">Correo electrónico</span>
+      <input
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        placeholder="Correo electr&oacute;nico"
+        [value]="email"
+        (input)="email = $any($event.target).value"
+      />
+    </label>
+
+    <label class="auth-field auth-field-peach">
+      <span class="auth-field-label">Contraseña</span>
+      <input
+        type="password"
+        autocomplete="current-password"
+        placeholder="Contrase&ntilde;a"
+        [value]="password"
+        (input)="password = $any($event.target).value"
+      />
+    </label>
+
+    <button class="auth-link auth-forgot-link" type="button" (click)="forgotPasswordRequested.emit()">¿Olvidaste tu contrase&ntilde;a?</button>
+
+    @if (error) {
+      <p class="form-message error">{{ error }}</p>
+    }
+
+    <button class="auth-primary" type="button" [disabled]="loading || !email.trim() || !password.trim() || !cognitoConfigured" (click)="submit()">
+      {{ loading ? 'Ingresando...' : 'Iniciar sesi&oacute;n' }}
+    </button>
+
+    <p class="auth-footer-copy">¿No tienes una cuenta? <button class="auth-inline-link" type="button" (click)="registerRequested.emit()">Reg&iacute;strate</button></p>
+  </div>
+</section>

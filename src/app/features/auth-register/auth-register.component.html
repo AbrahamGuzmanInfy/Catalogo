@@ -1,0 +1,55 @@
+<section class="simple-screen auth-screen" aria-label="Crear cuenta">
+  <div class="auth-card">
+    <div class="auth-hero auth-hero-compact">
+      <div class="auth-floral-art auth-floral-art-small" aria-hidden="true">
+        <span class="auth-bloom auth-bloom-center"></span>
+        <span class="auth-bloom auth-bloom-left"></span>
+        <span class="auth-bloom auth-bloom-right"></span>
+        <span class="auth-leaf auth-leaf-left"></span>
+        <span class="auth-leaf auth-leaf-right"></span>
+      </div>
+      <p class="auth-brand">Bloomy</p>
+      <h2>Crear cuenta</h2>
+      <p class="auth-copy">Guarda tus pedidos y sigue tu compra desde cualquier dispositivo.</p>
+    </div>
+
+    @if (!cognitoConfigured) {
+      <p class="form-message error">Falta configurar Cognito en el frontend antes de usar el registro.</p>
+    }
+
+    <label class="auth-field auth-field-lilac">
+      <span class="auth-field-label">Nombre</span>
+      <input type="text" autocomplete="name" placeholder="Nombre completo" [value]="nombre" (input)="nombre = $any($event.target).value" />
+    </label>
+
+    <label class="auth-field auth-field-peach">
+      <span class="auth-field-label">Correo electrónico</span>
+      <input type="email" inputmode="email" autocomplete="email" placeholder="Correo electr&oacute;nico" [value]="email" (input)="email = $any($event.target).value" />
+    </label>
+
+    <label class="auth-field auth-field-lilac">
+      <span class="auth-field-label">Contraseña</span>
+      <input type="password" autocomplete="new-password" placeholder="Contrase&ntilde;a" [value]="password" (input)="password = $any($event.target).value" />
+    </label>
+
+    <label class="auth-field auth-field-peach">
+      <span class="auth-field-label">Confirmar contraseña</span>
+      <input type="password" autocomplete="new-password" placeholder="Confirmar contrase&ntilde;a" [value]="confirmPassword" (input)="confirmPassword = $any($event.target).value" />
+    </label>
+
+    @if (error) {
+      <p class="form-message error">{{ error }}</p>
+    }
+
+    <button
+      class="auth-primary"
+      type="button"
+      [disabled]="loading || !nombre.trim() || !email.trim() || !password.trim() || !confirmPassword.trim() || !cognitoConfigured"
+      (click)="submit()"
+    >
+      {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }}
+    </button>
+
+    <p class="auth-footer-copy">¿Ya tienes una cuenta? <button class="auth-inline-link" type="button" (click)="loginRequested.emit()">Inicia sesi&oacute;n</button></p>
+  </div>
+</section>

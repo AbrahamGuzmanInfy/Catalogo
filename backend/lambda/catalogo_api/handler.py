@@ -20,6 +20,8 @@ VENTAS_TABLE = os.environ.get('VENTAS_TABLE', 'catalogo_ventas')
 VENTAS_DETALLE_TABLE = os.environ.get('VENTAS_DETALLE_TABLE', 'catalogo_ventas_detalle')
 PAGOS_TABLE = os.environ.get('PAGOS_TABLE', 'catalogo_pagos')
 SECUENCIAS_TABLE = os.environ.get('SECUENCIAS_TABLE', 'catalogo_secuencias')
+USUARIOS_TABLE = os.environ.get('USUARIOS_TABLE', 'catalogo_usuarios')
+ROLES_TABLE = os.environ.get('ROLES_TABLE', 'catalogo_roles')
 MEDIA_BUCKET = os.environ.get('MEDIA_BUCKET', 'media-app-1')
 AWS_REGION = os.environ.get('AWS_REGION', os.environ.get('AWS_DEFAULT_REGION', 'us-east-2'))
 MEDIA_BASE_URL = os.environ.get('MEDIA_BASE_URL', f'https://{MEDIA_BUCKET}.s3.{AWS_REGION}.amazonaws.com')
@@ -31,6 +33,8 @@ ventas_table = dynamodb.Table(VENTAS_TABLE)
 ventas_detalle_table = dynamodb.Table(VENTAS_DETALLE_TABLE)
 pagos_table = dynamodb.Table(PAGOS_TABLE)
 secuencias_table = dynamodb.Table(SECUENCIAS_TABLE)
+usuarios_table = dynamodb.Table(USUARIOS_TABLE)
+roles_table = dynamodb.Table(ROLES_TABLE)
 
 
 def serialize_value(value):
@@ -244,6 +248,64 @@ def public_pago(item: dict) -> dict:
         'created_at': item.get('created_at', ''),
         'updated_at': item.get('updated_at', ''),
     }
+
+
+def role_slug_for_item(item: dict | None) -> str:
+    if not item:
+        return 'cliente'
+
+    slug = str(item.get('slug') or '').strip().lower()
+    if slug in ('admin', 'dueno', 'cliente'):
+        return slug
+
+    role_id = str(item.get('rol_id') or item.get('role_id') or item.get('id') or '').strip()
+    if role_id == '1':
+        return 'dueno'
+    if role_id == '2':
+        return 'cliente'
+    if role_id == '3':
+        return 'admin'
+    return 'cliente'
+
+
+def get_role_item(rol_id: str) -> dict | None:
+    if not rol_id:
+        return None
+
+    result = roles_table.get_item(Key={'rol_id': rol_id})
+    return result.get('Item')
+
+
+def public_usuario(item: dict) -> dict:
+    rol_id = str(item.get('rol_id') or '2').strip() or '2'
+    role_item = get_role_item(rol_id)
+    return {
+        'usuario_id': str(item.get('usuario_id') or ''),
+        'cognito_sub': str(item.get('cognito_sub') or ''),
+        'nombre': str(item.get('nombre') or '').strip(),
+        'email': str(item.get('email') or '').strip().lower(),
+        'telefono': str(item.get('telefono') or '').strip(),
+        'rol_id': rol_id,
+        'rol': role_slug_for_item(role_item),
+        'activo': str(item.get('activo', 'true')).lower() == 'true',
+        'created_at': item.get('created_at', ''),
+        'updated_at': item.get('updated_at', ''),
+    }
+
+
+def get_usuario_by_email(email: str) -> dict | None:
+    normalized_email = str(email or '').strip().lower()
+    if not normalized_email:
+        return None
+
+    result = usuarios_table.query(
+        IndexName='email-index',
+        KeyConditionExpression='email = :email',
+        ExpressionAttributeValues={':email': normalized_email},
+        Limit=1,
+    )
+    items = result.get('Items', [])
+    return items[0] if items else None
 
 
 def normalize_venta_items(items: list[dict]) -> tuple[list[dict], Decimal]:
@@ -723,6 +785,48 @@ def create_pago(payload: dict) -> dict:
     return response(201, public_pago(item))
 
 
+def sync_usuario(payload: dict) -> dict:
+    cognito_sub = str(payload.get('cognito_sub') or '').strip()
+    email = str(payload.get('email') or '').strip().lower()
+    nombre = str(payload.get('nombre') or '').strip()
+    telefono = str(payload.get('telefono') or '').strip()
+
+    if not cognito_sub:
+        return response(400, {'message': 'cognito_sub es obligatorio'})
+    if not email:
+        return response(400, {'message': 'email es obligatorio'})
+    if not nombre:
+        return response(400, {'message': 'nombre es obligatorio'})
+
+    timestamp = now_iso()
+    existing = get_usuario_by_email(email)
+    if existing:
+        updated = {
+            **existing,
+            'cognito_sub': cognito_sub,
+            'nombre': nombre,
+            'telefono': telefono or str(existing.get('telefono') or '').strip(),
+            'email': email,
+            'updated_at': timestamp,
+        }
+        usuarios_table.put_item(Item=updated)
+        return response(200, public_usuario(updated))
+
+    item = {
+        'usuario_id': next_sequence_id('usuarios'),
+        'cognito_sub': cognito_sub,
+        'nombre': nombre,
+        'email': email,
+        'telefono': telefono,
+        'rol_id': '2',
+        'activo': 'true',
+        'created_at': timestamp,
+        'updated_at': timestamp,
+    }
+    usuarios_table.put_item(Item=item)
+    return response(201, public_usuario(item))
+
+
 def lambda_handler(event, context):
     method = event.get('requestContext', {}).get('http', {}).get('method', '')
     parts = path_parts(event)
@@ -783,6 +887,10 @@ def lambda_handler(event, context):
                 return list_pagos(event)
             if method == 'POST' and len(parts) == 1:
                 return create_pago(parse_body(event))
+
+        if resource == 'usuarios':
+            if method == 'POST' and len(parts) == 2 and parts[1] == 'sync':
+                return sync_usuario(parse_body(event))
 
         return response(404, {'message': 'Ruta no encontrada'})
     except ValueError as error:

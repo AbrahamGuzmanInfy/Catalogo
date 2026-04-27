@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import type { CartItem } from '../models/cart.model';
 import type { CreateVentaPayload } from '../models/order.model';
 import type { Product } from '../models/product.model';
-import type { TestUser } from '../models/user.model';
+import type { AppUserProfile } from '../models/user.model';
 import { OrderService } from '../services/order.service';
 
 const DEDICATION_MAX_LENGTH = 160;
@@ -177,11 +177,16 @@ export class CartState {
   }
 
   /**
-   * Genera un pedido usando el carrito actual para el usuario activo.
-   * @param currentUser Usuario de prueba seleccionado en sesión.
+   * Genera un pedido usando el carrito actual para el usuario autenticado.
+   * @param currentUser Usuario autenticado actual.
    */
-  checkout(currentUser: TestUser): void {
+  checkout(currentUser: AppUserProfile | null): void {
     if (!this.hasCartItems || this.checkoutLoading) return;
+    if (!currentUser) {
+      this.checkoutError = 'Inicia sesión para finalizar tu pedido.';
+      this.checkoutSuccess = '';
+      return;
+    }
 
     this.checkoutLoading = true;
     this.checkoutError = '';
