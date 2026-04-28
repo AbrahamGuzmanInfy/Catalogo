@@ -136,6 +136,29 @@
     }
   }
 
+  @if (cart.addedProductModalOpen && cart.addedProduct; as addedProduct) {
+    <section class="added-product-overlay" aria-label="Producto agregado al carrito">
+      <div class="added-product-modal">
+        <button class="added-product-close" type="button" aria-label="Cerrar modal" (click)="closeAddedProductModal()">&times;</button>
+        <div class="added-product-copy">
+          <span class="added-product-check" aria-hidden="true">&#10003;</span>
+          <h2>Producto Agregado</h2>
+        </div>
+        <article class="cart-item added-product-cart-item" aria-label="Producto agregado">
+          <img [src]="addedProduct.image" [alt]="addedProduct.alt" />
+          <div class="cart-item-info">
+            <h2>{{ addedProduct.name }}</h2>
+            <p class="cart-price">{{ addedProduct.price }}</p>
+          </div>
+        </article>
+        <div class="added-product-actions">
+          <button class="added-product-secondary" type="button" (click)="returnHomeFromAddedProductModal()">Ver m&aacute;s</button>
+          <button class="added-product-primary" type="button" (click)="openCartFromAddedProductModal()">Ir al carrito</button>
+        </div>
+      </div>
+    </section>
+  }
+
   <app-bottom-nav
     [activeView]="navigation.activeView"
     [detailReturnView]="navigation.currentDetailReturnView"

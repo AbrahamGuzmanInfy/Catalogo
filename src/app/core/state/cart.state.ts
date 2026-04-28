@@ -23,6 +23,8 @@ export class CartState {
   public dedicationPanelOpen = false;
   public dedicationDraft = '';
   public dedicationProduct: Product | null = null;
+  public addedProductModalOpen = false;
+  public addedProduct: Product | null = null;
 
   /**
    * Límite permitido de caracteres para una dedicatoria.
@@ -88,6 +90,8 @@ export class CartState {
     } else {
       this.cartItems = [...this.cartItems, { product, quantity: 1, ...(dedication ? { dedication } : {}) }];
     }
+
+    this.showAddedProductModal(product);
   }
 
   /**
@@ -154,6 +158,14 @@ export class CartState {
   }
 
   /**
+   * Cierra el modal temporal que confirma la adición de un producto.
+   */
+  closeAddedProductModal(): void {
+    this.addedProductModalOpen = false;
+    this.addedProduct = null;
+  }
+
+  /**
    * Guarda la dedicatoria redactada sobre el producto activo.
    */
   saveDedication(): void {
@@ -215,6 +227,7 @@ export class CartState {
       next: (venta) => {
         this.cartItems = [];
         this.productDedications.clear();
+        this.closeAddedProductModal();
         this.checkoutLoading = false;
         this.checkoutSuccess = `Pedido creado: ${venta.venta_id}`;
       },
@@ -247,5 +260,14 @@ export class CartState {
    */
   private formatCurrency(value: number): string {
     return `$${value.toFixed(2)}`;
+  }
+
+  /**
+   * Abre el modal de confirmacion de producto agregado.
+   * @param product Producto recientemente agregado al carrito.
+   */
+  private showAddedProductModal(product: Product): void {
+    this.addedProduct = product;
+    this.addedProductModalOpen = true;
   }
 }

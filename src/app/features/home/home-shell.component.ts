@@ -288,6 +288,29 @@ export class HomeShellComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Cierra el modal de confirmacion de producto agregado.
+   */
+  closeAddedProductModal(): void {
+    this.cart.closeAddedProductModal();
+  }
+
+  /**
+   * Cierra el modal y lleva al usuario de vuelta al home.
+   */
+  returnHomeFromAddedProductModal(): void {
+    this.cart.closeAddedProductModal();
+    this.navigation.showView('home');
+  }
+
+  /**
+   * Lleva al usuario al carrito desde el modal de confirmacion.
+   */
+  openCartFromAddedProductModal(): void {
+    this.cart.closeAddedProductModal();
+    this.navigation.showView('cart');
+  }
+
+  /**
    * Cierra la sesion actual y devuelve al login dentro del perfil.
    */
   async signOut(): Promise<void> {
